@@ -6,6 +6,7 @@ import { ExcelExport } from "@progress/kendo-react-excel-export";
 import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
 import { setGroupIds, setExpandedState } from "@progress/kendo-react-data-tools";
 import { EMPLOYEES } from "@/constants";
+import { ColumnMenu } from "./ColumnMenu";
 
 const DATA_ITEM_KEY = "id";
 const SELECTED_FIELD = "selected";
@@ -220,66 +221,60 @@ export function ClientWebTable() {
           groupable={false}
           size={"small"}
         >
-          <Column field="budget" width="110px" headerCell={() => <div style={{ textAlign: "center" }}>Menu URL</div>} />
+          <Column field="budget" width="140px"
+            title="Menu URL"
+            columnMenu={ColumnMenu}
+          />
           <Column
             field="full_name"
             width="130px"
-            headerCell={() => <div style={{ textAlign: "center" }}>Menu name</div>}
+            title="Menu name"
+            columnMenu={ColumnMenu}
           />
           <Column
             field="target"
-            cell={(props) => <td style={{ textAlign: "center" }}>{props.dataItem.target}</td>}
             width="130px"
-            headerCell={() => <div style={{ textAlign: "center" }}>화면번호</div>}
+            title="화면번호"
+            columnMenu={ColumnMenu}
+
           />
           <Column
             field="budget"
-            cell={(props) => <td style={{ textAlign: "center" }}>{props.dataItem.budget}</td>}
-            width="100px"
-            headerCell={() => <div style={{ textAlign: "center" }}>Site Type</div>}
-          />
-          <Column
-            field="budget"
-            cell={(props) => <td style={{ textAlign: "center" }}>{props.dataItem.budget}</td>}
-            width="100px"
-            headerCell={() => <div style={{ textAlign: "center" }}>Whether electronic signature is required</div>}
-          />
-          <Column
-            field="budget"
-            cell={(props) => <td style={{ textAlign: "center" }}>{props.dataItem.budget}</td>}
             width="120px"
-            headerCell={() => <div style={{ textAlign: "center" }}>Check status of other banks</div>}
+            title="Site Type"
+            columnMenu={ColumnMenu}
+          />
+          <Column
+            columnMenu={ColumnMenu}
+            field="budget"
+            width="350px"
+            title="Whether electronic signature is required"
           />
           <Column
             field="budget"
-            cell={(props) => <td style={{ textAlign: "center" }}>{props.dataItem.budget}</td>}
-            width="100px"
-            headerCell={() => <div style={{ textAlign: "center" }}>Input Type</div>}
+            width="250px"
+            title="Check status of other banks"
+            columnMenu={ColumnMenu}
           />
           <Column
             field="budget"
-            cell={(props) => <td style={{ textAlign: "center" }}>{props.dataItem.full_name}</td>}
-            width="100px"
-            headerCell={() => <div style={{ textAlign: "center" }}>e-channel log classification code</div>}
+            width="150px"
+            title="Input Type"
+            columnMenu={ColumnMenu}
+          />
+          <Column
+            field="budget"
+            width="280px"
+            title="e-channel log classification code"
+            columnMenu={ColumnMenu}
           />
 
           <Column
-            cell={(props) => <td style={{ textAlign: "center" }}>{props.dataItem.budget}</td>}
             field="budget"
-            width="130px"
-            headerCell={() => <div style={{ textAlign: "center" }}>Service state</div>}
+            width="150px"
+            title="Service state"
+            columnMenu={ColumnMenu}
           />
-
-          {/* <Column>
-            <Column
-              field="budget"
-              title="Budget"
-              cells={{
-                data: BudgetCell as any,
-              }}
-              width="230px"
-            />
-          </Column> */}
         </Grid>
       </ExcelExport>
       <GridPDFExport margin="1cm">

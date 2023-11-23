@@ -1,12 +1,12 @@
+import { MENUS } from "@/constants";
 import { ITab } from "@/types";
 import { createContext, useContext, ReactNode, FC, useState, Dispatch, SetStateAction, useMemo } from "react";
 
 interface TabContextType {
   tabs: ITab[];
   setTabs: Dispatch<SetStateAction<ITab[]>>;
-  selectedTabIndex: number;
-  setSelectedTabIndex: Dispatch<SetStateAction<number>>;
   selectedTab: ITab;
+  setSelectedTab: Dispatch<SetStateAction<ITab>>;
 }
 
 interface TabProviderProps {
@@ -24,21 +24,9 @@ export const useTab = () => {
 };
 
 export const TabProvider: FC<TabProviderProps> = ({ children }) => {
-  const [tabs, setTabs] = useState<ITab[]>([
-    {
-      id: "user-management",
-      title: "User Management",
-      componentName: "UserManagement",
-    },
-  ]);
+  const [tabs, setTabs] = useState<ITab[]>([...MENUS.filter((x) => x.url === "/service-management")]);
 
-  const [selectedTabIndex, setSelectedTabIndex] = useState<number>(0);
+  const [selectedTab, setSelectedTab] = useState<ITab>(tabs[0]);
 
-  const selectedTab = useMemo(() => tabs[selectedTabIndex], [tabs, selectedTabIndex]);
-
-  return (
-    <TabContext.Provider value={{ tabs, setTabs, selectedTab, selectedTabIndex, setSelectedTabIndex }}>
-      {children}
-    </TabContext.Provider>
-  );
+  return <TabContext.Provider value={{ tabs, setTabs, selectedTab, setSelectedTab }}>{children}</TabContext.Provider>;
 };

@@ -185,6 +185,6 @@ function ServiceManagement() {
   );
 }
 
-export default function Page() {
+export function Page() {
   return <ServiceManagement />;
 }

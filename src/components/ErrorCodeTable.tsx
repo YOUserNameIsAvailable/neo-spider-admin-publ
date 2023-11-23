@@ -6,6 +6,8 @@ import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
 import { setGroupIds, setExpandedState } from "@progress/kendo-react-data-tools";
 import { EMPLOYEES } from "@/constants";
 import { useCallback, useState } from "react";
+import { ColumnMenu } from "./ColumnMenu";
+import { Button } from "@progress/kendo-react-buttons";
 
 const DATA_ITEM_KEY = "id";
 const SELECTED_FIELD = "selected";
@@ -221,39 +223,35 @@ export function ErrorCodeTable() {
           <Column
             field="budget"
             width="130px"
-            headerCell={() => <div style={{ textAlign: "center" }}>Error Code</div>}
+            title="Error Code"
+            columnMenu={ColumnMenu}
           />
           <Column
             field="full_name"
             width="300px"
-            headerCell={() => <div style={{ textAlign: "center" }}>Error Title</div>}
+            title="Error Title"
+            columnMenu={ColumnMenu}
           />
           <Column
             field="target"
             width="300px"
-            headerCell={() => <div style={{ textAlign: "center" }}>Cause of error</div>}
+            title="Cause of error"
+            columnMenu={ColumnMenu}
           />
           <Column
             field="budget"
             width="140px"
-            headerCell={() => <div style={{ textAlign: "center" }}>Handler count</div>}
+            title="Handler count"
+            columnMenu={ColumnMenu}
           />
           <Column
             field="budget"
             width="130px"
-            headerCell={() => <div style={{ textAlign: "center" }}>Handler per error</div>}
+            title="Handler per error"
+            cell={(props) => <td style={{ textAlign: "center" }}> <Button size={"small"} className="px-4" themeColor={"primary"}>
+              Handler
+            </Button></td>}
           />
-
-          {/* <Column>
-            <Column
-              field="budget"
-              title="Budget"
-              cells={{
-                data: BudgetCell as any,
-              }}
-              width="230px"
-            />
-          </Column> */}
         </Grid>
       </ExcelExport>
       <GridPDFExport margin="1cm">

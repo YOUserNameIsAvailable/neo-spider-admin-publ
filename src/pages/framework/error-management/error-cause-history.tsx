@@ -76,6 +76,6 @@ function ErrorCause() {
   );
 }
 
-export default function Page() {
+export function Page() {
   return <ErrorCause />;
 }

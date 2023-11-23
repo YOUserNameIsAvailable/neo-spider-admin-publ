@@ -7,30 +7,44 @@ import {
   TabStripTab,
 } from "@progress/kendo-react-layout";
 import { SvgIcon } from "@progress/kendo-react-common";
-import { xIcon } from "@progress/kendo-svg-icons";
+import { exportIcon, printIcon, searchIcon, xIcon } from "@progress/kendo-svg-icons";
 import { ITab } from "@/types";
 import { useTab } from "@/providers/TabProvider";
 import { TopBar } from "./TopBar";
 import { FC, ReactNode, useState } from "react";
 import { LeftSideBar } from "../LeftSidePanel";
+import { Outlet, useNavigate } from "react-router-dom";
+import { BottomBar } from "./BottomBar";
+import { Button } from "@progress/kendo-react-buttons";
 
 const TabTitle = ({
   tab,
-  onTabRemove,
+  onSelectTab,
+  onRemoveTab,
   hideClose,
 }: {
   tab: ITab;
-  onTabRemove: (tab: ITab) => void;
+  onSelectTab: (tab: ITab) => void;
+  onRemoveTab: (tab: ITab) => void;
   hideClose?: boolean;
 }) => {
   return (
-    <div className="flex items-center gap-2">
+    <div
+      className="flex items-center gap-2 px-3 py-1.5"
+      onClick={(e) => {
+        e.stopPropagation();
+        onSelectTab(tab);
+      }}
+    >
       <img className="w-3" src="/images/tab-icon.png" alt="" />
-      <span>{tab.title}</span>
+      <span>{tab.text}</span>
       {!hideClose && (
         <span
           className="!p-0 k-button k-button-md k-rounded-md k-button-flat k-button-flat-base k-icon-button"
-          onClick={() => onTabRemove(tab)}
+          onClick={(e) => {
+            e.stopPropagation();
+            onRemoveTab(tab);
+          }}
         >
           <SvgIcon icon={xIcon} size="small" className="" />
         </span>
@@ -40,7 +54,7 @@ const TabTitle = ({
 };
 
 interface LayoutProps {
-  children: ReactNode;
+  children?: ReactNode;
 }
 
 export const Layout: FC<LayoutProps> = ({ children }) => {
@@ -50,15 +64,27 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
     { size: "80%", min: "20px", collapsible: false },
   ]);
 
-  const { selectedTabIndex, setSelectedTabIndex, setTabs, tabs } = useTab();
+  const { selectedTab, setSelectedTab, setTabs, tabs } = useTab();
 
-  const onSelectTab = (e: TabStripSelectEventArguments) => {
-    setSelectedTabIndex(e.selected);
+  const navigate = useNavigate();
+
+  const onSelectTab = (tab: ITab, index: number) => {
+    console.log("Tab Selected", index, tab);
+    navigate(tab.url as string);
+
+    setSelectedTab(tab);
   };
 
-  const onRemoveTab = (tab: ITab) => {
-    const newTabs = tabs.filter((item) => item.id !== tab.id);
+  const onRemoveTab = (tab: ITab, index: number) => {
+    console.log("Tab Removed", index, tab);
+    const newTabs = tabs.filter((item) => item.url !== tab.url);
     setTabs(newTabs);
+
+    if (selectedTab.url === tab.url) {
+      // setSelectedTab(null); // TODO
+    }
+
+    navigate(-1);
   };
 
   const onChangeTab = (event: SplitterOnChangeEvent) => {
@@ -75,21 +101,42 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
         <LeftSideBar />
 
         <div className="pane-content">
-          <TabStrip selected={selectedTabIndex} scrollable={true} onSelect={onSelectTab}>
+          {/* tabs */}
+          <TabStrip scrollable={true}>
             {tabs.map((tab, index) => (
               <TabStripTab
-                key={tab.id}
-                title={<TabTitle tab={tab} onTabRemove={onRemoveTab} hideClose={index === 0} />}
-              >
-                {/* content */}
-                {children}
-              </TabStripTab>
+                key={tab.url}
+                title={
+                  <TabTitle
+                    tab={tab}
+                    onSelectTab={(e) => onSelectTab(e, index)}
+                    onRemoveTab={(e) => onRemoveTab(e, index)}
+                    hideClose={index === 0}
+                  />
+                }
+              ></TabStripTab>
             ))}
           </TabStrip>
+
+          {/* title bar */}
+          <div className="title-bar">
+            <div className="title">{selectedTab?.text}</div>
+            <div className="actions">
+              <Button svgIcon={exportIcon}>Export</Button>
+              <Button svgIcon={printIcon}>Print</Button>
+              <Button svgIcon={searchIcon} />
+            </div>
+          </div>
+
+          {/* content */}
+          <div className="w-full px-4">
+            <Outlet />
+          </div>
         </div>
       </Splitter>
 
       {/* bottom bar */}
+      <BottomBar />
     </>
   );
 };

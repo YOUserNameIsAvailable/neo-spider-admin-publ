@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MENU } from "@/constants";
+import { MENUS } from "@/constants";
 import { Button, ButtonGroup } from "@progress/kendo-react-buttons";
 import { PanelBar, PanelBarItem } from "@progress/kendo-react-layout";
 import {
@@ -10,6 +10,8 @@ import {
   processTreeViewItems,
 } from "@progress/kendo-react-treeview";
 import { useTab } from "@/providers/TabProvider";
+import { IMenu, ITab } from "@/types";
+import { useNavigate } from "react-router-dom";
 
 const TreeItem = (props: ItemRenderProps) => {
   return (
@@ -25,27 +27,28 @@ const TreeItem = (props: ItemRenderProps) => {
 };
 
 export function LeftSideBar() {
-  const { tabs, setTabs } = useTab();
+  const { tabs, setTabs, setSelectedTab } = useTab();
 
   const [expand, setExpand] = useState({ ids: ["Item2"], idField: "text" });
   const [select, setSelect] = useState([""]);
 
-  const onItemClick = ({ item, itemHierarchicalIndex }: TreeViewItemClickEvent) => {
+  const navigate = useNavigate();
+
+  const onItemClick = ({ item: _item, itemHierarchicalIndex, target }: TreeViewItemClickEvent) => {
+    const item: IMenu = _item;
+
     // add new tab
     if (!item.items) {
-      const newTabs = [
-        ...tabs,
-        {
-          id: item.data,
-          title: item.text,
-          componentName: "UserManagement",
-        },
-      ];
+      const found = tabs.find((x) => x.url === item.url);
+      if (!found) {
+        const newTab: ITab = { text: item.text, url: item.url };
+        setTabs([...tabs, newTab]);
+        setSelectedTab(newTab);
+      }
 
-      setTabs(newTabs);
+      navigate(item.url as string);
+      setSelect([itemHierarchicalIndex]);
     }
-
-    setSelect([itemHierarchicalIndex]);
   };
 
   const onExpandChange = (event: TreeViewExpandChangeEvent) => {
@@ -61,7 +64,7 @@ export function LeftSideBar() {
       <div className="text-sm pl-4 font-semibold">Dev Mode</div>
       <div className="flex-grow flex flex-col h-full">
         <PanelBar expandMode="single">
-          {MENU.items.map((item, index) => (
+          {MENUS.map((item, index) => (
             <PanelBarItem key={item.data} title={item.text} expanded={index === 0}>
               <TreeView
                 className="h-full"

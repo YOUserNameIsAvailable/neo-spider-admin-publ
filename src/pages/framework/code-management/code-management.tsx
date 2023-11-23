@@ -4,7 +4,7 @@ import { DropDownList } from "@progress/kendo-react-dropdowns";
 import { searchIcon, arrowRightIcon } from "@progress/kendo-svg-icons";
 import { useState } from "react";
 import { SPORTS, PAGES } from "@/constants";
-import { CodeManageTable } from "@/components/CodeManageTable";
+import { CodeManageTable } from "@/components/CodemanageTable";
 
 function CodeManage() {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -44,7 +44,6 @@ function CodeManage() {
               <DropDownList className="w-16 h-7" size={"small"} data={PAGES} defaultValue="20" filterable={false} />
               <span className="text-sm">Items</span>
             </div>
-
             <Button svgIcon={searchIcon}>Find</Button>
           </div>
         </div>
@@ -80,6 +79,6 @@ function CodeManage() {
   );
 }
 
-export default function Page() {
+export function Page() {
   return <CodeManage />;
 }

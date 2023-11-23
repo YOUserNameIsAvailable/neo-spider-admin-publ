@@ -5,27 +5,13 @@ import "./themes/kendo-theme-custom.scss";
 import "./index.scss";
 
 import reportWebVitals from "./reportWebVitals";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { Layout } from "./components/shared/layout/Layout";
-import { TabProvider } from "./providers/TabProvider";
-import ServiceManagementPage from "./pages/framework/service-management/service-management";
-
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <ServiceManagementPage />,
-  },
-]);
+import { App } from "./App";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 
 root.render(
   <React.StrictMode>
-    <TabProvider>
-      <Layout>
-        <RouterProvider router={router} />
-      </Layout>
-    </TabProvider>
+    <App />
   </React.StrictMode>
 );
 

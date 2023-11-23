@@ -1,5 +1,13 @@
-export interface ITab {
-  id: string;
-  title: string;
-  componentName: string;
+import { RoutePathType } from "@/routes";
+
+export interface IMenu {
+  data: string;
+  level: number;
+  menuCheck?: string;
+  gubn?: string;
+  text: string;
+  url?: RoutePathType;
+  items?: IMenu[];
 }
+
+export interface ITab extends Pick<IMenu, "text" | "url"> {}

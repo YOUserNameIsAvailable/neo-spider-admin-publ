@@ -11,16 +11,6 @@ function UserManagement() {
 
   return (
     <>
-      {/* title bar */}
-      <div className="title-bar">
-        <div className="title">{selectedTab.title}</div>
-        <div className="actions">
-          <Button svgIcon={exportIcon}>Export</Button>
-          <Button svgIcon={printIcon}>Print</Button>
-          <Button svgIcon={searchIcon} />
-        </div>
-      </div>
-
       {/* filters */}
       <>
         <div className="flex items-center gap-2 py-4">
@@ -102,6 +92,6 @@ function UserManagement() {
   );
 }
 
-export default function Page() {
+export function Page() {
   return <UserManagement />;
 }

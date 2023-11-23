@@ -6,6 +6,7 @@ import { ExcelExport } from "@progress/kendo-react-excel-export";
 import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
 import { setGroupIds, setExpandedState } from "@progress/kendo-react-data-tools";
 import { EMPLOYEES } from "@/constants";
+import { ColumnMenu } from "./ColumnMenu";
 
 const DATA_ITEM_KEY = "id";
 const SELECTED_FIELD = "selected";
@@ -221,64 +222,50 @@ export function CodeManageTable() {
           <Column
             field="budget"
             width="110px"
-            headerCell={() => <div style={{ textAlign: "center" }}>Serial no</div>}
+            title="Serial no"
+            columnMenu={ColumnMenu}
           />
           <Column
             field="full_name"
             width="200px"
-            headerCell={() => <div style={{ textAlign: "center" }}>Log tracking number</div>}
+            title="Log tracking number"
+            columnMenu={ColumnMenu}
           />
           <Column
             field="target"
-            cell={(props) => <td style={{ textAlign: "center" }}>{props.dataItem.target}</td>}
             width="150px"
-            headerCell={() => <div style={{ textAlign: "center" }}>Customer ID</div>}
+            title="Customer ID"
+            columnMenu={ColumnMenu}
           />
           <Column
             field="budget"
-            cell={(props) => <td style={{ textAlign: "center" }}>{props.dataItem.budget}</td>}
             width="200px"
-            headerCell={() => <div style={{ textAlign: "center" }}>Channel ID</div>}
+            title="Channel ID"
+            columnMenu={ColumnMenu}
           />
           <Column
             field="budget"
-            cell={(props) => <td style={{ textAlign: "center" }}>{props.dataItem.budget}</td>}
             width="250px"
-            headerCell={() => <div style={{ textAlign: "center" }}>Outgoing Incomming.</div>}
+            title="Outgoing Incomming"
+            columnMenu={ColumnMenu}
           />
           <Column
             field="budget"
-            cell={(props) => <td style={{ textAlign: "center" }}>{props.dataItem.budget}</td>}
             width="100px"
-            headerCell={() => (
-              <div style={{ textAlign: "center" }}>
-                요청 <br /> 응답
-              </div>
-            )}
+          title="요청 응답"
           />
           <Column
             field="budget"
-            cell={(props) => <td style={{ textAlign: "center" }}>{props.dataItem.full_name}</td>}
             width="150px"
-            headerCell={() => <div style={{ textAlign: "center" }}>Processing result</div>}
+            title="Processing result"
+            columnMenu={ColumnMenu}
           />
           <Column
             field="budget"
-            cell={(props) => <td style={{ textAlign: "center" }}>{props.dataItem.full_name}</td>}
-            width="130px"
-            headerCell={() => <div style={{ textAlign: "center" }}>Result message</div>}
+            width="150px"
+            title="Result message"
+            columnMenu={ColumnMenu}
           />
-
-          {/* <Column>
-            <Column
-              field="budget"
-              title="Budget"
-              cells={{
-                data: BudgetCell as any,
-              }}
-              width="230px"
-            />
-          </Column> */}
         </Grid>
       </ExcelExport>
       <GridPDFExport margin="1cm">

@@ -6,6 +6,8 @@ import { ExcelExport } from "@progress/kendo-react-excel-export";
 import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
 import { setGroupIds, setExpandedState } from "@progress/kendo-react-data-tools";
 import { EMPLOYEES } from "@/constants";
+import { ColumnMenu } from "./ColumnMenu";
+import { Button } from "@progress/kendo-react-buttons";
 
 const DATA_ITEM_KEY = "id";
 const SELECTED_FIELD = "selected";
@@ -218,29 +220,28 @@ export function UserManagementTable() {
           groupable={false}
           size={"small"}
         >
-          <Column field="budget" title="User ID" width="105px" />
-          <Column field="full_name" title="User Name" width="105px" />
-          <Column field="target" title="Rank" width="105px" />
-          <Column field="budget" title="Emp no" width="105px" />
-          <Column field="budget" title="Role name" width="105px" />
-          <Column field="budget" title="Belong" width="105px" />
-          <Column field="budget" title="User status" width="105px" />
-          <Column field="budget" title="Modified  date" width="105px" />
-          <Column field="Menu init" title="Menu init" width="105px" />
-          <Column field="Menu authority" title="Menu authorityt" width="105px" />
-          <Column title="Actions" cell={renderButtonCell} />
-          <Column field="Status(Error count)" title="Status(Error count)" width="105px" />
-          <Column field="DO Login" title="DO Login" width="105px" />
-          {/* <Column>
-            <Column
-              field="budget"
-              title="Budget"
-              cells={{
-                data: BudgetCell as any,
-              }}
-              width="230px"
-            />
-          </Column> */}
+          <Column field="budget" title="User ID" width="105px" columnMenu={ColumnMenu} />
+          <Column field="full_name" title="User Name" width="105px" columnMenu={ColumnMenu} />
+          <Column field="target" title="Rank" width="105px" columnMenu={ColumnMenu} />
+          <Column field="budget" title="Emp no" width="105px" columnMenu={ColumnMenu} />
+          <Column field="budget" title="Role name" width="105px" columnMenu={ColumnMenu} />
+          <Column field="budget" title="Belong" width="105px" columnMenu={ColumnMenu} />
+          <Column field="budget" title="User status" width="105px" columnMenu={ColumnMenu} />
+          <Column field="budget" title="Modified  date" width="140px" columnMenu={ColumnMenu} />
+          <Column field="Menu init" title="Menu init" width="105px" cell={(props) => <td style={{ textAlign: "center" }}> <Button size={"small"} className="px-4" themeColor={"primary"}>
+            Reset
+          </Button></td>} />
+          <Column field="Menu authority" title="Menu authorityt" width="105px"
+            cell={(props) => <td style={{ textAlign: "center" }}> <Button size={"small"} className="px-4" themeColor={"primary"}>
+              Menu
+            </Button></td>}
+          />
+          <Column field="Status(Error count)" title="Status(Error count)" width="135px" cell={(props) => <td style={{ textAlign: "center" }}> <Button size={"small"} className="px-4" themeColor={"primary"}>
+            Unloack(0)
+          </Button></td>} />
+          <Column field="DO Login" title="DO Login" width="105px" cell={(props) => <td style={{ textAlign: "center" }}> <Button size={"small"} className="px-4" themeColor={"primary"}>
+            Login
+          </Button></td>} />
         </Grid>
       </ExcelExport>
       <GridPDFExport margin="1cm">

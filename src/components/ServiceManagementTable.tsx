@@ -6,6 +6,8 @@ import { ExcelExport } from "@progress/kendo-react-excel-export";
 import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
 import { setGroupIds, setExpandedState } from "@progress/kendo-react-data-tools";
 import { EMPLOYEES } from "@/constants";
+import { ColumnMenu } from "./ColumnMenu";
+import { Button } from "@progress/kendo-react-buttons";
 
 const DATA_ITEM_KEY = "id";
 const SELECTED_FIELD = "selected";
@@ -221,54 +223,59 @@ export function ServiceManagementTable() {
           <Column
             field="budget"
             width="110px"
-            headerCell={() => <div style={{ textAlign: "center" }}>Service ID</div>}
+            columnMenu={ColumnMenu}
+            title="Service ID"
           />
           <Column
             field="full_name"
             width="250px"
-            headerCell={() => <div style={{ textAlign: "center" }}>Service name</div>}
+            columnMenu={ColumnMenu}
+            title="Service name"
           />
           <Column
             field="target"
-            cell={(props) => <td style={{ textAlign: "center" }}>{props.dataItem.target}</td>}
             width="130px"
-            headerCell={() => <div style={{ textAlign: "center" }}>Biz class</div>}
+            columnMenu={ColumnMenu}
+            title="Biz class"
+
           />
           <Column
             field="budget"
-            cell={(props) => <td style={{ textAlign: "center" }}>{props.dataItem.budget}</td>}
             width="120px"
             headerCell={() => <div style={{ textAlign: "center" }}>Component exist</div>}
-          />
-          <Column
-            field="budget"
-            cell={(props) => <td style={{ textAlign: "center" }}>{props.dataItem.budget}</td>}
-            width="130px"
-            headerCell={() => <div style={{ textAlign: "center" }}>Reload</div>}
-          />
-          <Column
-            field="budget"
-            cell={(props) => <td style={{ textAlign: "center" }}>{props.dataItem.budget}</td>}
-            width="140px"
-            headerCell={() => <div style={{ textAlign: "center" }}>Similar service</div>}
-          />
-          <Column
-            field="budget"
-            cell={(props) => <td style={{ textAlign: "center" }}>{props.dataItem.budget}</td>}
-            width="130px"
-            headerCell={() => <div style={{ textAlign: "center" }}>Add Access user</div>}
-          />
+            title="Service name"
+            cell={(props) => <td style={{ display: "flex", flexDirection: "row", justifyContent: "center" }}> <img src="http://tst.neobns.com:9480/images/radio-on-button-green.png" className="h-5 w-5" /></td>}
 
-          {/* <Column>
-            <Column
-              field="budget"
-              title="Budget"
-              cells={{
-                data: BudgetCell as any,
-              }}
-              width="230px"
-            />
-          </Column> */}
+          />
+          <Column
+            field="budget"
+            width="130px"
+            columnMenu={ColumnMenu}
+            headerCell={() => <div style={{ textAlign: "center" }}>Reload</div>}
+            cell={(props) => <td style={{ textAlign: "center" }}> <Button size={"small"} className="px-4" themeColor={"primary"}>
+              Reload
+            </Button></td>}
+
+
+          />
+          <Column
+            field="budget"
+            width="140px"
+            headerCell={() => <div >Similar service</div>}
+            cell={(props) => <td style={{ textAlign: "center" }}> <Button size={"small"} className="px-4" themeColor={"primary"}>
+              Add
+            </Button></td>}
+          />
+          <Column
+            field="budget"
+            width="150px"
+            headerCell={() => <div >Add Access user</div>}
+            cell={(props) => <td style={{ textAlign: "center" }}> <Button size={"small"} className="px-4" themeColor={"primary"}>
+              + (0)
+            </Button></td>}
+
+
+          />
         </Grid>
       </ExcelExport>
       <GridPDFExport margin="1cm">

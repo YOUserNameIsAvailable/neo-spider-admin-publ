@@ -4,7 +4,7 @@ import { Button } from "@progress/kendo-react-buttons";
 import { DropDownList } from "@progress/kendo-react-dropdowns";
 import { searchIcon } from "@progress/kendo-svg-icons";
 import { SPORTS, PAGES } from "@/constants";
-import { CodeManageTable } from "@/components/CodeManageTable";
+import { CodeManageTable } from "@/components/CodemanageTable";
 
 export function ManagerLog() {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -100,6 +100,6 @@ export function ManagerLog() {
   );
 }
 
-export default function Page() {
+export function Page() {
   return <div>Works!</div>;
 }
