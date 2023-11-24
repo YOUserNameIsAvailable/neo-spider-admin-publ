@@ -98,3 +98,40 @@
   text-align: center;
   text-shadow: 0 -1px 1px #000f4d;
 }
+
+.print-btn {
+  border-width: 0px;
+  padding: 0px !important;
+  width: 63px;
+  height: 20px;
+  background-repeat: no-repeat;
+  border: 0px;
+  margin-left: 10px;
+}
+
+.print-btn:hover {
+  > img {
+    content: url("../../../../public/images/btn_print_over.gif") !important;
+  }
+}
+
+.excel-btn {
+  border-width: 0px;
+  padding: 0px !important;
+  width: 63px;
+  height: 20px;
+  background-repeat: no-repeat;
+  border: 0px;
+  margin-left: 10px;
+}
+
+.excel-btn:hover {
+  > img {
+    content: url("../../../../public/images/btn_excel_over.gif") !important;
+  }
+}
+
+.search-btn {
+  border-width: 0px;
+  padding: 0px !important;
+}

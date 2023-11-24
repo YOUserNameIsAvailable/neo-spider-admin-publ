@@ -7,7 +7,12 @@ import {
   TabStripTab,
 } from "@progress/kendo-react-layout";
 import { SvgIcon } from "@progress/kendo-react-common";
-import { exportIcon, printIcon, searchIcon, xIcon } from "@progress/kendo-svg-icons";
+import {
+  exportIcon,
+  printIcon,
+  searchIcon,
+  xIcon,
+} from "@progress/kendo-svg-icons";
 import { ITab } from "@/types";
 import { useTab } from "@/providers/TabProvider";
 import { TopBar } from "./TopBar";
@@ -96,7 +101,11 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
       {/* top bar */}
       <TopBar />
 
-      <Splitter style={{ height: "calc(100dvh - 84px)" }} panes={panes} onChange={onChangeTab}>
+      <Splitter
+        style={{ height: "calc(100dvh - 84px)" }}
+        panes={panes}
+        onChange={onChangeTab}
+      >
         {/* left side panel */}
         <LeftSideBar />
 
@@ -121,10 +130,16 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
           {/* title bar */}
           <div className="title-bar">
             <div className="title">{selectedTab?.text}</div>
-            <div className="actions">
-              <Button svgIcon={exportIcon}>Export</Button>
-              <Button svgIcon={printIcon}>Print</Button>
-              <Button svgIcon={searchIcon} />
+            <div className="flex">
+              <Button
+                imageUrl="/images/btn_excel_off.gif"
+                className="excel-btn"
+              />
+              <Button
+                imageUrl="/images/btn_print_off.gif"
+                className="ml-px-10 print-btn"
+              />
+              <Button imageUrl="/images/refresh.png" className="ml-[5px] search-btn" />
             </div>
           </div>
 
