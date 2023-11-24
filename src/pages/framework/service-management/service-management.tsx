@@ -5,13 +5,34 @@ import { searchIcon, arrowRightIcon } from "@progress/kendo-svg-icons";
 import { useState } from "react";
 import { PAGES, SPORTS } from "@/constants";
 import { ServiceManagementTable } from "@/components/ServiceManagementTable";
+import { Window } from '@progress/kendo-react-dialogs';
+import { Grid, GridColumn } from '@progress/kendo-react-grid';
 
 function ServiceManagement() {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [visible, setVisible] = useState(false);
   
   const toggleExpansion = () => {
     setIsExpanded(!isExpanded);
   };
+
+  const CustomCell = (props:any) => {
+    return (
+      <div
+        style={{
+          backgroundColor:'#adc6f4',
+          fontSize:"12px",
+          padding:"6px",
+          fontWeight:'bold',
+          color:"black",
+          textAlign:'center'
+        }}
+      >
+        {props.title}
+      </div>
+    );
+  };
+
 
   return (
     <>
@@ -52,7 +73,7 @@ function ServiceManagement() {
               <span className="text-sm">Items</span>
             </div>
 
-            <Button svgIcon={searchIcon}>Find</Button>
+            <Button svgIcon={searchIcon} onClick={()=>{setVisible(true)}}>Find</Button>
           </div>
         </div>
         <div className="bg-neutral-50 flex justify-between p-4 gap-4 border-t-2  border-grey-500">
@@ -181,6 +202,33 @@ function ServiceManagement() {
           ADD
         </Button>
       </div>
+      {visible && (
+        <Window
+          minimizeButton={() => null}
+          maximizeButton={() => null}
+          restoreButton={() => null}
+          appendTo={null}
+          doubleClickStageChange={false}
+          title={'오류코드별 핸들러 등록'}
+          style={{minWidth:'300px',minHeight:'300px',width:"710px",height:'400px'}}
+          onClose={()=>{setVisible(false)}}
+        >
+          <div className='flex flex-col'>
+        <div className='bg-[#d1daec] h-[30px] flex items-center px-[5px] rounded-t-[4px]'>
+        [ UME10116 ] - 서비스 미가입 오류
+        </div>
+        <form className='flex'>
+        <Grid style={{height:'200px',borderRightColor:'#eee',borderRightWidth:'20px'}}>
+          {['핸들러 명','파라미터'].map((v)=>{
+            return(
+              <GridColumn className="bg-[#adc6f4]"  key={v} field={v} title={v} width={'150px'} headerCell={CustomCell} />
+            )
+          })}
+        </Grid>
+        </form>
+          </div>
+        </Window>
+      )}
     </>
   );
 }
