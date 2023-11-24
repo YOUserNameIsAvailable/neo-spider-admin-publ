@@ -2,7 +2,7 @@ import { GridColumnMenuSort, GridColumnMenuFilter, GridColumnMenuGroup } from "@
 
 export const ColumnMenu = ({ dataItem, ...props }: any) => {
   return (
-    <div >
+    <div>
       <GridColumnMenuSort {...props} />
       <GridColumnMenuFilter {...props} />
       <GridColumnMenuGroup {...props} />

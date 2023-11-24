@@ -69,8 +69,8 @@ export function ClientWebTable() {
         ...item,
         ["selected"]: currentSelectedState[idGetter(item)],
       })),
-      initialDataState
-    )
+      initialDataState,
+    ),
   );
 
   const dataStateChange = (event: any) => {
@@ -99,7 +99,7 @@ export function ClientWebTable() {
         });
       }
     },
-    [dataResult]
+    [dataResult],
   );
 
   const setSelectedValue = (data: any) => {
@@ -140,7 +140,7 @@ export function ClientWebTable() {
       const newDataResult = processWithGroups(newData, dataState);
       setDataResult(newDataResult);
     },
-    [data, dataState]
+    [data, dataState],
   );
 
   const onSelectionChange = (event: any) => {
@@ -219,62 +219,22 @@ export function ClientWebTable() {
           onHeaderSelectionChange={onHeaderSelectionChange}
           onSelectionChange={onSelectionChange}
           groupable={false}
-          size={"small"}
-        >
-          <Column field="budget" width="140px"
-            title="Menu URL"
-            columnMenu={ColumnMenu}
-          />
-          <Column
-            field="full_name"
-            width="130px"
-            title="Menu name"
-            columnMenu={ColumnMenu}
-          />
-          <Column
-            field="target"
-            width="130px"
-            title="화면번호"
-            columnMenu={ColumnMenu}
-
-          />
-          <Column
-            field="budget"
-            width="120px"
-            title="Site Type"
-            columnMenu={ColumnMenu}
-          />
+          size={"small"}>
+          <Column field="budget" width="140px" title="Menu URL" columnMenu={ColumnMenu} />
+          <Column field="full_name" width="130px" title="Menu name" columnMenu={ColumnMenu} />
+          <Column field="target" width="130px" title="화면번호" columnMenu={ColumnMenu} />
+          <Column field="budget" width="120px" title="Site Type" columnMenu={ColumnMenu} />
           <Column
             columnMenu={ColumnMenu}
             field="budget"
             width="350px"
             title="Whether electronic signature is required"
           />
-          <Column
-            field="budget"
-            width="250px"
-            title="Check status of other banks"
-            columnMenu={ColumnMenu}
-          />
-          <Column
-            field="budget"
-            width="150px"
-            title="Input Type"
-            columnMenu={ColumnMenu}
-          />
-          <Column
-            field="budget"
-            width="280px"
-            title="e-channel log classification code"
-            columnMenu={ColumnMenu}
-          />
+          <Column field="budget" width="250px" title="Check status of other banks" columnMenu={ColumnMenu} />
+          <Column field="budget" width="150px" title="Input Type" columnMenu={ColumnMenu} />
+          <Column field="budget" width="280px" title="e-channel log classification code" columnMenu={ColumnMenu} />
 
-          <Column
-            field="budget"
-            width="150px"
-            title="Service state"
-            columnMenu={ColumnMenu}
-          />
+          <Column field="budget" width="150px" title="Service state" columnMenu={ColumnMenu} />
         </Grid>
       </ExcelExport>
       <GridPDFExport margin="1cm">
@@ -297,8 +257,7 @@ export function ClientWebTable() {
           onHeaderSelectionChange={onHeaderSelectionChange}
           onSelectionChange={onSelectionChange}
           groupable={true}
-          size={"small"}
-        ></Grid>
+          size={"small"}></Grid>
       </GridPDFExport>
     </div>
   );

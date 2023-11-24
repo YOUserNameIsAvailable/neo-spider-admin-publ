@@ -68,8 +68,8 @@ export function ServiceManagementTable() {
         ...item,
         ["selected"]: currentSelectedState[idGetter(item)],
       })),
-      initialDataState
-    )
+      initialDataState,
+    ),
   );
 
   const dataStateChange = (event: any) => {
@@ -98,7 +98,7 @@ export function ServiceManagementTable() {
         });
       }
     },
-    [dataResult]
+    [dataResult],
   );
 
   const setSelectedValue = (data: any) => {
@@ -139,7 +139,7 @@ export function ServiceManagementTable() {
       const newDataResult = processWithGroups(newData, dataState);
       setDataResult(newDataResult);
     },
-    [data, dataState]
+    [data, dataState],
   );
 
   const onSelectionChange = (event: any) => {
@@ -218,63 +218,61 @@ export function ServiceManagementTable() {
           onHeaderSelectionChange={onHeaderSelectionChange}
           onSelectionChange={onSelectionChange}
           groupable={false}
-          size={"small"}
-        >
-          <Column
-            field="budget"
-            width="110px"
-            columnMenu={ColumnMenu}
-            title="Service ID"
-          />
-          <Column
-            field="full_name"
-            width="250px"
-            columnMenu={ColumnMenu}
-            title="Service name"
-          />
-          <Column
-            field="target"
-            width="130px"
-            columnMenu={ColumnMenu}
-            title="Biz class"
-
-          />
+          size={"small"}>
+          <Column field="budget" width="110px" columnMenu={ColumnMenu} title="Service ID" />
+          <Column field="full_name" width="250px" columnMenu={ColumnMenu} title="Service name" />
+          <Column field="target" width="130px" columnMenu={ColumnMenu} title="Biz class" />
           <Column
             field="budget"
             width="120px"
             headerCell={() => <div style={{ textAlign: "center" }}>Component exist</div>}
             title="Service name"
-            cell={(props) => <td style={{ display: "flex", flexDirection: "row", justifyContent: "center" }}> <img src="http://tst.neobns.com:9480/images/radio-on-button-green.png" className="h-5 w-5" /></td>}
-
+            cell={(props) => (
+              <td style={{ display: "flex", flexDirection: "row", justifyContent: "center" }}>
+                {" "}
+                <img src="http://tst.neobns.com:9480/images/radio-on-button-green.png" className="h-5 w-5" />
+              </td>
+            )}
           />
           <Column
             field="budget"
             width="130px"
             columnMenu={ColumnMenu}
             headerCell={() => <div style={{ textAlign: "center" }}>Reload</div>}
-            cell={(props) => <td style={{ textAlign: "center" }}> <Button size={"small"} className="px-4" themeColor={"primary"}>
-              Reload
-            </Button></td>}
-
-
+            cell={(props) => (
+              <td style={{ textAlign: "center" }}>
+                {" "}
+                <Button size={"small"} className="px-4" themeColor={"primary"}>
+                  Reload
+                </Button>
+              </td>
+            )}
           />
           <Column
             field="budget"
             width="140px"
-            headerCell={() => <div >Similar service</div>}
-            cell={(props) => <td style={{ textAlign: "center" }}> <Button size={"small"} className="px-4" themeColor={"primary"}>
-              Add
-            </Button></td>}
+            headerCell={() => <div>Similar service</div>}
+            cell={(props) => (
+              <td style={{ textAlign: "center" }}>
+                {" "}
+                <Button size={"small"} className="px-4" themeColor={"primary"}>
+                  Add
+                </Button>
+              </td>
+            )}
           />
           <Column
             field="budget"
             width="150px"
-            headerCell={() => <div >Add Access user</div>}
-            cell={(props) => <td style={{ textAlign: "center" }}> <Button size={"small"} className="px-4" themeColor={"primary"}>
-              + (0)
-            </Button></td>}
-
-
+            headerCell={() => <div>Add Access user</div>}
+            cell={(props) => (
+              <td style={{ textAlign: "center" }}>
+                {" "}
+                <Button size={"small"} className="px-4" themeColor={"primary"}>
+                  + (0)
+                </Button>
+              </td>
+            )}
           />
         </Grid>
       </ExcelExport>
@@ -298,8 +296,7 @@ export function ServiceManagementTable() {
           onHeaderSelectionChange={onHeaderSelectionChange}
           onSelectionChange={onSelectionChange}
           groupable={true}
-          size={"small"}
-        ></Grid>
+          size={"small"}></Grid>
       </GridPDFExport>
     </div>
   );

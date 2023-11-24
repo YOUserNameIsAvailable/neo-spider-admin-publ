@@ -1,4 +1,4 @@
-import { RoutePathType } from "@/routes";
+import { RouteValue } from "@/constants/routes";
 
 export interface IMenu {
   data: string;
@@ -6,7 +6,7 @@ export interface IMenu {
   menuCheck?: string;
   gubn?: string;
   text: string;
-  url?: RoutePathType;
+  url?: RouteValue;
   items?: IMenu[];
 }
 

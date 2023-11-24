@@ -3,28 +3,26 @@ import { AppBar, AppBarSection, AppBarSpacer } from "@progress/kendo-react-layou
 
 export function TopBar() {
   return (
-    <>
-      <AppBar>
-        <AppBarSpacer />
+    <AppBar>
+      <AppBarSpacer />
 
-        <AppBarSection className="actions"></AppBarSection>
+      <AppBarSection className="actions"></AppBarSection>
 
-        <AppBarSection>
-          <ul className="text-sm list-none flex m-0 p-0 items-center [&>li]:mx-2.5 my-0">
-            <li>
-              <span>Admin</span>
-            </li>
-            <li>
-              <span>Login OK.</span>
-            </li>
-            <li>
-              <Button size={"small"} themeColor={"primary"}>
-                Logout
-              </Button>
-            </li>
-          </ul>
-        </AppBarSection>
-      </AppBar>
-    </>
+      <AppBarSection>
+        <ul className="m-0 my-0 flex list-none items-center p-0 text-sm [&>li]:mx-2.5">
+          <li>
+            <span>Admin</span>
+          </li>
+          <li>
+            <span>Login OK.</span>
+          </li>
+          <li>
+            <Button size={"small"} themeColor={"primary"}>
+              Logout
+            </Button>
+          </li>
+        </ul>
+      </AppBarSection>
+    </AppBar>
   );
 }

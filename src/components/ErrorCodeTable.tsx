@@ -68,8 +68,8 @@ export function ErrorCodeTable() {
         ...item,
         ["selected"]: currentSelectedState[idGetter(item)],
       })),
-      initialDataState
-    )
+      initialDataState,
+    ),
   );
 
   const dataStateChange = (event: any) => {
@@ -98,7 +98,7 @@ export function ErrorCodeTable() {
         });
       }
     },
-    [dataResult]
+    [dataResult],
   );
 
   const setSelectedValue = (data: any) => {
@@ -139,7 +139,7 @@ export function ErrorCodeTable() {
       const newDataResult = processWithGroups(newData, dataState);
       setDataResult(newDataResult);
     },
-    [data, dataState]
+    [data, dataState],
   );
 
   const onSelectionChange = (event: any) => {
@@ -218,39 +218,23 @@ export function ErrorCodeTable() {
           onHeaderSelectionChange={onHeaderSelectionChange}
           onSelectionChange={onSelectionChange}
           groupable={false}
-          size={"small"}
-        >
-          <Column
-            field="budget"
-            width="130px"
-            title="Error Code"
-            columnMenu={ColumnMenu}
-          />
-          <Column
-            field="full_name"
-            width="300px"
-            title="Error Title"
-            columnMenu={ColumnMenu}
-          />
-          <Column
-            field="target"
-            width="300px"
-            title="Cause of error"
-            columnMenu={ColumnMenu}
-          />
-          <Column
-            field="budget"
-            width="140px"
-            title="Handler count"
-            columnMenu={ColumnMenu}
-          />
+          size={"small"}>
+          <Column field="budget" width="130px" title="Error Code" columnMenu={ColumnMenu} />
+          <Column field="full_name" width="300px" title="Error Title" columnMenu={ColumnMenu} />
+          <Column field="target" width="300px" title="Cause of error" columnMenu={ColumnMenu} />
+          <Column field="budget" width="140px" title="Handler count" columnMenu={ColumnMenu} />
           <Column
             field="budget"
             width="130px"
             title="Handler per error"
-            cell={(props) => <td style={{ textAlign: "center" }}> <Button size={"small"} className="px-4" themeColor={"primary"}>
-              Handler
-            </Button></td>}
+            cell={(props) => (
+              <td style={{ textAlign: "center" }}>
+                {" "}
+                <Button size={"small"} className="px-4" themeColor={"primary"}>
+                  Handler
+                </Button>
+              </td>
+            )}
           />
         </Grid>
       </ExcelExport>
@@ -274,8 +258,7 @@ export function ErrorCodeTable() {
           onHeaderSelectionChange={onHeaderSelectionChange}
           onSelectionChange={onSelectionChange}
           groupable={true}
-          size={"small"}
-        ></Grid>
+          size={"small"}></Grid>
       </GridPDFExport>
     </div>
   );

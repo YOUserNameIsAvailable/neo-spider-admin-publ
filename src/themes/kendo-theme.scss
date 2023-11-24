@@ -1,0 +1,16 @@
+// VARIABLES OVERRIDES
+// $primary: #53D2FA;
+// $kendo-panelbar-header-text: #1274AC;
+// $kendo-panelbar-header-selected-bg: #1274AC;
+// $kendo-panelbar-header-selected-text: white;
+// $kendo-color-light: #ebebeb !default;
+
+// BUILT-IN THEMES
+// @import "~@progress/kendo-theme-material/dist/all.scss";
+// @import "~@progress/kendo-font-icons/dist/index.css";
+// @import "~@progress/kendo-theme-default/dist/default-ocean-blue.scss";
+// @import "~@progress/kendo-theme-fluent/dist/all.scss";
+// @import "~@progress/kendo-theme-default/dist/default-ocean-blue-a11y.scss";
+
+// CUSTOM THEME
+@import "./kendo-theme//index.scss";

@@ -68,8 +68,8 @@ export function UserManagementTable() {
         ...item,
         ["selected"]: currentSelectedState[idGetter(item)],
       })),
-      initialDataState
-    )
+      initialDataState,
+    ),
   );
 
   const dataStateChange = (event: any) => {
@@ -98,7 +98,7 @@ export function UserManagementTable() {
         });
       }
     },
-    [dataResult]
+    [dataResult],
   );
 
   const setSelectedValue = (data: any) => {
@@ -139,7 +139,7 @@ export function UserManagementTable() {
       const newDataResult = processWithGroups(newData, dataState);
       setDataResult(newDataResult);
     },
-    [data, dataState]
+    [data, dataState],
   );
 
   const onSelectionChange = (event: any) => {
@@ -218,8 +218,7 @@ export function UserManagementTable() {
           onHeaderSelectionChange={onHeaderSelectionChange}
           onSelectionChange={onSelectionChange}
           groupable={false}
-          size={"small"}
-        >
+          size={"small"}>
           <Column field="budget" title="User ID" width="105px" columnMenu={ColumnMenu} />
           <Column field="full_name" title="User Name" width="105px" columnMenu={ColumnMenu} />
           <Column field="target" title="Rank" width="105px" columnMenu={ColumnMenu} />
@@ -228,20 +227,58 @@ export function UserManagementTable() {
           <Column field="budget" title="Belong" width="105px" columnMenu={ColumnMenu} />
           <Column field="budget" title="User status" width="105px" columnMenu={ColumnMenu} />
           <Column field="budget" title="Modified  date" width="140px" columnMenu={ColumnMenu} />
-          <Column field="Menu init" title="Menu init" width="105px" cell={(props) => <td style={{ textAlign: "center" }}> <Button size={"small"} className="px-4" themeColor={"primary"}>
-            Reset
-          </Button></td>} />
-          <Column field="Menu authority" title="Menu authorityt" width="105px"
-            cell={(props) => <td style={{ textAlign: "center" }}> <Button size={"small"} className="px-4" themeColor={"primary"}>
-              Menu
-            </Button></td>}
+          <Column
+            field="Menu init"
+            title="Menu init"
+            width="105px"
+            cell={(props) => (
+              <td style={{ textAlign: "center" }}>
+                {" "}
+                <Button size={"small"} className="px-4" themeColor={"primary"}>
+                  Reset
+                </Button>
+              </td>
+            )}
           />
-          <Column field="Status(Error count)" title="Status(Error count)" width="135px" cell={(props) => <td style={{ textAlign: "center" }}> <Button size={"small"} className="px-4" themeColor={"primary"}>
-            Unloack(0)
-          </Button></td>} />
-          <Column field="DO Login" title="DO Login" width="105px" cell={(props) => <td style={{ textAlign: "center" }}> <Button size={"small"} className="px-4" themeColor={"primary"}>
-            Login
-          </Button></td>} />
+          <Column
+            field="Menu authority"
+            title="Menu authorityt"
+            width="105px"
+            cell={(props) => (
+              <td style={{ textAlign: "center" }}>
+                {" "}
+                <Button size={"small"} className="px-4" themeColor={"primary"}>
+                  Menu
+                </Button>
+              </td>
+            )}
+          />
+          <Column
+            field="Status(Error count)"
+            title="Status(Error count)"
+            width="135px"
+            cell={(props) => (
+              <td style={{ textAlign: "center" }}>
+                {" "}
+                <Button size={"small"} className="px-4" themeColor={"primary"}>
+                  Unloack(0)
+                </Button>
+              </td>
+            )}
+          />
+          <Column
+            field="DO Login"
+            title="DO Login"
+            width="105px"
+            cell={(props) => (
+              <td style={{ textAlign: "center" }}>
+                {" "}
+                <Button size={"small"} className="px-4" themeColor={"primary"}>
+                  Login
+                </Button>
+              </td>
+            )}
+          />
         </Grid>
       </ExcelExport>
       <GridPDFExport margin="1cm">
@@ -264,8 +301,7 @@ export function UserManagementTable() {
           onHeaderSelectionChange={onHeaderSelectionChange}
           onSelectionChange={onSelectionChange}
           groupable={true}
-          size={"small"}
-        ></Grid>
+          size={"small"}></Grid>
       </GridPDFExport>
     </div>
   );

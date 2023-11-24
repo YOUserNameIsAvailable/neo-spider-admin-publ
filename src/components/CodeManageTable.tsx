@@ -67,8 +67,8 @@ export function CodeManageTable() {
         ...item,
         ["selected"]: currentSelectedState[idGetter(item)],
       })),
-      initialDataState
-    )
+      initialDataState,
+    ),
   );
 
   const dataStateChange = (event: any) => {
@@ -97,7 +97,7 @@ export function CodeManageTable() {
         });
       }
     },
-    [dataResult]
+    [dataResult],
   );
 
   const setSelectedValue = (data: any) => {
@@ -138,7 +138,7 @@ export function CodeManageTable() {
       const newDataResult = processWithGroups(newData, dataState);
       setDataResult(newDataResult);
     },
-    [data, dataState]
+    [data, dataState],
   );
 
   const onSelectionChange = (event: any) => {
@@ -217,55 +217,15 @@ export function CodeManageTable() {
           onHeaderSelectionChange={onHeaderSelectionChange}
           onSelectionChange={onSelectionChange}
           groupable={false}
-          size={"small"}
-        >
-          <Column
-            field="budget"
-            width="110px"
-            title="Serial no"
-            columnMenu={ColumnMenu}
-          />
-          <Column
-            field="full_name"
-            width="200px"
-            title="Log tracking number"
-            columnMenu={ColumnMenu}
-          />
-          <Column
-            field="target"
-            width="150px"
-            title="Customer ID"
-            columnMenu={ColumnMenu}
-          />
-          <Column
-            field="budget"
-            width="200px"
-            title="Channel ID"
-            columnMenu={ColumnMenu}
-          />
-          <Column
-            field="budget"
-            width="250px"
-            title="Outgoing Incomming"
-            columnMenu={ColumnMenu}
-          />
-          <Column
-            field="budget"
-            width="100px"
-          title="요청 응답"
-          />
-          <Column
-            field="budget"
-            width="150px"
-            title="Processing result"
-            columnMenu={ColumnMenu}
-          />
-          <Column
-            field="budget"
-            width="150px"
-            title="Result message"
-            columnMenu={ColumnMenu}
-          />
+          size={"small"}>
+          <Column field="budget" width="110px" title="Serial no" columnMenu={ColumnMenu} />
+          <Column field="full_name" width="200px" title="Log tracking number" columnMenu={ColumnMenu} />
+          <Column field="target" width="150px" title="Customer ID" columnMenu={ColumnMenu} />
+          <Column field="budget" width="200px" title="Channel ID" columnMenu={ColumnMenu} />
+          <Column field="budget" width="250px" title="Outgoing Incomming" columnMenu={ColumnMenu} />
+          <Column field="budget" width="100px" title="요청 응답" />
+          <Column field="budget" width="150px" title="Processing result" columnMenu={ColumnMenu} />
+          <Column field="budget" width="150px" title="Result message" columnMenu={ColumnMenu} />
         </Grid>
       </ExcelExport>
       <GridPDFExport margin="1cm">
@@ -288,8 +248,7 @@ export function CodeManageTable() {
           onHeaderSelectionChange={onHeaderSelectionChange}
           onSelectionChange={onSelectionChange}
           groupable={true}
-          size={"small"}
-        ></Grid>
+          size={"small"}></Grid>
       </GridPDFExport>
     </div>
   );

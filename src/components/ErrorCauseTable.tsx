@@ -75,8 +75,8 @@ export function ErrotCauseTable() {
         ["selected"]: currentSelectedState[idGetter(item)],
       })),
 
-      initialDataState
-    )
+      initialDataState,
+    ),
   );
 
   const dataStateChange = (event: any) => {
@@ -105,7 +105,7 @@ export function ErrotCauseTable() {
         });
       }
     },
-    [dataResult]
+    [dataResult],
   );
 
   const setSelectedValue = (data: any) => {
@@ -146,7 +146,7 @@ export function ErrotCauseTable() {
       const newDataResult = processWithGroups(newData, dataState);
       setDataResult(newDataResult);
     },
-    [data, dataState]
+    [data, dataState],
   );
 
   const onSelectionChange = (event: any) => {
@@ -225,50 +225,14 @@ export function ErrotCauseTable() {
           onHeaderSelectionChange={onHeaderSelectionChange}
           onSelectionChange={onSelectionChange}
           groupable={false}
-          size={"small"}
-        >
-          <Column
-            field="budget"
-            width="110px"
-            title="Error code"
-            columnMenu={ColumnMenu}
-          />
-          <Column
-            field="full_name"
-            width="160px"
-            title="Error occur serial no"
-            columnMenu={ColumnMenu}
-          />
-          <Column
-            field="target"
-            width="130px"
-            title="Customer ID"
-            columnMenu={ColumnMenu}
-          />
-          <Column
-            field="budget"
-            width="140px"
-            title="Customer tel"
-            columnMenu={ColumnMenu}
-          />
-          <Column
-            field="budget"
-            width="200px"
-            title="Customer print message"
-            columnMenu={ColumnMenu}
-          />
-          <Column
-            field="budget"
-            width="120px"
-            title="Menu name"
-            columnMenu={ColumnMenu}
-          />
-          <Column
-            field="budget"
-            width="180"
-            title="Error instance ID"
-            columnMenu={ColumnMenu}
-          />
+          size={"small"}>
+          <Column field="budget" width="110px" title="Error code" columnMenu={ColumnMenu} />
+          <Column field="full_name" width="160px" title="Error occur serial no" columnMenu={ColumnMenu} />
+          <Column field="target" width="130px" title="Customer ID" columnMenu={ColumnMenu} />
+          <Column field="budget" width="140px" title="Customer tel" columnMenu={ColumnMenu} />
+          <Column field="budget" width="200px" title="Customer print message" columnMenu={ColumnMenu} />
+          <Column field="budget" width="120px" title="Menu name" columnMenu={ColumnMenu} />
+          <Column field="budget" width="180" title="Error instance ID" columnMenu={ColumnMenu} />
         </Grid>
       </ExcelExport>
       <GridPDFExport margin="1cm">
@@ -291,8 +255,7 @@ export function ErrotCauseTable() {
           onHeaderSelectionChange={onHeaderSelectionChange}
           onSelectionChange={onSelectionChange}
           groupable={true}
-          size={"small"}
-        ></Grid>
+          size={"small"}></Grid>
       </GridPDFExport>
     </div>
   );

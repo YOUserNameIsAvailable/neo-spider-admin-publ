@@ -1,12 +1,12 @@
 {
-  "name": "spider-admin",
+  "name": "neo-spider-admin",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "craco start",
-    "build": "craco build",
-    "test": "craco test",
-    "eject": "craco eject"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
     "@progress/kendo-data-query": "^1.7.0",
@@ -38,8 +38,8 @@
     "@progress/kendo-react-map": "^6.1.1",
     "@progress/kendo-react-notification": "^6.1.1",
     "@progress/kendo-react-orgchart": "^6.1.1",
-    "@progress/kendo-react-pdf": "^6.1.1",
     "@progress/kendo-react-pdf-viewer": "^6.1.1",
+    "@progress/kendo-react-pdf": "^6.1.1",
     "@progress/kendo-react-pivotgrid": "^6.1.1",
     "@progress/kendo-react-popup": "^6.1.1",
     "@progress/kendo-react-progressbars": "^6.1.1",
@@ -58,43 +58,23 @@
     "@progress/kendo-theme-default": "^7.0.2",
     "@progress/kendo-theme-fluent": "^7.0.2",
     "@progress/kendo-theme-material": "^7.0.2",
-    "@testing-library/jest-dom": "^6.1.4",
-    "@testing-library/react": "^14.1.2",
-    "@testing-library/user-event": "^14.5.1",
-    "@types/jest": "^29.5.8",
-    "@types/node": "^20.9.2",
-    "@types/react": "^18.2.37",
-    "@types/react-dom": "^18.2.15",
-    "localforage": "^1.10.0",
-    "match-sorter": "^6.3.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "6.20.0",
-    "sort-by": "^1.2.0",
-    "typescript": "^4.9.5",
-    "web-vitals": "^3.5.0"
+    "next": "14.0.3",
+    "react-dom": "^18",
+    "react": "^18"
   },
   "devDependencies": {
-    "@craco/craco": "^7.1.0",
+    "@types/node": "^20",
+    "@types/react-dom": "^18",
+    "@types/react": "^18",
+    "autoprefixer": "^10.0.1",
+    "eslint-config-next": "14.0.3",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint": "^8",
+    "postcss": "^8",
+    "prettier-plugin-tailwindcss": "0.5.7",
+    "prettier": "3.1.0",
     "sass": "^1.69.5",
-    "tailwindcss": "^3.3.5"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "tailwindcss": "^3.3.0",
+    "typescript": "^5"
   }
 }
