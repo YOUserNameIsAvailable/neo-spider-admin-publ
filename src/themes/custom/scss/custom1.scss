@@ -1,0 +1,40 @@
+/* window */
+.k-window-title {
+    font-size: 14px;
+    color: #262d92;
+    font-weight: bold;
+    text-align: center;
+  }
+  .k-window-titlebar {
+    background-color: #97a9df;
+    border-radius: 5px 5px 0 0;
+  }
+  .k-window-title {
+    display: flex;
+  justify-content: center;
+  }
+  .k-window-actions {
+    .span{
+      background: red;
+    }
+  }
+
+  .k-window-content {
+    border: solid 5px #97a9df;
+    border-top: 0px;
+    border-radius: 0 0 5px 5px;
+  }
+
+  .k-window {
+    border-radius: 5px;
+    width: 710px;
+  }
+
+  .k-cell-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #adc6f4;
+    font-weight: bold;
+    font-size: 14px;
+  }
