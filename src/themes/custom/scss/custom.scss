@@ -30,18 +30,18 @@
   width: 710px;
 }
 
-.mla .find {
+.mla .basic-btn {
   font-size: 11px;
   margin-left: 2px;
   margin-right: 2px;
   line-height: 15px;
 }
 
-.find img {
+.basic-btn img {
   width: 10px;
 }
 
-.find {
+.basic-btn {
   background-color: #8c9cbf;
   background-image: -webkit-gradient(
     linear,
@@ -134,4 +134,31 @@
 .search-btn {
   border-width: 0px;
   padding: 0px !important;
+}
+
+.bg-cell {
+  background: #d1daec;
+}
+
+span.required {
+  color: #ff575e;
+  margin: 0 5px;
+  display: flex;
+  align-items: center;
+}
+
+// Input and Textarea
+input.k-input,
+textarea.k-textarea {
+  &:disabled,
+  &[disabled] {
+    @include disabled($kendo-disabled-styling);
+
+    [disabled] &,
+    .k-disabled & {
+      opacity: 1;
+      filter: grayscale(0);
+      background: #dcdcdc;
+    }
+  }
 }

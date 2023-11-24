@@ -31,7 +31,9 @@ const processWithGroups = (data: any, dataState: any) => {
   return newDataState;
 };
 
-export const ClientWebTable: React.FC<ClientWebProps> = ({ onRowClick }) => {
+export const ClientWebDetailTable: React.FC<ClientWebProps> = ({
+  onRowClick,
+}) => {
   const idGetter = getter("id");
   const [filterValue, setFilterValue] = React.useState();
   const [filteredData, setFilteredData] = React.useState(EMPLOYEES);
@@ -207,7 +209,7 @@ export const ClientWebTable: React.FC<ClientWebProps> = ({ onRowClick }) => {
       <ExcelExport>
         <Grid
           style={{
-            height: "500px",
+            height: "212px",
             cursor: "pointer",
           }}
           pageable={{
@@ -227,62 +229,22 @@ export const ClientWebTable: React.FC<ClientWebProps> = ({ onRowClick }) => {
           onRowClick={onRowClick}
           groupable={false}
           size={"small"}
+          resizable={true}
         >
           <Column
             field="budget"
-            width="140px"
-            title="Menu URL"
+            title="CRUD"
+            width="80px"
             columnMenu={ColumnMenu}
           />
-          <Column
-            field="full_name"
-            width="130px"
-            title="Menu name"
-            columnMenu={ColumnMenu}
-          />
-          <Column
-            field="target"
-            width="130px"
-            title="화면번호"
-            columnMenu={ColumnMenu}
-          />
-          <Column
-            field="budget"
-            width="120px"
-            title="Site Type"
-            columnMenu={ColumnMenu}
-          />
-          <Column
-            columnMenu={ColumnMenu}
-            field="budget"
-            width="350px"
-            title="Whether electronic signature is required"
-          />
-          <Column
-            field="budget"
-            width="250px"
-            title="Check status of other banks"
-            columnMenu={ColumnMenu}
-          />
-          <Column
-            field="budget"
-            width="150px"
-            title="Input Type"
-            columnMenu={ColumnMenu}
-          />
-          <Column
-            field="budget"
-            width="280px"
-            title="e-channel log classification code"
-            columnMenu={ColumnMenu}
-          />
-
-          <Column
-            field="budget"
-            width="150px"
-            title="Service state"
-            columnMenu={ColumnMenu}
-          />
+          <Column field="full_name" title="분기코드" columnMenu={ColumnMenu} />
+          <Column field="target" title="분기코드설명" columnMenu={ColumnMenu} />
+          <Column field="budget" title="Forward유형" columnMenu={ColumnMenu} />
+          <Column field="budget" title="Layout Page" columnMenu={ColumnMenu} />
+          <Column field="budget" title="Content Page" columnMenu={ColumnMenu} />
+          <Column field="budget" title="Top Page" columnMenu={ColumnMenu} />
+          <Column field="budget" title="Left Page" columnMenu={ColumnMenu} />
+          <Column field="budget" title="특이사항" columnMenu={ColumnMenu} />
         </Grid>
       </ExcelExport>
       <GridPDFExport margin="1cm">
