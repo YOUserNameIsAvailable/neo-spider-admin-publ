@@ -4,7 +4,7 @@ import { DropDownList } from "@progress/kendo-react-dropdowns";
 import { searchIcon, arrowRightIcon } from "@progress/kendo-svg-icons";
 import { useState } from "react";
 import { SPORTS, PAGES } from "@/constants";
-import { CodeManageTable } from "@/components/CodemanageTable";
+import { CodeManageTable } from "@/components/CodeManageTable";
 
 function CodeManage() {
   const [isExpanded, setIsExpanded] = useState(false);
