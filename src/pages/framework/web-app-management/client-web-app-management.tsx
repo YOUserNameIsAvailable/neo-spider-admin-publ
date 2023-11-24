@@ -36,13 +36,13 @@ function ClientWebApp() {
             </div>
           </div>
 
-          <div className="flex items-center gap-8">
+          <div className="flex items-center gap-8 mla">
             <div className="flex items-center gap-2">
               <DropDownList className="w-16 h-7" size={"small"} data={PAGES} defaultValue="20" filterable={false} />
               <span className="text-sm">Items</span>
             </div>
 
-            <Button svgIcon={searchIcon}>Find</Button>
+            <Button imageUrl="/images/refresh.png" className="find">Find</Button>
           </div>
         </div>
         <div className="bg-neutral-50 flex justify-between p-4 gap-4 border-t-2  border-grey-500">
