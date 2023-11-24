@@ -207,7 +207,6 @@ function ServiceManagement() {
           minimizeButton={() => null}
           maximizeButton={() => null}
           restoreButton={() => null}
-          appendTo={null}
           doubleClickStageChange={false}
           title={'오류코드별 핸들러 등록'}
           style={{minWidth:'300px',minHeight:'300px',width:"710px",height:'400px'}}
