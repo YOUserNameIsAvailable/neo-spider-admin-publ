@@ -202,6 +202,11 @@ export const ClientWebTable: React.FC<ClientWebProps> = ({ onRowClick }) => {
     return count;
   };
 
+  const checkHeaderSelectionValue = () => {
+    let selectedItems = getNumberOfSelectedItems(newData);
+    return newData.length > 0 && selectedItems === getNumberOfItems(newData);
+  };
+
   return (
     <div>
       <ExcelExport>
@@ -226,62 +231,140 @@ export const ClientWebTable: React.FC<ClientWebProps> = ({ onRowClick }) => {
           onSelectionChange={onSelectionChange}
           onRowClick={onRowClick}
           groupable={false}
-          size={"small"}
         >
+          <Column
+            filterable={false}
+            field={SELECTED_FIELD}
+            width={50}
+            headerSelectionValue={checkHeaderSelectionValue()}
+            headerClassName="bg-[#adc6f4]"
+          />
           <Column
             field="budget"
             width="140px"
+            headerClassName="justify-center bg-[#adc6f4]"
             title="Menu URL"
             columnMenu={ColumnMenu}
           />
           <Column
             field="full_name"
             width="130px"
+            headerClassName="justify-center bg-[#adc6f4]"
             title="Menu name"
             columnMenu={ColumnMenu}
           />
           <Column
             field="target"
             width="130px"
+            headerClassName="justify-center bg-[#adc6f4]"
             title="화면번호"
             columnMenu={ColumnMenu}
+            cells={{
+              data: ({ dataItem, ...props }) => {
+                return (
+                  <td {...props.tdProps} style={{ textAlign: "center" }}>
+                    {dataItem.target}
+                  </td>
+                );
+              },
+            }}
           />
           <Column
             field="budget"
             width="120px"
+            headerClassName="justify-center bg-[#adc6f4]"
             title="Site Type"
             columnMenu={ColumnMenu}
+            cells={{
+              data: ({ dataItem, ...props }) => {
+                return (
+                  <td {...props.tdProps} style={{ textAlign: "center" }}>
+                    {dataItem.budget}
+                  </td>
+                );
+              },
+            }}
           />
           <Column
             columnMenu={ColumnMenu}
             field="budget"
             width="350px"
+            headerClassName="justify-center bg-[#adc6f4]"
             title="Whether electronic signature is required"
+            cells={{
+              data: ({ dataItem, ...props }) => {
+                return (
+                  <td {...props.tdProps} style={{ textAlign: "center" }}>
+                    {dataItem.budget}
+                  </td>
+                );
+              },
+            }}
           />
           <Column
             field="budget"
             width="250px"
+            headerClassName="justify-center bg-[#adc6f4]"
             title="Check status of other banks"
             columnMenu={ColumnMenu}
+            cells={{
+              data: ({ dataItem, ...props }) => {
+                return (
+                  <td {...props.tdProps} style={{ textAlign: "center" }}>
+                    {dataItem.budget}
+                  </td>
+                );
+              },
+            }}
           />
           <Column
             field="budget"
             width="150px"
+            headerClassName="justify-center bg-[#adc6f4]"
             title="Input Type"
             columnMenu={ColumnMenu}
+            cells={{
+              data: ({ dataItem, ...props }) => {
+                return (
+                  <td {...props.tdProps} style={{ textAlign: "center" }}>
+                    {dataItem.budget}
+                  </td>
+                );
+              },
+            }}
           />
           <Column
             field="budget"
             width="280px"
+            headerClassName="justify-center bg-[#adc6f4]"
             title="e-channel log classification code"
             columnMenu={ColumnMenu}
+            cells={{
+              data: ({ dataItem, ...props }) => {
+                return (
+                  <td {...props.tdProps} style={{ textAlign: "center" }}>
+                    {dataItem.budget}
+                  </td>
+                );
+              },
+            }}
           />
 
           <Column
             field="budget"
             width="150px"
+            headerClassName="justify-center bg-[#adc6f4]"
             title="Service state"
             columnMenu={ColumnMenu}
+            cells={{
+              data: ({ dataItem, ...props }) => {
+                return (
+                  <td {...props.tdProps} style={{ textAlign: "center" }}>
+                    {dataItem.budget}
+                  </td>
+                );
+              },
+            }}
           />
         </Grid>
       </ExcelExport>

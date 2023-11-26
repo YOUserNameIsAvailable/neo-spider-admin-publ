@@ -20,87 +20,103 @@ export const ClientWebAppMain: React.FC<ClientWebProps> = ({ onRowClick }) => {
       <div>
         <div className="flex items-center gap-2 py-4">
           <img src={"/images/dot_subtitle.gif"} alt="" style={{}} />
-          <span>Condition</span>
+          <span className="text-[#656565] font-bold">Condition</span>
           <button
-            className="bg-neutral-50 p-2"
+            className="bg-[#f6f6f6f6] px-[4px] py-[2px] border border-[#999999]"
             onClick={() => toggleExpansion()}
           >
             Enlargement/Reduction
           </button>
         </div>
-        <div className="bg-neutral-50 flex justify-between p-4 gap-4">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <span className="text-sm">Menu url</span>
-              <Input className="w-40 h-7" />
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-sm">Menu name</span>
-              <Input className="w-40 h-7" />
-            </div>
-          </div>
-
-          <div className="flex items-center gap-8 mla">
-            <div className="flex items-center gap-2">
-              <DropDownList
-                className="w-16 h-7"
-                size={"small"}
-                data={PAGES}
-                defaultValue="20"
-                filterable={false}
-              />
-              <span className="text-sm">Items</span>
+        <div className="bg-[#dde6f0] px-[10px]">
+          <div className="bg-[#dde6f0] flex justify-between p-[5px] gap-4">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-[#6f7071] font-bold">
+                  Menu url
+                </span>
+                <Input className="w-48 border border-[#999999]" />
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-[#6f7071] font-bold">
+                  Menu name
+                </span>
+                <Input className="w-48 border border-[#999999]" />
+              </div>
             </div>
 
-            <Button imageUrl="/images/refresh.png" className="find">
-              Find
-            </Button>
-          </div>
-        </div>
-        <div className="bg-neutral-50 flex justify-between p-4 gap-4 border-t-2  border-grey-500">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <span className="text-sm">Custom Action class</span>
-              <Input className="w-40 h-7" />
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-sm">View number</span>
-              <Input className="w-40 h-7" />
-            </div>
-          </div>
-        </div>
-        <div className="bg-neutral-50 flex justify-between p-4 gap-4 border-t-2  border-grey-500">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <span className="text-sm">Site type</span>
-              <DropDownList
-                className="w-40 h-7"
-                size={"small"}
-                data={SPORTS}
-                defaultValue="Option 1"
-                filterable={false}
-              />
-            </div>
+            <div className="flex items-center gap-8 mla">
+              <div className="flex items-center gap-2">
+                <DropDownList
+                  className="h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
+                  size={"small"}
+                  data={PAGES}
+                  defaultValue="20"
+                  filterable={false}
+                />
+                <span className="text-sm font-bold">Items</span>
+              </div>
 
-            <div className="flex items-center gap-2">
-              <span className="text-sm">Check status of other banks</span>
-              <DropDownList
-                className="w-40 h-7"
-                size={"small"}
-                data={SPORTS}
-                defaultValue="Option 1"
-                filterable={false}
-              />
+              <Button imageUrl="/images/refresh.png" className="basic-btn">
+                Find
+              </Button>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="text-sm">Service state</span>
-              <DropDownList
-                className="w-40 h-7"
-                size={"small"}
-                data={SPORTS}
-                defaultValue="Option 1"
-                filterable={false}
-              />
+          </div>
+          <div className="bg-[#dde6f0] flex justify-between p-[5px] gap-4 border-t border-[#ccc]">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-[#6f7071] font-bold">
+                  Custom Action class
+                </span>
+                <Input className="w-48 border border-[#999999]" />
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-[#6f7071] font-bold">
+                  View number
+                </span>
+                <Input className="w-48 border border-[#999999]" />
+              </div>
+            </div>
+          </div>
+          <div className="bg-[#dde6f0] flex justify-between p-[5px] gap-4 border-t border-[#ccc]">
+            <div className="w-full flex items-center gap-4">
+              <div className="min-w-[195px] flex items-center gap-1">
+                <span className="text-sm text-[#6f7071] font-bold whitespace-nowrap">
+                  Site type
+                </span>
+                <DropDownList
+                  className="h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
+                  size={"small"}
+                  data={SPORTS}
+                  defaultValue="Option 1"
+                  filterable={false}
+                />
+              </div>
+
+              <div className="min-w-[195px] flex items-center gap-1">
+                <span className="text-sm text-[#6f7071] font-bold">
+                  Check status of other banks
+                </span>
+                <DropDownList
+                  className="p-0 h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
+                  size={"small"}
+                  data={SPORTS}
+                  defaultValue="Option 1"
+                  filterable={false}
+                />
+              </div>
+              <div className="min-w-[195px] flex items-center gap-1">
+                <span className="text-sm text-[#6f7071] font-bold whitespace-nowrap">
+                  Service state
+                </span>
+                <DropDownList
+                  className="p-0 h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
+                  size={"small"}
+                  data={SPORTS}
+                  defaultValue="Option 1"
+                  filterable={false}
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -184,9 +200,9 @@ export const ClientWebAppMain: React.FC<ClientWebProps> = ({ onRowClick }) => {
       <div className="flex w-[100%]">
         <div className="flex items-center gap-2 py-4 w-[50%]">
           <img src={"/images/dot_subtitle.gif"} alt="" style={{}} />
-          <span>List</span>
+          <span className="text-[#656565] font-bold">List</span>
         </div>
-        <div className="flex gap-4 w-[90%] justify-end">
+        <div className="flex gap-1 w-[90%] justify-end">
           <Button
             imageUrl="/images/dot-right-arrow.png"
             className="flex items-center justify-start w-30  h-7 mt-2 basic-btn"
@@ -201,7 +217,7 @@ export const ClientWebAppMain: React.FC<ClientWebProps> = ({ onRowClick }) => {
           </Button>
           <Button
             imageUrl="/images/dot-right-arrow.png"
-            className="flex items-center justify-start w-32 h-7 mt-2 basic-btn"
+            className="flex items-center justify-start h-7 mt-2 basic-btn"
           >
             Group manage
           </Button>

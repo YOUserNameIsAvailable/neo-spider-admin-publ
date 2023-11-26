@@ -1,8 +1,12 @@
-import { GridColumnMenuSort, GridColumnMenuFilter, GridColumnMenuGroup } from "@progress/kendo-react-grid";
+import {
+  GridColumnMenuSort,
+  GridColumnMenuFilter,
+  GridColumnMenuGroup,
+} from "@progress/kendo-react-grid";
 
 export const ColumnMenu = ({ dataItem, ...props }: any) => {
   return (
-    <div >
+    <div>
       <GridColumnMenuSort {...props} />
       <GridColumnMenuFilter {...props} />
       <GridColumnMenuGroup {...props} />
