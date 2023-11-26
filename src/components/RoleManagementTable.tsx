@@ -26,7 +26,7 @@ const processWithGroups = (data: any, dataState: any) => {
     return newDataState;
 };
 
-export function MenuManagementTable() {
+export function RoleManagementTable() {
     const idGetter = getter("id");
     const [filterValue, setFilterValue] = React.useState();
     const [filteredData, setFilteredData] = React.useState(EMPLOYEES);
@@ -221,29 +221,62 @@ export function MenuManagementTable() {
                     size={"small"}
                 >
                     <Column
+                        filterable={false}
+                        field={SELECTED_FIELD}
+                        // headerSelectionValue={checkHeaderSelectionValue()}
+                        headerClassName="bg-[#adc6f4] overflow-none"
+                        className="overflow-none"
+                        width={30}
+                    />
+                    <Column
                         field="budget"
-                        title="Menu ID"
+                        title="CRUD"
+                        columnMenu={ColumnMenu}
+                        headerClassName="justify-center"
+                        width={50}
+                    />
+                    <Column
+                        field="budget"
+                        title="Role ID"
                         columnMenu={ColumnMenu}
                         headerClassName="justify-center col-width20per"
                         className="col-width20per"
                     />
                     <Column
                         field="full_name"
-                        title="Menu Name"
+                        title="Role Name"
                         columnMenu={ColumnMenu}
-                        headerClassName="justify-center col-width30per"
-                        className="col-width30per"
+                        headerClassName="justify-center col-width20per"
+                        className="col-width20per"
                     />
                     <Column
                         field="target"
-                        title="메뉴 URL"
+                        title="use"
                         columnMenu={ColumnMenu}
-                        headerClassName="justify-center col-width40per"
-                        className="col-width40per"
+                        headerClassName="justify-center col-width15per"
+                        className="col-width15per"
                     />
                     <Column
                         field="budget"
-                        title="Display"
+                        title="Role desc"
+                        cells={{
+                            data: ({dataItem, ...props}) => {
+                                return (
+                                    <td {...props.tdProps}>
+                                      <span className="w-full flex justify-center">
+                                        <img src="/images/radio-on-button-green.png"
+                                             className="h-5 w-5"/>
+                                      </span>
+                                    </td>
+                                );
+                            },
+                        }}
+                        headerClassName="justify-center col-width45per"
+                        className="col-width45per"
+                    />
+                    <Column
+                        field="budget"
+                        title="Ranking"
                         cells={{
                             data: ({dataItem, ...props}) => {
                                 return (
@@ -261,25 +294,7 @@ export function MenuManagementTable() {
                     />
                     <Column
                         field="budget"
-                        title="Use"
-                        cells={{
-                            data: ({dataItem, ...props}) => {
-                                return (
-                                    <td {...props.tdProps}>
-                                      <span className="w-full flex justify-center">
-                                        <img src="/images/radio-on-button-green.png"
-                                             className="h-5 w-5"/>
-                                      </span>
-                                    </td>
-                                );
-                            },
-                        }}
-                        headerClassName="justify-center col-width10per"
-                        className="col-width10per"
-                    />
-                    <Column
-                        field="budget"
-                        title="Sub Menu"
+                        title="Menu role"
                         cell={(props) =>
                             <td style={{textAlign: "center"}}>
                                 <Button size={"small"} className="px-4" themeColor={"primary"}>
@@ -288,7 +303,7 @@ export function MenuManagementTable() {
                             </td>
                         }
                         headerClassName="justify-center"
-                        width={100}
+                        width={83}
                     />
                 </Grid>
             </ExcelExport>

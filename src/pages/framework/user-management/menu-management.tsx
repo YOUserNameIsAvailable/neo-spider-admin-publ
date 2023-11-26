@@ -2,19 +2,19 @@ import {DropDownList} from "@progress/kendo-react-dropdowns";
 import {PAGES, SPORTS} from "@/constants";
 import {Input} from "@progress/kendo-react-inputs";
 import {Button} from "@progress/kendo-react-buttons";
-import {arrowRightIcon, searchIcon} from "@progress/kendo-svg-icons";
-import { MenuManagementTable } from "@/components/MenuManagementTable";
+import {arrowRightIcon} from "@progress/kendo-svg-icons";
+import {MenuManagementTable} from "@/components/MenuManagementTable";
+import React from "react";
 
-
-export function Page() {
+function MenuManagement() {
     return (
         <>
             <>
                 <div className="flex items-center gap-2 py-4">
-                    <img src={"/images/dot_subtitle.gif"} alt="" style={{}}/>
+                    <img src={"/images/dot_subtitle.gif"} alt=""/>
                     <span>Condition</span>
                 </div>
-                <div className="searchbox flex justify-between max-h-[40px] min-h-[40px]">
+                <div className="searchbox flex justify-between min-h-[40px] gap-2">
                     <div className="flex items-center gap-4">
                         <div className="minw input-group" style={{minWidth: '120px', marginLeft: '2px'}}>
                             <DropDownList
@@ -53,13 +53,13 @@ export function Page() {
                     </div>
                 </div>
             </>
-            <>
+            <div>
                 <div className="flex items-center gap-2 pb-4">
                     <img src={"/images/dot_subtitle.gif"} alt="" style={{}}/>
                     <span>List</span>
                 </div>
                 <MenuManagementTable/>
-            </>
+            </div>
 
             <div className="flex justify-end">
                 <Button svgIcon={arrowRightIcon} className="flex items-center justify-end  mt-2">
@@ -68,4 +68,9 @@ export function Page() {
             </div>
         </>
     );
+}
+
+
+export function Page() {
+    return <MenuManagement/>;
 }
