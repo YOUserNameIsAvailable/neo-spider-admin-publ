@@ -10,7 +10,7 @@ import { SPORTS, PAGES } from "@/constants";
 import { CodeManagementTable } from "@/components/CodeManagementTable";
 
 export default function Page() {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
 
   const toggleExpansion = () => {
     setIsExpanded(!isExpanded);
@@ -22,50 +22,70 @@ export default function Page() {
       <div>
         <div className="flex items-center gap-2 py-4">
           <img src={"/images/dot_subtitle.gif"} alt="" style={{}} />
-          <span>Condition</span>
-          <button className="bg-neutral-50 p-2" onClick={() => toggleExpansion()}>
+          <span className="font-bold text-[#656565]">Condition</span>
+          <button
+            className="border border-[#999999] bg-[#f6f6f6f6] px-[4px] py-[2px]"
+            onClick={() => toggleExpansion()}>
             Expand / Colapse
           </button>
         </div>
-        <div className="flex justify-between gap-4 bg-neutral-50 p-4">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <span className="text-sm">Code group per biz group</span>
-              <DropDownList
-                className="h-7 w-40"
-                size={"small"}
-                data={SPORTS}
-                defaultValue="Option 1"
-                filterable={false}
-              />
+        <div className="bg-[#dde6f0] px-[10px]">
+          <div className="flex justify-between bg-[#dde6f0] p-[5px]">
+            <div className="flex items-center gap-4 min-w-[410px]">
+              <div className="flex items-center gap-2 w-full">
+                <span className="text-sm font-bold text-[#6f7071] w-full">Code group per biz group</span>
+                <DropDownList
+                  className="h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
+                  size={"small"}
+                  data={SPORTS}
+                  defaultValue="Option 1"
+                  filterable={false}
+                />
+                <DropDownList
+                  className="h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
+                  size={"small"}
+                  data={SPORTS}
+                  defaultValue="Option 1"
+                  filterable={true}
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center gap-8">
+              <div className="flex items-center gap-2">
+                <DropDownList
+                  className="h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
+                  size={"small"}
+                  data={PAGES}
+                  defaultValue="20"
+                  filterable={false}
+                />
+                <span className="text-sm font-bold">Items</span>
+              </div>
+              <Button svgIcon={searchIcon} className="basic-btn">
+                Find
+              </Button>
             </div>
           </div>
-          <DropDownList className="h-7 w-48" size={"small"} data={SPORTS} defaultValue="Option 1" filterable={true} />
-          <div className="flex items-center gap-8">
-            <div className="flex items-center gap-2">
-              <DropDownList className="h-7 w-16" size={"small"} data={PAGES} defaultValue="20" filterable={false} />
-              <span className="text-sm">Items</span>
+          {isExpanded ? (
+            <div className="flex justify-between bg-[#dde6f0] p-[5px]">
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <DropDownList
+                    className="h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
+                    size={"small"}
+                    data={SPORTS}
+                    defaultValue="Option 1"
+                    filterable={false}
+                  />
+                </div>
+                <Input className="w-48 border border-[#999999]" />
+              </div>
             </div>
-            <Button svgIcon={searchIcon}>Find</Button>
-          </div>
+          ) : null}
         </div>
       </div>
-      {isExpanded ? (
-        <div className="border-grey-500 flex justify-between gap-4 border-t-2 bg-neutral-50  p-4">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <DropDownList
-                className="h-7 w-40"
-                size={"small"}
-                data={SPORTS}
-                defaultValue="Option 1"
-                filterable={false}
-              />
-            </div>
-            <Input className="h-7 w-40" />
-          </div>
-        </div>
-      ) : null}
+
       {/* table */}
       <div className="flex items-center gap-2 py-4">
         <img src={"/images/dot_subtitle.gif"} alt="" style={{}} />

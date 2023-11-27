@@ -11,3 +11,9 @@ export interface IMenu {
 }
 
 export interface ITab extends Pick<IMenu, "text" | "url"> {}
+
+export interface ClientWebProps {
+  onRowClick?: (event: any) => void;
+  setIsDetail?: React.Dispatch<React.SetStateAction<boolean>>;
+  // other props...
+}
