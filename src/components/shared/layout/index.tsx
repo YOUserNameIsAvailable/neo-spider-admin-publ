@@ -124,9 +124,9 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
           <div className="title-bar">
             <div className="title">{selectedTab?.text}</div>
             <div className="actions">
-              <Button svgIcon={exportIcon}>Export</Button>
-              <Button svgIcon={printIcon}>Print</Button>
-              <Button svgIcon={searchIcon} />
+              <Button imageUrl="/images/btn_excel_off.gif" className="excel-btn" />
+              <Button imageUrl="/images/btn_print_off.gif" className="ml-px-10 print-btn" />
+              <Button imageUrl="/images/refresh.png" className="search-btn ml-[5px]" />
             </div>
           </div>
 
