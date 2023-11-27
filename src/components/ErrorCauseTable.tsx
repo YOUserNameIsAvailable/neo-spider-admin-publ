@@ -75,8 +75,8 @@ export function ErrotCauseTable() {
         ["selected"]: currentSelectedState[idGetter(item)],
       })),
 
-      initialDataState
-    )
+      initialDataState,
+    ),
   );
 
   const dataStateChange = (event: any) => {
@@ -105,7 +105,7 @@ export function ErrotCauseTable() {
         });
       }
     },
-    [dataResult]
+    [dataResult],
   );
 
   const setSelectedValue = (data: any) => {
@@ -146,7 +146,7 @@ export function ErrotCauseTable() {
       const newDataResult = processWithGroups(newData, dataState);
       setDataResult(newDataResult);
     },
-    [data, dataState]
+    [data, dataState],
   );
 
   const onSelectionChange = (event: any) => {
@@ -224,87 +224,37 @@ export function ErrotCauseTable() {
           selectedField={SELECTED_FIELD}
           onHeaderSelectionChange={onHeaderSelectionChange}
           onSelectionChange={onSelectionChange}
-          groupable={false}
-        >
+          groupable={false}>
           <Column
             field="budget"
             width="110px"
             title="Error code"
             headerClassName="justify-center bg-[#adc6f4]"
             columnMenu={ColumnMenu}
-            cells={{
-              data: ({ dataItem, ...props }) => {
-                return (
-                  <td {...props.tdProps} style={{ textAlign: "center" }}>
-                    {dataItem.budget}
-                  </td>
-                );
-              },
-            }}
           />
           <Column
             field="full_name"
-            width="160px"
             title="Error occur serial no"
             headerClassName="justify-center bg-[#adc6f4]"
             columnMenu={ColumnMenu}
-            cells={{
-              data: ({ dataItem, ...props }) => {
-                return (
-                  <td {...props.tdProps} style={{ textAlign: "center" }}>
-                    {dataItem.full_name}
-                  </td>
-                );
-              },
-            }}
           />
           <Column
             field="target"
-            width="130px"
             title="Customer ID"
             headerClassName="justify-center bg-[#adc6f4]"
             columnMenu={ColumnMenu}
-            cells={{
-              data: ({ dataItem, ...props }) => {
-                return (
-                  <td {...props.tdProps} style={{ textAlign: "center" }}>
-                    {dataItem.target}
-                  </td>
-                );
-              },
-            }}
           />
           <Column
             field="budget"
-            width="140px"
             title="Customer tel"
             headerClassName="justify-center bg-[#adc6f4]"
             columnMenu={ColumnMenu}
-            cells={{
-              data: ({ dataItem, ...props }) => {
-                return (
-                  <td {...props.tdProps} style={{ textAlign: "center" }}>
-                    {dataItem.budget}
-                  </td>
-                );
-              },
-            }}
           />
           <Column
             field="budget"
-            width="200px"
             title="Customer print message"
             headerClassName="justify-center bg-[#adc6f4]"
             columnMenu={ColumnMenu}
-            cells={{
-              data: ({ dataItem, ...props }) => {
-                return (
-                  <td {...props.tdProps} style={{ textAlign: "center" }}>
-                    {dataItem.budget}
-                  </td>
-                );
-              },
-            }}
           />
           <Column
             field="budget"
@@ -312,15 +262,6 @@ export function ErrotCauseTable() {
             title="Menu name"
             headerClassName="justify-center bg-[#adc6f4]"
             columnMenu={ColumnMenu}
-            cells={{
-              data: ({ dataItem, ...props }) => {
-                return (
-                  <td {...props.tdProps} style={{ textAlign: "center" }}>
-                    {dataItem.budget}
-                  </td>
-                );
-              },
-            }}
           />
           <Column
             field="budget"
@@ -328,15 +269,6 @@ export function ErrotCauseTable() {
             title="Error instance ID"
             headerClassName="justify-center bg-[#adc6f4]"
             columnMenu={ColumnMenu}
-            cells={{
-              data: ({ dataItem, ...props }) => {
-                return (
-                  <td {...props.tdProps} style={{ textAlign: "center" }}>
-                    {dataItem.budget}
-                  </td>
-                );
-              },
-            }}
           />
         </Grid>
       </ExcelExport>
@@ -360,8 +292,7 @@ export function ErrotCauseTable() {
           onHeaderSelectionChange={onHeaderSelectionChange}
           onSelectionChange={onSelectionChange}
           groupable={true}
-          size={"small"}
-        ></Grid>
+          size={"small"}></Grid>
       </GridPDFExport>
     </div>
   );

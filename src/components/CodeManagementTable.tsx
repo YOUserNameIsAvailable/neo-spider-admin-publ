@@ -216,15 +216,47 @@ export function CodeManagementTable() {
           selectedField={SELECTED_FIELD}
           onHeaderSelectionChange={onHeaderSelectionChange}
           onSelectionChange={onSelectionChange}
-          groupable={false}
-          size={"small"}>
-          <Column field="budget" width="110px" title="Code group" columnMenu={ColumnMenu} />
-          <Column field="full_name" width="200px" title="Code group name" columnMenu={ColumnMenu} />
-          <Column field="target" width="150px" title="Code" columnMenu={ColumnMenu} />
-          <Column field="budget" width="200px" title="Code name" columnMenu={ColumnMenu} />
-          <Column field="budget" width="250px" title="Code desc" columnMenu={ColumnMenu} />
-          <Column field="budget" width="100px" title="Sort order" />
-          <Column field="budget" width="100px" title="사용" columnMenu={ColumnMenu} />
+          groupable={false}>
+          <Column
+            field="budget"
+            width="110px"
+            title="Code group"
+            headerClassName="justify-center bg-[#adc6f4]"
+            columnMenu={ColumnMenu}
+          />
+          <Column
+            field="full_name"
+            title="Code group name"
+            headerClassName="justify-center bg-[#adc6f4]"
+            columnMenu={ColumnMenu}
+          />
+          <Column
+            field="target"
+            width="150px"
+            title="Code"
+            headerClassName="justify-center bg-[#adc6f4]"
+            columnMenu={ColumnMenu}
+          />
+          <Column
+            field="budget"
+            title="Code name"
+            headerClassName="justify-center bg-[#adc6f4]"
+            columnMenu={ColumnMenu}
+          />
+          <Column
+            field="budget"
+            title="Code desc"
+            headerClassName="justify-center bg-[#adc6f4]"
+            columnMenu={ColumnMenu}
+          />
+          <Column field="budget" width="100px" title="Sort order" headerClassName="justify-center bg-[#adc6f4]" />
+          <Column
+            field="budget"
+            width="100px"
+            title="사용"
+            headerClassName="justify-center bg-[#adc6f4]"
+            columnMenu={ColumnMenu}
+          />
         </Grid>
       </ExcelExport>
       <GridPDFExport margin="1cm">

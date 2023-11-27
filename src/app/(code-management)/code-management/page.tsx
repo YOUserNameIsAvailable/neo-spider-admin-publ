@@ -89,7 +89,7 @@ export default function Page() {
       {/* table */}
       <div className="flex items-center gap-2 py-4">
         <img src={"/images/dot_subtitle.gif"} alt="" style={{}} />
-        <span>List</span>
+        <span className="font-bold text-[#656565]">List</span>
       </div>
       <CodeManagementTable />
       <div className="flex justify-end">
