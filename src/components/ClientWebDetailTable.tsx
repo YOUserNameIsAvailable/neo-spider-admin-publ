@@ -204,6 +204,11 @@ export const ClientWebDetailTable: React.FC<ClientWebProps> = ({
     return count;
   };
 
+  const checkHeaderSelectionValue = () => {
+    let selectedItems = getNumberOfSelectedItems(newData);
+    return newData.length > 0 && selectedItems === getNumberOfItems(newData);
+  };
+
   return (
     <div>
       <ExcelExport>
@@ -232,19 +237,67 @@ export const ClientWebDetailTable: React.FC<ClientWebProps> = ({
           resizable={true}
         >
           <Column
+            filterable={false}
+            field={SELECTED_FIELD}
+            width={35}
+            headerSelectionValue={checkHeaderSelectionValue()}
+            headerClassName="bg-[#adc6f4]"
+          />
+          <Column
             field="budget"
             title="CRUD"
             width="80px"
+            headerClassName="justify-center bg-[#adc6f4]"
             columnMenu={ColumnMenu}
           />
-          <Column field="full_name" title="분기코드" columnMenu={ColumnMenu} />
-          <Column field="target" title="분기코드설명" columnMenu={ColumnMenu} />
-          <Column field="budget" title="Forward유형" columnMenu={ColumnMenu} />
-          <Column field="budget" title="Layout Page" columnMenu={ColumnMenu} />
-          <Column field="budget" title="Content Page" columnMenu={ColumnMenu} />
-          <Column field="budget" title="Top Page" columnMenu={ColumnMenu} />
-          <Column field="budget" title="Left Page" columnMenu={ColumnMenu} />
-          <Column field="budget" title="특이사항" columnMenu={ColumnMenu} />
+          <Column
+            field="full_name"
+            title="분기코드"
+            headerClassName="justify-center bg-[#adc6f4]"
+            columnMenu={ColumnMenu}
+          />
+          <Column
+            field="target"
+            title="분기코드설명"
+            headerClassName="justify-center bg-[#adc6f4]"
+            columnMenu={ColumnMenu}
+          />
+          <Column
+            field="budget"
+            title="Forward유형"
+            headerClassName="justify-center bg-[#adc6f4]"
+            columnMenu={ColumnMenu}
+          />
+          <Column
+            field="budget"
+            title="Layout Page"
+            headerClassName="justify-center bg-[#adc6f4]"
+            columnMenu={ColumnMenu}
+          />
+          <Column
+            field="budget"
+            title="Content Page"
+            headerClassName="justify-center bg-[#adc6f4]"
+            columnMenu={ColumnMenu}
+          />
+          <Column
+            field="budget"
+            title="Top Page"
+            headerClassName="justify-center bg-[#adc6f4]"
+            columnMenu={ColumnMenu}
+          />
+          <Column
+            field="budget"
+            title="Left Page"
+            headerClassName="justify-center bg-[#adc6f4]"
+            columnMenu={ColumnMenu}
+          />
+          <Column
+            field="budget"
+            title="특이사항"
+            headerClassName="justify-center bg-[#adc6f4]"
+            columnMenu={ColumnMenu}
+          />
         </Grid>
       </ExcelExport>
       <GridPDFExport margin="1cm">
