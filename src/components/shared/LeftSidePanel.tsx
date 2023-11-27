@@ -7,11 +7,13 @@ import {
   TreeView,
   TreeViewExpandChangeEvent,
   TreeViewItemClickEvent,
+  TreeViewOperationDescriptor,
   processTreeViewItems,
 } from "@progress/kendo-react-treeview";
 import { useTab } from "@/providers/TabProvider";
 import { IMenu, ITab } from "@/types";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
+// import { useNavigate } from "react-router-dom";
 
 const TreeItem = (props: ItemRenderProps) => {
   return (
@@ -21,7 +23,7 @@ const TreeItem = (props: ItemRenderProps) => {
       ) : (
         <img className="w-5" src="/images/document.png" alt="" />
       )}
-      <span>{props.item.text}</span>
+      <span className="capitalize">{props.item.text}</span>
     </div>
   );
 };
@@ -29,40 +31,50 @@ const TreeItem = (props: ItemRenderProps) => {
 export function LeftSideBar() {
   const { tabs, setTabs, setSelectedTab } = useTab();
 
-  const [expand, setExpand] = useState({ ids: ["Item2"], idField: "text" });
-  const [select, setSelect] = useState([""]);
+  const router = useRouter();
 
-  const navigate = useNavigate();
+  const [expand, setExpand] = useState<TreeViewOperationDescriptor>({ ids: [], idField: "text" });
+  const [select, setSelect] = useState<string[]>();
 
-  const onItemClick = ({ item: _item, itemHierarchicalIndex, target }: TreeViewItemClickEvent) => {
+  const onItemClick = ({ item: _item, itemHierarchicalIndex }: TreeViewItemClickEvent) => {
     const item: IMenu = _item;
 
-    // add new tab
-    if (!item.items) {
-      const found = tabs.find((x) => x.url === item.url);
-      if (!found) {
-        const newTab: ITab = { text: item.text, url: item.url };
-        setTabs([...tabs, newTab]);
-        setSelectedTab(newTab);
-      }
-
-      navigate(item.url as string);
-      setSelect([itemHierarchicalIndex]);
+    // if folder clicked
+    if (item.items) {
+      onExpandChange({ item } as any);
+      return;
     }
+
+    const found = tabs.find((x) => x.url === item.url);
+    // add new tab
+    if (!found) {
+      const newTab: ITab = { text: item.text, url: item.url };
+      setTabs([...tabs, newTab]);
+
+      setSelectedTab(newTab);
+    } else {
+      setSelectedTab(item);
+    }
+
+    setSelect([itemHierarchicalIndex]);
   };
 
-  const onExpandChange = (event: TreeViewExpandChangeEvent) => {
-    let ids = expand.ids.slice();
-    const index = ids.indexOf(event.item.text);
+  const onExpandChange = ({ item: _item }: TreeViewExpandChangeEvent) => {
+    const item: IMenu = _item;
 
-    index === -1 ? ids.push(event.item.text) : ids.splice(index, 1);
+    let ids = expand?.ids?.slice() || [];
+
+    const index = ids.indexOf(item.text);
+
+    index === -1 ? ids.push(item.text) : ids.splice(index, 1);
+
     setExpand({ ids, idField: "text" });
   };
 
   return (
-    <div className="pane-content h-full flex flex-col gap-3 pt-3">
-      <div className="text-sm pl-4 font-semibold">Dev Mode</div>
-      <div className="flex-grow flex flex-col h-full">
+    <div className="pane-content flex h-full flex-col gap-3 pt-3">
+      <div className="pl-4 text-sm font-semibold">Dev Mode</div>
+      <div className="flex h-full flex-grow flex-col">
         <PanelBar expandMode="single">
           {MENUS.map((item, index) => (
             <PanelBarItem key={item.data} title={item.text} expanded={index === 0}>
@@ -83,7 +95,7 @@ export function LeftSideBar() {
           ))}
         </PanelBar>
       </div>
-      <ButtonGroup className="flex m-2">
+      <ButtonGroup className="m-2 flex">
         <Button className="flex-grow !text-sm !capitalize" themeColor={"primary"}>
           Framework
         </Button>
