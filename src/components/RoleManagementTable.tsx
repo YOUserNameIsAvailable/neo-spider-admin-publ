@@ -207,7 +207,7 @@ export function RoleManagementTable() {
                         pageSizes: true,
                     }}
                     data={dataResult}
-                    sortable={false}
+                    sortable={true}
                     total={resultState.total}
                     onDataStateChange={dataStateChange}
                     {...dataState}
@@ -222,6 +222,7 @@ export function RoleManagementTable() {
                 >
                     <Column
                         filterable={false}
+                        sortable={false}
                         field={SELECTED_FIELD}
                         // headerSelectionValue={checkHeaderSelectionValue()}
                         headerClassName="bg-[#adc6f4] overflow-none"
@@ -231,78 +232,63 @@ export function RoleManagementTable() {
                     <Column
                         field="budget"
                         title="CRUD"
-                        columnMenu={ColumnMenu}
-                        headerClassName="justify-center"
-                        width={50}
+                        headerClassName="justify-center bg-[#adc6f4]"
+                        width={53}
                     />
                     <Column
                         field="budget"
                         title="Role ID"
+                        sortable={false}
                         columnMenu={ColumnMenu}
-                        headerClassName="justify-center col-width20per"
+                        headerClassName="justify-center bg-[#adc6f4] col-width20per"
                         className="col-width20per"
                     />
                     <Column
                         field="full_name"
                         title="Role Name"
+                        sortable={false}
                         columnMenu={ColumnMenu}
-                        headerClassName="justify-center col-width20per"
+                        headerClassName="justify-center bg-[#adc6f4] col-width20per"
                         className="col-width20per"
                     />
                     <Column
                         field="target"
                         title="use"
+                        sortable={false}
                         columnMenu={ColumnMenu}
-                        headerClassName="justify-center col-width15per"
+                        headerClassName="justify-center bg-[#adc6f4] col-width15per"
                         className="col-width15per"
                     />
                     <Column
                         field="budget"
                         title="Role desc"
-                        cells={{
-                            data: ({dataItem, ...props}) => {
-                                return (
-                                    <td {...props.tdProps}>
-                                      <span className="w-full flex justify-center">
-                                        <img src="/images/radio-on-button-green.png"
-                                             className="h-5 w-5"/>
-                                      </span>
-                                    </td>
-                                );
-                            },
-                        }}
-                        headerClassName="justify-center col-width45per"
+                        sortable={false}
+                        headerClassName="justify-center bg-[#adc6f4] col-width45per"
                         className="col-width45per"
                     />
                     <Column
                         field="budget"
                         title="Ranking"
-                        cells={{
-                            data: ({dataItem, ...props}) => {
-                                return (
-                                    <td {...props.tdProps}>
-                                      <span className="w-full flex justify-center">
-                                        <img src="/images/radio-on-button-green.png"
-                                             className="h-5 w-5"/>
-                                      </span>
-                                    </td>
-                                );
-                            },
-                        }}
-                        headerClassName="justify-center col-width10per"
+                        sortable={false}
+                        headerClassName="justify-center bg-[#adc6f4] col-width10per"
                         className="col-width10per"
                     />
                     <Column
                         field="budget"
                         title="Menu role"
-                        cell={(props) =>
-                            <td style={{textAlign: "center"}}>
-                                <Button size={"small"} className="px-4" themeColor={"primary"}>
-                                    Find
-                                </Button>
-                            </td>
-                        }
-                        headerClassName="justify-center"
+                        sortable={false}
+                        cells={{
+                            data: ({dataItem, ...props}) => {
+                                return (
+                                    <td {...props.tdProps} style={{textAlign: "center"}}>
+                                        <Button size={"small"} className="px-4 cell-inside-btn" themeColor={"primary"}>
+                                            Menu
+                                        </Button>
+                                    </td>
+                                );
+                            },
+                        }}
+                        headerClassName="justify-center bg-[#adc6f4]"
                         width={83}
                     />
                 </Grid>

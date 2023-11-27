@@ -19,11 +19,11 @@ export function ErrorCode() {
         <div className="flex items-center gap-2 py-4">
           <img src={"/images/dot_subtitle.gif"} alt="" style={{}} />
           <span>Condition</span>
-          <button className="bg-neutral-50 p-2" onClick={() => toggleExpansion()}>
+          <button className="bg-[#f6f6f6f6] px-[4px] py-[2px] border border-[#999999]" onClick={() => toggleExpansion()}>
             Enlargement/Reduction
           </button>
         </div>
-        <div className="bg-neutral-50 flex justify-between p-4 gap-4">
+        <div className="bg-[#dde6f0] flex justify-between p-4 gap-4">
           <div className="flex items-center gap-4">
             <DropDownList
               className="w-32 h-7"
@@ -58,7 +58,7 @@ export function ErrorCode() {
         </div>
         {/* exandable */}
         {isExpanded ? (
-          <div className="bg-neutral-50 flex justify-between p-4 gap-4 border-t-2  border-grey-500">
+          <div className="bg-[#dde6f0] flex justify-between p-4 gap-4 border-t border-[#ccc]">
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
                 <span className="text-sm">Tran name</span>
@@ -90,5 +90,5 @@ export function ErrorCode() {
 }
 
 export function Page() {
-  return <div>Works!</div>;
+  return <ErrorCode />;
 }

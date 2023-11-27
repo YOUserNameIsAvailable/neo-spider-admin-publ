@@ -280,13 +280,17 @@ export function MenuManagementTable() {
                     <Column
                         field="budget"
                         title="Sub Menu"
-                        cell={(props) =>
-                            <td style={{textAlign: "center"}}>
-                                <Button size={"small"} className="px-4" themeColor={"primary"}>
-                                    Find
-                                </Button>
-                            </td>
-                        }
+                        cells={{
+                            data: ({dataItem, ...props}) => {
+                                return (
+                                    <td {...props.tdProps} style={{textAlign: "center"}}>
+                                        <Button size={"small"} className="px-4 cell-inside-btn" themeColor={"primary"}>
+                                            Find
+                                        </Button>
+                                    </td>
+                                );
+                            },
+                        }}
                         headerClassName="justify-center"
                         width={100}
                     />

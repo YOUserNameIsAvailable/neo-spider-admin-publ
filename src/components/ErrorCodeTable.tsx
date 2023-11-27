@@ -66,7 +66,7 @@ export function ErrorCodeTable() {
     processWithGroups(
       EMPLOYEES.map((item: any) => ({
         ...item,
-        ["selected"]: currentSelectedState[idGetter(item)],
+        "selected": currentSelectedState[idGetter(item)],
       })),
       initialDataState
     )
@@ -111,7 +111,7 @@ export function ErrorCodeTable() {
       } else {
         return {
           ...item,
-          ["selected"]: currentSelectedState[idGetter(item)],
+          "selected": currentSelectedState[idGetter(item)],
         };
       }
     });
@@ -222,33 +222,37 @@ export function ErrorCodeTable() {
         >
           <Column
             field="budget"
-            width="130px"
             title="Error Code"
             columnMenu={ColumnMenu}
+            headerClassName="justify-center bg-[#adc6f4] col-width10per"
+            className="col-width10per"
           />
           <Column
             field="full_name"
-            width="300px"
             title="Error Title"
             columnMenu={ColumnMenu}
+            headerClassName="justify-center bg-[#adc6f4] col-width35per"
+            className="col-width35per"
           />
           <Column
             field="target"
-            width="300px"
             title="Cause of error"
             columnMenu={ColumnMenu}
+            headerClassName="justify-center bg-[#adc6f4] col-width35per"
+            className="col-width35per"
           />
           <Column
             field="budget"
-            width="140px"
             title="Handler count"
             columnMenu={ColumnMenu}
+            headerClassName="justify-center bg-[#adc6f4] col-width10per"
+            className="col-width10per"
           />
           <Column
             field="budget"
-            width="130px"
+            width="150px"
             title="Handler per error"
-            cell={(props) => <td style={{ textAlign: "center" }}> <Button size={"small"} className="px-4" themeColor={"primary"}>
+            cell={(props) => <td style={{ textAlign: "center" }}> <Button size={"small"} className="px-4 cell-inside-btn" themeColor={"primary"}>
               Handler
             </Button></td>}
           />

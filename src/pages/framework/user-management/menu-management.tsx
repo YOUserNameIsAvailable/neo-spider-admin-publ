@@ -49,7 +49,9 @@ function MenuManagement() {
                             <span className="text-xs">Items</span>
                         </div>
 
-                        <Button imageUrl="/images/refresh.png" className="find">Find</Button>
+                        <Button imageUrl="/images/refresh.png" className="basic-btn">
+                            Find
+                        </Button>
                     </div>
                 </div>
             </>
