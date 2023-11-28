@@ -21,7 +21,7 @@ export default function Page() {
           <span className="font-bold text-[#656565]">Condition</span>
         </div>
         <div className="flex justify-between gap-4 bg-[#dde6f0] p-4">
-          <div className="flex items-center gap-4">
+          <div className="shrink-1 flex flex-grow items-center gap-4">
             <DropDownList
               className="h-[24px] w-32"
               size={"small"}
@@ -30,12 +30,12 @@ export default function Page() {
               filterable={false}
             />
 
-            <Input className="h-[24px] w-40" />
+            <Input className="h-[24px] w-[148px] border border-[#999999]" />
 
             <div className="flex items-center gap-2">
-              <span>User status:</span>
+              <span className="whitespace-nowrap font-bold">User status:</span>
               <DropDownList
-                className="h-[24px] w-20"
+                className="h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
                 size={"small"}
                 data={SPORTS}
                 defaultValue="Option 1"
@@ -44,9 +44,9 @@ export default function Page() {
             </div>
 
             <div className="flex items-center gap-2">
-              <span>Auth:</span>
+              <span className="font-bold">Auth:</span>
               <DropDownList
-                className="w-25 h-[24px]"
+                className="h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
                 size={"small"}
                 data={SPORTS}
                 defaultValue="Option 1"
@@ -55,9 +55,9 @@ export default function Page() {
             </div>
 
             <div className="flex items-center gap-2">
-              <span>Rank:</span>
+              <span className="font-bold">Rank:</span>
               <DropDownList
-                className="w-25 h-[24px]"
+                className="h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
                 size={"small"}
                 data={SPORTS}
                 defaultValue="Option 1"
@@ -75,7 +75,7 @@ export default function Page() {
                 filterable={false}
                 style={{ width: "80px" }}
               />
-              <span>Items</span>
+              <span className="font-bold">Items</span>
             </div>
 
             <Button imageUrl="/images/refresh.png" className="basic-btn">

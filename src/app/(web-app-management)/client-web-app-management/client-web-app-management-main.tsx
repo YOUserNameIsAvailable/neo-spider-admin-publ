@@ -20,32 +20,27 @@ export const ClientWebAppMain: React.FC<ClientWebProps> = ({ onRowClick }) => {
       <div>
         <div className="flex items-center gap-2 py-4">
           <img src={"/images/dot_subtitle.gif"} alt="" style={{}} />
-          <span className="text-[#656565] font-bold">Condition</span>
+          <span className="font-bold text-[#656565]">Condition</span>
           <button
-            className="bg-[#f6f6f6f6] px-[4px] py-[2px] border border-[#999999]"
-            onClick={() => toggleExpansion()}
-          >
+            className="border border-[#999999] bg-[#f6f6f6f6] px-[4px] py-[2px]"
+            onClick={() => toggleExpansion()}>
             Enlargement/Reduction
           </button>
         </div>
         <div className="bg-[#dde6f0] px-[10px]">
-          <div className="bg-[#dde6f0] flex justify-between p-[5px] gap-4">
+          <div className="flex justify-between gap-4 bg-[#dde6f0] p-[5px]">
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
-                <span className="text-sm text-[#6f7071] font-bold">
-                  Menu url
-                </span>
+                <span className="font-bold text-[#6f7071]">Menu url</span>
                 <Input className="w-48 border border-[#999999]" />
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-sm text-[#6f7071] font-bold">
-                  Menu name
-                </span>
+                <span className="font-bold text-[#6f7071]">Menu name</span>
                 <Input className="w-48 border border-[#999999]" />
               </div>
             </div>
 
-            <div className="flex items-center gap-8 mla">
+            <div className="mla flex items-center gap-8">
               <div className="flex items-center gap-2">
                 <DropDownList
                   className="h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
@@ -54,7 +49,7 @@ export const ClientWebAppMain: React.FC<ClientWebProps> = ({ onRowClick }) => {
                   defaultValue="20"
                   filterable={false}
                 />
-                <span className="text-sm font-bold">Items</span>
+                <span className="font-bold">Items</span>
               </div>
 
               <Button imageUrl="/images/refresh.png" className="basic-btn">
@@ -62,28 +57,22 @@ export const ClientWebAppMain: React.FC<ClientWebProps> = ({ onRowClick }) => {
               </Button>
             </div>
           </div>
-          <div className="bg-[#dde6f0] flex justify-between p-[5px] gap-4 border-t border-[#ccc]">
+          <div className="flex justify-between gap-4 border-t border-[#ccc] bg-[#dde6f0] p-[5px]">
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
-                <span className="text-sm text-[#6f7071] font-bold">
-                  Custom Action class
-                </span>
+                <span className="font-bold text-[#6f7071]">Custom Action class</span>
                 <Input className="w-48 border border-[#999999]" />
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-sm text-[#6f7071] font-bold">
-                  View number
-                </span>
+                <span className="font-bold text-[#6f7071]">View number</span>
                 <Input className="w-48 border border-[#999999]" />
               </div>
             </div>
           </div>
-          <div className="bg-[#dde6f0] flex justify-between p-[5px] gap-4 border-t border-[#ccc]">
-            <div className="w-full flex items-center gap-4">
-              <div className="min-w-[195px] flex items-center gap-1">
-                <span className="text-sm text-[#6f7071] font-bold whitespace-nowrap">
-                  Site type
-                </span>
+          <div className="flex justify-between gap-4 border-t border-[#ccc] bg-[#dde6f0] p-[5px]">
+            <div className="flex w-full items-center gap-4">
+              <div className="flex min-w-[195px] items-center gap-1">
+                <span className="whitespace-nowrap font-bold text-[#6f7071]">Site type</span>
                 <DropDownList
                   className="h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
                   size={"small"}
@@ -93,24 +82,20 @@ export const ClientWebAppMain: React.FC<ClientWebProps> = ({ onRowClick }) => {
                 />
               </div>
 
-              <div className="min-w-[195px] flex items-center gap-1">
-                <span className="text-sm text-[#6f7071] font-bold">
-                  Check status of other banks
-                </span>
+              <div className="flex min-w-[195px] items-center gap-1">
+                <span className="whitespace-nowrap font-bold text-[#6f7071]">Check status of other banks</span>
                 <DropDownList
-                  className="p-0 h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
+                  className="h-[30px] border bg-[#f6f6f6f6] p-0 text-[#656565]"
                   size={"small"}
                   data={SPORTS}
                   defaultValue="Option 1"
                   filterable={false}
                 />
               </div>
-              <div className="min-w-[195px] flex items-center gap-1">
-                <span className="text-sm text-[#6f7071] font-bold whitespace-nowrap">
-                  Service state
-                </span>
+              <div className="flex min-w-[195px] items-center gap-1">
+                <span className="whitespace-nowrap font-bold text-[#6f7071]">Service state</span>
                 <DropDownList
-                  className="p-0 h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
+                  className="h-[30px] border bg-[#f6f6f6f6] p-0 text-[#656565]"
                   size={"small"}
                   data={SPORTS}
                   defaultValue="Option 1"
@@ -123,12 +108,12 @@ export const ClientWebAppMain: React.FC<ClientWebProps> = ({ onRowClick }) => {
       </div>
       {isExpanded ? (
         <>
-          <div className="bg-neutral-50 flex justify-between p-4 gap-4 border-t-2  border-grey-500">
+          <div className="border-grey-500 flex justify-between gap-4 border-t-2 bg-neutral-50  p-4">
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
                 <span className="text-sm">e채널 로그 분류코드</span>
                 <DropDownList
-                  className="w-40 h-7"
+                  className="h-7 w-40"
                   size={"small"}
                   data={SPORTS}
                   defaultValue="Option 1"
@@ -138,7 +123,7 @@ export const ClientWebAppMain: React.FC<ClientWebProps> = ({ onRowClick }) => {
               <div className="flex items-center gap-2">
                 <span className="text-sm">Required</span>
                 <DropDownList
-                  className="w-40 h-7"
+                  className="h-7 w-40"
                   size={"small"}
                   data={SPORTS}
                   defaultValue="Option 1"
@@ -146,11 +131,9 @@ export const ClientWebAppMain: React.FC<ClientWebProps> = ({ onRowClick }) => {
                 />
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-sm">
-                  Whether electronic signature is required
-                </span>
+                <span className="text-sm">Whether electronic signature is required</span>
                 <DropDownList
-                  className="w-40 h-7"
+                  className="h-7 w-40"
                   size={"small"}
                   data={SPORTS}
                   defaultValue="Option 1"
@@ -159,12 +142,12 @@ export const ClientWebAppMain: React.FC<ClientWebProps> = ({ onRowClick }) => {
               </div>
             </div>
           </div>
-          <div className="bg-neutral-50 flex justify-between p-4 gap-4 border-t-2  border-grey-500">
+          <div className="border-grey-500 flex justify-between gap-4 border-t-2 bg-neutral-50  p-4">
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
                 <span className="text-sm">입력유형</span>
                 <DropDownList
-                  className="w-40 h-7"
+                  className="h-7 w-40"
                   size={"small"}
                   data={SPORTS}
                   defaultValue="Option 1"
@@ -174,7 +157,7 @@ export const ClientWebAppMain: React.FC<ClientWebProps> = ({ onRowClick }) => {
               <div className="flex items-center gap-2">
                 <span className="text-sm">IN/OUTuse message</span>
                 <DropDownList
-                  className="w-40 h-7"
+                  className="h-7 w-40"
                   size={"small"}
                   data={SPORTS}
                   defaultValue="Option 1"
@@ -184,7 +167,7 @@ export const ClientWebAppMain: React.FC<ClientWebProps> = ({ onRowClick }) => {
               <div className="flex items-center gap-2">
                 <span className="text-sm">Biz class</span>
                 <DropDownList
-                  className="w-40 h-7"
+                  className="h-7 w-40"
                   size={"small"}
                   data={SPORTS}
                   defaultValue="Option 1"
@@ -198,43 +181,32 @@ export const ClientWebAppMain: React.FC<ClientWebProps> = ({ onRowClick }) => {
       {/* table */}
 
       <div className="flex w-[100%]">
-        <div className="flex items-center gap-2 py-4 w-[50%]">
+        <div className="flex w-[50%] items-center gap-2 py-4">
           <img src={"/images/dot_subtitle.gif"} alt="" style={{}} />
-          <span className="text-[#656565] font-bold">List</span>
+          <span className="font-bold text-[#656565]">List</span>
         </div>
-        <div className="flex gap-1 w-[90%] justify-end">
+        <div className="flex w-[90%] justify-end gap-1">
           <Button
             imageUrl="/images/dot-right-arrow.png"
-            className="flex items-center justify-start w-30  h-7 mt-2 basic-btn"
-          >
+            className="w-30 basic-btn mt-2 flex  h-7 items-center justify-start">
             stop selection
           </Button>
           <Button
             imageUrl="/images/dot-right-arrow.png"
-            className="flex items-center justify-start w-46 h-7 mt-2 basic-btn"
-          >
+            className="w-46 basic-btn mt-2 flex h-7 items-center justify-start">
             Selection guide message
           </Button>
-          <Button
-            imageUrl="/images/dot-right-arrow.png"
-            className="flex items-center justify-start h-7 mt-2 basic-btn"
-          >
+          <Button imageUrl="/images/dot-right-arrow.png" className="basic-btn mt-2 flex h-7 items-center justify-start">
             Group manage
           </Button>
-          <Button
-            imageUrl="/images/dot-right-arrow.png"
-            className="flex items-center justify-start h-7 mt-2 basic-btn"
-          >
+          <Button imageUrl="/images/dot-right-arrow.png" className="basic-btn mt-2 flex h-7 items-center justify-start">
             Del select
           </Button>
         </div>
       </div>
       <ClientWebTable onRowClick={onRowClick} />
       <div className="flex justify-end">
-        <Button
-          svgIcon={arrowRightIcon}
-          className="flex items-center justify-end  mt-2"
-        >
+        <Button svgIcon={arrowRightIcon} className="mt-2 flex items-center  justify-end">
           ADD
         </Button>
       </div>
