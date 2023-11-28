@@ -68,8 +68,8 @@ export function UserManagementTable() {
         ...item,
         ["selected"]: currentSelectedState[idGetter(item)],
       })),
-      initialDataState
-    )
+      initialDataState,
+    ),
   );
 
   const dataStateChange = (event: any) => {
@@ -98,7 +98,7 @@ export function UserManagementTable() {
         });
       }
     },
-    [dataResult]
+    [dataResult],
   );
 
   const setSelectedValue = (data: any) => {
@@ -139,7 +139,7 @@ export function UserManagementTable() {
       const newDataResult = processWithGroups(newData, dataState);
       setDataResult(newDataResult);
     },
-    [data, dataState]
+    [data, dataState],
   );
 
   const onSelectionChange = (event: any) => {
@@ -218,30 +218,125 @@ export function UserManagementTable() {
           onHeaderSelectionChange={onHeaderSelectionChange}
           onSelectionChange={onSelectionChange}
           groupable={false}
-          size={"small"}
-        >
-          <Column field="budget" title="User ID" width="105px" columnMenu={ColumnMenu} />
-          <Column field="full_name" title="User Name" width="105px" columnMenu={ColumnMenu} />
-          <Column field="target" title="Rank" width="105px" columnMenu={ColumnMenu} />
-          <Column field="budget" title="Emp no" width="105px" columnMenu={ColumnMenu} />
-          <Column field="budget" title="Role name" width="105px" columnMenu={ColumnMenu} />
-          <Column field="budget" title="Belong" width="105px" columnMenu={ColumnMenu} />
-          <Column field="budget" title="User status" width="105px" columnMenu={ColumnMenu} />
-          <Column field="budget" title="Modified  date" width="140px" columnMenu={ColumnMenu} />
-          <Column field="Menu init" title="Menu init" width="105px" cell={(props) => <td style={{ textAlign: "center" }}> <Button size={"small"} className="px-4" themeColor={"primary"}>
-            Reset
-          </Button></td>} />
-          <Column field="Menu authority" title="Menu authorityt" width="105px"
-            cell={(props) => <td style={{ textAlign: "center" }}> <Button size={"small"} className="px-4" themeColor={"primary"}>
-              Menu
-            </Button></td>}
+          size={"small"}>
+          <Column
+            field="budget"
+            title="User ID"
+            headerClassName="justify-center bg-[#adc6f4] col-width15per"
+            className="col-width15per"
+            columnMenu={ColumnMenu}
           />
-          <Column field="Status(Error count)" title="Status(Error count)" width="135px" cell={(props) => <td style={{ textAlign: "center" }}> <Button size={"small"} className="px-4" themeColor={"primary"}>
-            Unloack(0)
-          </Button></td>} />
-          <Column field="DO Login" title="DO Login" width="105px" cell={(props) => <td style={{ textAlign: "center" }}> <Button size={"small"} className="px-4" themeColor={"primary"}>
-            Login
-          </Button></td>} />
+          <Column
+            field="full_name"
+            title="User Name"
+            headerClassName="justify-center bg-[#adc6f4] col-width15per"
+            className="col-width15per"
+            columnMenu={ColumnMenu}
+          />
+          <Column
+            field="target"
+            title="Rank"
+            headerClassName="justify-center bg-[#adc6f4] col-width10per"
+            className="col-width10per"
+            columnMenu={ColumnMenu}
+          />
+          <Column
+            field="budget"
+            title="Emp no"
+            headerClassName="justify-center bg-[#adc6f4] col-width10per"
+            className="col-width10per"
+            columnMenu={ColumnMenu}
+          />
+          <Column
+            field="budget"
+            title="Role name"
+            headerClassName="justify-center bg-[#adc6f4] col-width15per"
+            className="col-width15per"
+            columnMenu={ColumnMenu}
+          />
+          <Column
+            field="budget"
+            title="Belong"
+            headerClassName="justify-center bg-[#adc6f4] col-width10per"
+            className="col-width10per"
+            columnMenu={ColumnMenu}
+          />
+          <Column
+            field="budget"
+            title="User status"
+            headerClassName="justify-center bg-[#adc6f4] col-width11per"
+            className="col-width11per"
+            columnMenu={ColumnMenu}
+          />
+          <Column field="budget" title="Modified  date" width="140px" columnMenu={ColumnMenu} />
+          <Column
+            field="Menu init"
+            title="Menu init"
+            width="90px"
+            headerClassName="justify-center"
+            cells={{
+              data: ({ dataItem, ...props }) => {
+                return (
+                  <td {...props.tdProps} style={{ textAlign: "center" }}>
+                    <Button size={"small"} className="cell-inside-btn px-4 font-normal" themeColor={"primary"}>
+                      Reset
+                    </Button>
+                  </td>
+                );
+              },
+            }}
+          />
+          <Column
+            field="Menu authority"
+            title="Menu authorityt"
+            width="90px"
+            headerClassName="justify-center"
+            cells={{
+              data: ({ dataItem, ...props }) => {
+                return (
+                  <td {...props.tdProps} style={{ textAlign: "center" }}>
+                    <Button size={"small"} className="cell-inside-btn px-4 font-normal" themeColor={"primary"}>
+                      Menu
+                    </Button>
+                  </td>
+                );
+              },
+            }}
+          />
+          <Column
+            field="Status(Error count)"
+            title="Status(Error count)"
+            width="100px"
+            headerClassName="justify-center"
+            cells={{
+              data: ({ dataItem, ...props }) => {
+                return (
+                  <td {...props.tdProps} style={{ textAlign: "center" }}>
+                    <Button size={"small"} className="cell-inside-btn px-4 font-normal" themeColor={"primary"}>
+                      Unloack(0)
+                    </Button>
+                  </td>
+                );
+              },
+            }}
+          />
+          <Column
+            field="DO Login"
+            title="DO Login"
+            width="90px"
+            headerClassName="justify-center"
+            cells={{
+              data: ({ dataItem, ...props }) => {
+                return (
+                  <td {...props.tdProps} style={{ textAlign: "center" }}>
+                    <Button size={"small"} className="cell-inside-btn px-4 font-normal" themeColor={"primary"}>
+                      Login
+                    </Button>
+                  </td>
+                );
+              },
+            }}
+          />
         </Grid>
       </ExcelExport>
       <GridPDFExport margin="1cm">
@@ -264,8 +359,7 @@ export function UserManagementTable() {
           onHeaderSelectionChange={onHeaderSelectionChange}
           onSelectionChange={onSelectionChange}
           groupable={true}
-          size={"small"}
-        ></Grid>
+          size={"small"}></Grid>
       </GridPDFExport>
     </div>
   );

@@ -129,8 +129,8 @@ export default function Page() {
           </div>
         </div>
         <div className="my-[14px] flex w-full justify-center">
-          <h2 className="font-weight">
-            <a className="underline">다운로드 페이지 이동</a>
+          <h2 className="font-bold">
+            <a className="cursor-pointer underline visited:text-[#666666]">다운로드 페이지 이동</a>
           </h2>
         </div>
       </form>
