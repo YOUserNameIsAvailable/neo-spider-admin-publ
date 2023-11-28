@@ -217,15 +217,24 @@ export function PropertyDbManagementTable() {
           selectedField={SELECTED_FIELD}
           onHeaderSelectionChange={onHeaderSelectionChange}
           onSelectionChange={onSelectionChange}
-          groupable={false}
-          size={"small"}>
-          <Column field="budget" width="250px" title="Property Group ID" columnMenu={ColumnMenu} />
-          <Column field="full_name" width="250px" title="Property group name" columnMenu={ColumnMenu} />
+          groupable={false}>
+          <Column
+            field="budget"
+            title="Property Group ID"
+            headerClassName="justify-center bg-[#adc6f4] col-width25per"
+            columnMenu={ColumnMenu}
+          />
+          <Column
+            field="full_name"
+            title="Property group name"
+            headerClassName="justify-center bg-[#adc6f4] col-width25per"
+            columnMenu={ColumnMenu}
+          />
 
           <Column
             field="budget"
-            width="130px"
-            headerCell={() => <div style={{ textAlign: "center" }}>Detail view</div>}
+            headerClassName="justify-center bg-[#adc6f4] col-width15per"
+            headerCell={() => <div style={{ textAlign: "center", fontWeight: "bold" }}>Detail view</div>}
             cell={(props) => (
               <td style={{ textAlign: "center" }}>
                 {" "}
@@ -237,8 +246,8 @@ export function PropertyDbManagementTable() {
           />
           <Column
             field="budget"
-            width="250px"
-            headerCell={() => <div style={{ textAlign: "center" }}>Setting vaolue per WAS</div>}
+            headerClassName="justify-center bg-[#adc6f4] col-width20per"
+            headerCell={() => <div style={{ textAlign: "center", fontWeight: "bold" }}>Setting vaolue per WAS</div>}
             cell={(props) => (
               <td style={{ textAlign: "center" }}>
                 {" "}
@@ -250,8 +259,8 @@ export function PropertyDbManagementTable() {
           />
           <Column
             field="budget"
-            width="130px"
-            headerCell={() => <div style={{ textAlign: "center" }}>Reload</div>}
+            headerClassName="justify-center bg-[#adc6f4] col-width15per"
+            headerCell={() => <div style={{ textAlign: "center", fontWeight: "bold" }}>Reload</div>}
             cell={(props) => (
               <td style={{ textAlign: "center" }}>
                 {" "}
@@ -282,8 +291,7 @@ export function PropertyDbManagementTable() {
           selectedField={SELECTED_FIELD}
           onHeaderSelectionChange={onHeaderSelectionChange}
           onSelectionChange={onSelectionChange}
-          groupable={true}
-          size={"small"}></Grid>
+          groupable={true}></Grid>
       </GridPDFExport>
     </div>
   );

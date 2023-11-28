@@ -20,14 +20,14 @@ export default function Page() {
     <>
       <div className="flex items-center gap-2 py-4">
         <img src={"/images/dot_subtitle.gif"} alt="" style={{}} />
-        <span>List</span>
+        <span className="text-[#656565] font-bold">List</span>
       </div>
       <PropertyDbManagementTable />
-      <div className="flex justify-end">
+      {/* <div className="flex justify-end">
         <Button svgIcon={arrowRightIcon} className="mt-2 flex items-center  justify-end">
           ADD
         </Button>
-      </div>
+      </div> */}
     </>
   );
 }
