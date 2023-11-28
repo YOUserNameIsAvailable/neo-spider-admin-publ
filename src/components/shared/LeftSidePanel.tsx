@@ -72,10 +72,13 @@ export function LeftSideBar() {
   };
 
   return (
-    <div className="pane-content flex h-full flex-col gap-3 pt-3">
-      <div className="pl-4 text-sm font-semibold">Dev Mode</div>
+    <div className="pane-content flex h-full flex-col gap-3 rounded-t-[12px] bg-[#603d86] p-[5px]">
+      <div className="flex flex-row justify-between pt-[5px]">
+        <div className="pl-4 text-[14px] font-bold text-[#2ac2d9]">Dev Mode</div>
+        <span className="collepsMenu" id="leftmenuhidebtn"></span>
+      </div>
       <div className="flex h-full flex-grow flex-col">
-        <PanelBar expandMode="single">
+        <PanelBar expandMode="single" className="h-full">
           {MENUS.map((item, index) => (
             <PanelBarItem key={item.data} title={item.text} expanded={index === 0}>
               <TreeView
