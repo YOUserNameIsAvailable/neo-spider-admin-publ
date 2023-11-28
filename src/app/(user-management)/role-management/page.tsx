@@ -34,7 +34,7 @@ export default function Page() {
           <div className="flex items-center gap-8">
             <div className="flex items-center gap-2">
               <DropDownList size={"small"} data={PAGES} defaultValue="20" filterable={false} />
-              <span className="font-bold">Items</span>
+              <span className="font-bold text-[#333333]">Items</span>
             </div>
             <Button imageUrl="/images/refresh.png" className="basic-btn">
               Find

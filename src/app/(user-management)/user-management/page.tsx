@@ -3,7 +3,7 @@
 import { Input } from "@progress/kendo-react-inputs";
 import { Button } from "@progress/kendo-react-buttons";
 import { DropDownList } from "@progress/kendo-react-dropdowns";
-import { searchIcon, arrowRightIcon } from "@progress/kendo-svg-icons";
+import { arrowRightIcon } from "@progress/kendo-svg-icons";
 import { useTab } from "@/providers/TabProvider";
 import { PAGES, SPORTS } from "@/constants";
 import { UserManagementTable } from "@/components/UserManagementTable";
@@ -33,7 +33,7 @@ export default function Page() {
             <Input className="h-[24px] w-[148px] border border-[#999999]" />
 
             <div className="flex items-center gap-2">
-              <span className="whitespace-nowrap font-bold">User status:</span>
+              <span className="whitespace-nowrap font-bold text-[#6f7071]">User status:</span>
               <DropDownList
                 className="h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
                 size={"small"}
@@ -44,7 +44,7 @@ export default function Page() {
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="font-bold">Auth:</span>
+              <span className="font-bold text-[#6f7071]">Auth:</span>
               <DropDownList
                 className="h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
                 size={"small"}
@@ -55,7 +55,7 @@ export default function Page() {
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="font-bold">Rank:</span>
+              <span className="font-bold text-[#6f7071]">Rank:</span>
               <DropDownList
                 className="h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
                 size={"small"}
@@ -75,7 +75,7 @@ export default function Page() {
                 filterable={false}
                 style={{ width: "80px" }}
               />
-              <span className="font-bold">Items</span>
+              <span className="font-bold text-[#333333]">Items</span>
             </div>
 
             <Button imageUrl="/images/refresh.png" className="basic-btn">

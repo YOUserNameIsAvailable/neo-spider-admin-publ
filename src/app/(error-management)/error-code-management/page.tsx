@@ -41,7 +41,7 @@ export default function Page() {
             <Input className="h-[24px] w-[148px]" />
 
             <div className="ml-2 flex items-center gap-2">
-              <span className="whitespace-nowrap font-bold">Error handler</span>
+              <span className="whitespace-nowrap font-bold text-[#6f7071]">Error handler</span>
               <DropDownList
                 className="mr-2 h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
                 size={"small"}
@@ -56,7 +56,7 @@ export default function Page() {
           <div className="flex items-center gap-8">
             <div className="flex items-center gap-2">
               <DropDownList className="h-[24px]" size={"small"} data={PAGES} defaultValue="20" filterable={false} />
-              <span className="font-bold">Items</span>
+              <span className="font-bold text-[#333333]">Items</span>
             </div>
 
             <Button svgIcon={searchIcon}>Find</Button>
@@ -67,7 +67,7 @@ export default function Page() {
           <div className="flex justify-between gap-4 border-t border-[#ccc] bg-[#dde6f0] p-4">
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
-                <span className="whitespace-nowrap font-bold">Tran name</span>
+                <span className="whitespace-nowrap font-bold text-[#6f7071]">Tran name</span>
                 <DropDownList
                   className="h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
                   size={"small"}

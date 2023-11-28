@@ -31,11 +31,11 @@ export default function Page() {
         <div className="flex justify-between gap-4 bg-[#dde6f0] p-4">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
-              <span className="font-bold">Log tracking number</span>
+              <span className="font-bold text-[#6f7071]">Log tracking number</span>
               <Input className="h-[24px] w-[148px]" />
             </div>
             <div className="flex items-center gap-2">
-              <span className="whitespace-nowrap font-bold">Channel ID</span>
+              <span className="whitespace-nowrap font-bold text-[#6f7071]">Channel ID</span>
               <DropDownList
                 className="mr-2 h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
                 size={"small"}
@@ -54,7 +54,7 @@ export default function Page() {
                 defaultValue="20"
                 filterable={false}
               />
-              <span className="font-bold">Items</span>
+              <span className="font-bold text-[#333333]">Items</span>
             </div>
             <Button svgIcon={searchIcon}>Find</Button>
           </div>
@@ -64,19 +64,19 @@ export default function Page() {
         <div className="flex gap-4 border-t border-[#ccc] bg-[#dde6f0] p-4">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
-              <span className="font-bold">User ID</span>
+              <span className="font-bold text-[#6f7071]">User ID</span>
               <Input className="h-[24px] w-[148px]" />
             </div>
           </div>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
-              <span className="font-bold">Result code</span>
+              <span className="font-bold text-[#6f7071]">Result code</span>
               <Input className="h-[24px] w-[148px]" />
             </div>
           </div>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
-              <span className="font-bold">Outgoing/Incomming</span>
+              <span className="font-bold text-[#6f7071]">Outgoing/Incomming</span>
               <DropDownList
                 className="h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
                 size={"small"}
@@ -88,7 +88,7 @@ export default function Page() {
           </div>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
-              <span className="font-bold">Req/Res</span>
+              <span className="font-bold text-[#6f7071]">Req/Res</span>
               <DropDownList
                 className="h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
                 size={"small"}

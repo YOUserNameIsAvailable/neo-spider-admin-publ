@@ -32,12 +32,12 @@ export default function Page() {
             </div>
 
             <div className="">
-              <span className="mr-2 font-bold">Menu URL</span>
+              <span className="mr-2 font-bold text-[#6f7071]">Menu URL</span>
               <Input className="h-[24px] w-[148px]" />
             </div>
 
             <div className="">
-              <span className="mr-2 font-bold">Top menu ID</span>
+              <span className="mr-2 font-bold text-[#6f7071]">Top menu ID</span>
               <Input className="h-[24px] w-[148px]" />
             </div>
             <button data-role="button" role="button" className="search_btn no-text" aria-disabled="false">
@@ -48,7 +48,7 @@ export default function Page() {
           <div className="flex items-center gap-8">
             <div className="flex items-center gap-2">
               <DropDownList size={"small"} data={PAGES} defaultValue="20" filterable={false} />
-              <span className="font-bold">Items</span>
+              <span className="font-bold text-[#333333]">Items</span>
             </div>
 
             <Button imageUrl="/images/refresh.png" className="basic-btn">
