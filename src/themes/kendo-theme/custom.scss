@@ -169,3 +169,14 @@ textarea.k-textarea {
     }
   }
 }
+
+.panel-bar > span > span {
+  color: #ffffff !important;
+}
+
+.panel-bar-header {
+  background: linear-gradient(180deg, #d8b8f9 0%, #7a50a7 100%) !important;
+  border: none;
+  font-weight: bold !important;
+  padding: 4px 8px 7px !important;
+}

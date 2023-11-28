@@ -78,9 +78,14 @@ export function LeftSideBar() {
         <span className="collepsMenu" id="leftmenuhidebtn"></span>
       </div>
       <div className="flex h-full flex-grow flex-col">
-        <PanelBar expandMode="single" className="h-full">
+        <PanelBar expandMode="single" className="h-full border-0">
           {MENUS.map((item, index) => (
-            <PanelBarItem key={item.data} title={item.text} expanded={index === 0}>
+            <PanelBarItem
+              key={item.data}
+              title={item.text}
+              expanded={index === 0}
+              headerClassName="panel-bar-header"
+              className="panel-bar">
               <TreeView
                 className="h-full"
                 data={processTreeViewItems(item.items, {
