@@ -72,7 +72,7 @@ export function LeftSideBar({ clickCollapseBtn }: () => void) {
   };
 
   return (
-    <div className="pane-content flex h-full flex-col gap-3 rounded-t-[12px] bg-[#603d86] p-[5px] transition-all duration-300">
+    <div className="pane-content flex h-full flex-col gap-3 rounded-t-[12px] bg-[#603d86] p-[5px]">
       <div className="flex flex-row justify-between pt-[5px]">
         <div className="pl-4 text-[14px] font-bold text-[#2ac2d9]">Dev Mode</div>
         <span className="collepsMenu min-w-[15px]" id="leftmenuhidebtn" onClick={clickCollapseBtn}></span>

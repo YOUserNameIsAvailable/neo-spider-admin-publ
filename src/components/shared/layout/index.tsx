@@ -56,9 +56,17 @@ interface LayoutProps {
 
 export const Layout: FC<LayoutProps> = ({ children }) => {
   const [panes, setPanes] = useState<SplitterPaneProps[]>([
-    { size: "249px", max: "249px", collapsible: true },
+    {
+      size: "249px",
+      max: "249px",
+      collapsible: true,
+    },
     {},
-    { size: "80%", min: "20px", collapsible: false },
+    {
+      size: "80%",
+      min: "20px",
+      collapsible: false,
+    },
   ]);
   const [isClose, setIsClose] = useState(false);
 
@@ -143,7 +151,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
 
       <Splitter style={{ height: "calc(100dvh - 84px)" }} panes={panes} onChange={onChangeTab}>
         {/* left side panel */}
-        <div className="h-full overflow-x-hidden pl-2">
+        <div className="transition: all 0.3s h-full overflow-x-hidden pl-2">
           <LeftSideBar clickCollapseBtn={clickCollapseBtn} />
         </div>
 
