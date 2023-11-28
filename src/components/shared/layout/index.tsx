@@ -56,10 +56,11 @@ interface LayoutProps {
 
 export const Layout: FC<LayoutProps> = ({ children }) => {
   const [panes, setPanes] = useState<SplitterPaneProps[]>([
-    { size: "20%", min: "290px", collapsible: true },
+    { size: "249px", max: "249px", collapsible: true },
     {},
     { size: "80%", min: "20px", collapsible: false },
   ]);
+  const [isClose, setIsClose] = useState(false);
 
   const { tabs, selectedTab, selectedTabIndex, setSelectedTab, setTabs } = useTab();
 
@@ -91,7 +92,48 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
   };
 
   const onChangeTab = (event: SplitterOnChangeEvent) => {
+    console.log("event.newState: ", event.newState);
     setPanes(event.newState);
+  };
+
+  const clickCollapseBtn = () => {
+    if (isClose) {
+      setPanes([
+        {
+          collapsible: true,
+          collapsed: false,
+          resizable: true,
+          scrollable: true,
+          size: "249px",
+          max: "249px",
+        },
+        {
+          collapsible: false,
+          collapsed: false,
+          resizable: true,
+          scrollable: true,
+        },
+      ]);
+      setIsClose((prevState) => !prevState);
+    } else {
+      setPanes([
+        {
+          collapsible: true,
+          collapsed: false,
+          resizable: true,
+          scrollable: true,
+          size: "100px",
+          max: "249px",
+        },
+        {
+          collapsible: false,
+          collapsed: false,
+          resizable: true,
+          scrollable: true,
+        },
+      ]);
+      setIsClose((prevState) => !prevState);
+    }
   };
 
   return (
@@ -101,7 +143,9 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
 
       <Splitter style={{ height: "calc(100dvh - 84px)" }} panes={panes} onChange={onChangeTab}>
         {/* left side panel */}
-        <LeftSideBar />
+        <div className="h-full overflow-x-hidden pl-2">
+          <LeftSideBar clickCollapseBtn={clickCollapseBtn} />
+        </div>
 
         <div className="pane-content">
           {/* tabs */}

@@ -17,7 +17,7 @@ import { useRouter } from "next/navigation";
 
 const TreeItem = (props: ItemRenderProps) => {
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex h-full items-center gap-2">
       {props.item.items?.length > 0 ? (
         <img src="/images/folder.png" alt="" />
       ) : (
@@ -28,7 +28,7 @@ const TreeItem = (props: ItemRenderProps) => {
   );
 };
 
-export function LeftSideBar() {
+export function LeftSideBar({ clickCollapseBtn }: () => void) {
   const { tabs, setTabs, setSelectedTab } = useTab();
 
   const router = useRouter();
@@ -72,10 +72,10 @@ export function LeftSideBar() {
   };
 
   return (
-    <div className="pane-content flex h-full flex-col gap-3 rounded-t-[12px] bg-[#603d86] p-[5px]">
+    <div className="pane-content flex h-full flex-col gap-3 rounded-t-[12px] bg-[#603d86] p-[5px] transition-all duration-300">
       <div className="flex flex-row justify-between pt-[5px]">
         <div className="pl-4 text-[14px] font-bold text-[#2ac2d9]">Dev Mode</div>
-        <span className="collepsMenu" id="leftmenuhidebtn"></span>
+        <span className="collepsMenu min-w-[15px]" id="leftmenuhidebtn" onClick={clickCollapseBtn}></span>
       </div>
       <div className="flex h-full flex-grow flex-col">
         <PanelBar expandMode="single" className="h-full border-0">
@@ -84,10 +84,10 @@ export function LeftSideBar() {
               key={item.data}
               title={item.text}
               expanded={index === 0}
-              headerClassName="panel-bar-header"
+              headerClassName="panel-bar-header overflow-hidden whitespace-nowrap"
               className="panel-bar">
               <TreeView
-                className="h-full"
+                className="shrink-1 flex flex-grow"
                 data={processTreeViewItems(item.items, {
                   select: select,
                   expand: expand,
@@ -103,16 +103,10 @@ export function LeftSideBar() {
           ))}
         </PanelBar>
       </div>
-      <ButtonGroup className="m-2 flex">
-        <Button className="flex-grow !text-sm !capitalize" themeColor={"primary"}>
-          Framework
-        </Button>
-        <Button className="flex-grow !text-sm !capitalize" themeColor={"light"}>
-          MyMenu
-        </Button>
-        <Button className="flex-grow !text-sm !capitalize" themeColor={"light"}>
-          TestCase
-        </Button>
+      <ButtonGroup className="m-2 flex gap-[4px]">
+        <Button className="leftPanelGroupBtn flex-grow !capitalize">Framework</Button>
+        <Button className="leftPanelGroupBtn flex-grow  !capitalize">MyMenu</Button>
+        <Button className="leftPanelGroupBtn flex-grow !capitalize">TestCase</Button>
       </ButtonGroup>
     </div>
   );
