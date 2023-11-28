@@ -211,11 +211,28 @@ export function LabelManagementTable() {
           selectedField={SELECTED_FIELD}
           onHeaderSelectionChange={onHeaderSelectionChange}
           onSelectionChange={onSelectionChange}
-          groupable={false}
-          size={"small"}>
-          <Column field="budget" width="350px" columnMenu={ColumnMenu} title="LABEL ID" />
-          <Column field="full_name" width="350px" columnMenu={ColumnMenu} title="LABEL Distinction" />
-          <Column field="target" width="350px" columnMenu={ColumnMenu} title="LABEL Description" />
+          groupable={false}>
+          <Column
+            field="budget"
+            title="LABEL ID"
+            headerClassName="justify-center bg-[#adc6f4] col-width40per"
+            className="col-width40per"
+            columnMenu={ColumnMenu}
+          />
+          <Column
+            field="full_name"
+            title="LABEL Distinction"
+            headerClassName="justify-center bg-[#adc6f4] col-width20per"
+            className="col-width20per"
+            columnMenu={ColumnMenu}
+          />
+          <Column
+            field="target"
+            title="LABEL Description"
+            headerClassName="justify-center bg-[#adc6f4] col-width40per"
+            className="col-width40per"
+            columnMenu={ColumnMenu}
+          />
         </Grid>
       </ExcelExport>
       <GridPDFExport margin="1cm">
@@ -237,8 +254,7 @@ export function LabelManagementTable() {
           selectedField={SELECTED_FIELD}
           onHeaderSelectionChange={onHeaderSelectionChange}
           onSelectionChange={onSelectionChange}
-          groupable={true}
-          size={"small"}></Grid>
+          groupable={true}></Grid>
       </GridPDFExport>
     </div>
   );
