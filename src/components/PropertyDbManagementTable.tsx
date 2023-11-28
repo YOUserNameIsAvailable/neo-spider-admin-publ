@@ -222,18 +222,21 @@ export function PropertyDbManagementTable() {
             field="budget"
             title="Property Group ID"
             headerClassName="justify-center bg-[#adc6f4] col-width25per"
+            className="col-width25per"
             columnMenu={ColumnMenu}
           />
           <Column
             field="full_name"
             title="Property group name"
             headerClassName="justify-center bg-[#adc6f4] col-width25per"
+            className="col-width25per"
             columnMenu={ColumnMenu}
           />
 
           <Column
             field="budget"
             headerClassName="justify-center bg-[#adc6f4] col-width15per"
+            className="col-width15per"
             headerCell={() => <div style={{ textAlign: "center", fontWeight: "bold" }}>Detail view</div>}
             cell={(props) => (
               <td style={{ textAlign: "center" }}>
@@ -247,6 +250,7 @@ export function PropertyDbManagementTable() {
           <Column
             field="budget"
             headerClassName="justify-center bg-[#adc6f4] col-width20per"
+            className="col-width20per"
             headerCell={() => <div style={{ textAlign: "center", fontWeight: "bold" }}>Setting vaolue per WAS</div>}
             cell={(props) => (
               <td style={{ textAlign: "center" }}>
@@ -260,6 +264,7 @@ export function PropertyDbManagementTable() {
           <Column
             field="budget"
             headerClassName="justify-center bg-[#adc6f4] col-width15per"
+            className="col-width15per"
             headerCell={() => <div style={{ textAlign: "center", fontWeight: "bold" }}>Reload</div>}
             cell={(props) => (
               <td style={{ textAlign: "center" }}>

@@ -23,11 +23,11 @@ export default function Page() {
         <span className="text-[#656565] font-bold">List</span>
       </div>
       <PropertyDbManagementTable />
-      {/* <div className="flex justify-end">
+      <div className="flex justify-end">
         <Button svgIcon={arrowRightIcon} className="mt-2 flex items-center  justify-end">
           ADD
         </Button>
-      </div> */}
+      </div>
     </>
   );
 }

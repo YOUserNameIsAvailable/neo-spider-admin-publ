@@ -211,13 +211,41 @@ export function ComponentManagementTable() {
           selectedField={SELECTED_FIELD}
           onHeaderSelectionChange={onHeaderSelectionChange}
           onSelectionChange={onSelectionChange}
-          groupable={false}
-          size={"small"}>
-          <Column field="budget" width="150px" columnMenu={ColumnMenu} title="Component ID" />
-          <Column field="full_name" width="250px" columnMenu={ColumnMenu} title="Component name" />
-          <Column field="target" width="330px" columnMenu={ColumnMenu} title="Class" />
-          <Column field="target" width="130px" columnMenu={ColumnMenu} title="Method" />
-          <Column field="target" width="130px" columnMenu={ColumnMenu} title="Biz class" />
+          groupable={false}>
+          <Column
+            field="budget"
+            title="Component ID"
+            headerClassName="justify-center bg-[#adc6f4] col-width20per"
+            className="col-width20per"
+            columnMenu={ColumnMenu}
+          />
+          <Column
+            field="full_name"
+            title="Component name"
+            headerClassName="justify-center bg-[#adc6f4] col-width20per"
+            className="col-width20per"
+            columnMenu={ColumnMenu}
+          />
+          <Column
+            field="target"
+            title="Class"
+            headerClassName="justify-center bg-[#adc6f4] col-width30per"
+            className="col-width30per"
+            columnMenu={ColumnMenu}
+          />
+          <Column
+            field="target"
+            title="Method"
+            headerClassName="justify-center bg-[#adc6f4] col-width15per"
+            className="col-width15per"
+            columnMenu={ColumnMenu}
+          />
+          <Column
+            field="target"
+            title="Biz class"
+            headerClassName="justify-center bg-[#adc6f4] col-width15per"
+            columnMenu={ColumnMenu}
+          />
         </Grid>
       </ExcelExport>
       <GridPDFExport margin="1cm">
@@ -239,8 +267,7 @@ export function ComponentManagementTable() {
           selectedField={SELECTED_FIELD}
           onHeaderSelectionChange={onHeaderSelectionChange}
           onSelectionChange={onSelectionChange}
-          groupable={true}
-          size={"small"}></Grid>
+          groupable={true}></Grid>
       </GridPDFExport>
     </div>
   );

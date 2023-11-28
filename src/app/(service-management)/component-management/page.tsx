@@ -10,7 +10,7 @@ import { ServiceManagementTable } from "@/components/ServiceManagementTable";
 import { ComponentManagementTable } from "@/components/ComponentManagementTable";
 
 export default function Page() {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
 
   const toggleExpansion = () => {
     setIsExpanded(!isExpanded);
@@ -21,91 +21,103 @@ export default function Page() {
       <div>
         <div className="flex items-center gap-2 py-4">
           <img src={"/images/dot_subtitle.gif"} alt="" style={{}} />
-          <span>Condition</span>
-          <button className="bg-neutral-50 p-2" onClick={() => toggleExpansion()}>
+          <span className="font-bold text-[#656565]">Condition</span>
+          <button
+            className="border border-[#999999] bg-[#f6f6f6f6] px-[4px] py-[2px]"
+            onClick={() => toggleExpansion()}>
             Expand/Colapse
           </button>
         </div>
-        <div className="flex justify-between gap-4 bg-neutral-50 p-4">
-          <div className="flex items-center gap-4">
-            <DropDownList
-              className="h-7 w-32"
-              size={"small"}
-              data={SPORTS}
-              defaultValue="Option 1"
-              filterable={false}
-            />
-            <div className="flex items-center gap-2">
-              <Input className="h-7 w-40" />
-            </div>
-            <span className="text-sm">Class</span>
-
-            <Input className="h-7 w-40" />
-            <div className="flex items-center gap-2">
-              <span className="text-sm">Biz class</span>
+        <div className="bg-[#dde6f0] px-[10px]">
+          <div className="flex justify-between gap-4 bg-[#dde6f0] p-[5px]">
+            <div className="flex items-center gap-4">
               <DropDownList
-                className="h-7 w-32"
+                className="min-w-[120px] h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
                 size={"small"}
                 data={SPORTS}
-                defaultValue="Option 1"
+                defaultValue="Option"
                 filterable={false}
-              />{" "}
+              />
+              <div className="flex items-center gap-2">
+                <Input className="w-[148px] border border-[#999999]" />
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-[#6f7071]">Class</span>
+                <Input className="w-[148px] border border-[#999999]" />
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-[#6f7071] whitespace-nowrap">Biz class</span>
+                <DropDownList
+                  className="min-w-[120px] h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
+                  size={"small"}
+                  data={SPORTS}
+                  defaultValue="Option 1"
+                  filterable={false}
+                />{" "}
+              </div>
             </div>
-          </div>
-          <div className="flex items-center gap-8">
-            <div className="flex items-center gap-2">
-              <DropDownList className="h-7 w-16" size={"small"} data={PAGES} defaultValue="20" filterable={false} />
-              <span className="text-sm">Items</span>
-            </div>
+            <div className="flex items-center gap-8">
+              <div className="flex items-center gap-2">
+                <DropDownList
+                  className="h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
+                  size={"small"}
+                  data={PAGES}
+                  defaultValue="20"
+                  filterable={false}
+                />
+                <span className="">Items</span>
+              </div>
 
-            <Button svgIcon={searchIcon}>Find</Button>
+              <Button svgIcon={searchIcon} className="basic-btn">
+                Find
+              </Button>
+            </div>
           </div>
+          {isExpanded ? (
+            <div className="flex justify-between gap-4 border-t border-[#ccc]  bg-[#dde6f0] p-[5px]">
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <span className="font-bold text-[#6f7071] whitespace-nowrap">Component type</span>
+                  <DropDownList
+                    className="min-w-[148px] h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
+                    size={"small"}
+                    data={SPORTS}
+                    defaultValue="Option 1"
+                    filterable={false}
+                  />
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="font-bold text-[#6f7071] whitespace-nowrap">Creation type</span>
+                  <DropDownList
+                    className="min-w-[148px] h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
+                    size={"small"}
+                    data={SPORTS}
+                    defaultValue="Option 1"
+                    filterable={false}
+                  />
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="font-bold text-[#6f7071] whitespace-nowrap">select order</span>
+                  <DropDownList
+                    className="min-w-[148px] h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
+                    size={"small"}
+                    data={SPORTS}
+                    defaultValue="Option 1"
+                    filterable={false}
+                  />
+                </div>
+              </div>
+            </div>
+          ) : null}
         </div>
       </div>
-      {isExpanded ? (
-        <>
-          <div className="border-grey-500 flex justify-between gap-4 border-t-2 bg-neutral-50  p-4">
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <span className="text-sm">Component type</span>
-                <DropDownList
-                  className="h-7 w-40"
-                  size={"small"}
-                  data={SPORTS}
-                  defaultValue="Option 1"
-                  filterable={false}
-                />
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-sm">Creation type</span>
-                <DropDownList
-                  className="h-7 w-40"
-                  size={"small"}
-                  data={SPORTS}
-                  defaultValue="Option 1"
-                  filterable={false}
-                />
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-sm">select order</span>
-                <DropDownList
-                  className="h-7 w-40"
-                  size={"small"}
-                  data={SPORTS}
-                  defaultValue="Option 1"
-                  filterable={false}
-                />
-              </div>
-            </div>
-          </div>
-        </>
-      ) : null}
+
       {/* table */}
 
       <div className="flex w-[100%]">
         <div className="flex w-[65%] items-center gap-2 py-4">
           <img src={"/images/dot_subtitle.gif"} alt="" style={{}} />
-          <span>List</span>
+          <span className="font-bold text-[#656565]">List</span>
         </div>
       </div>
       <ComponentManagementTable />
