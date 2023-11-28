@@ -217,8 +217,7 @@ export function UserManagementTable() {
           selectedField={SELECTED_FIELD}
           onHeaderSelectionChange={onHeaderSelectionChange}
           onSelectionChange={onSelectionChange}
-          groupable={false}
-          size={"small"}>
+          groupable={false}>
           <Column
             field="budget"
             title="User ID"
@@ -364,8 +363,7 @@ export function UserManagementTable() {
           selectedField={SELECTED_FIELD}
           onHeaderSelectionChange={onHeaderSelectionChange}
           onSelectionChange={onSelectionChange}
-          groupable={true}
-          size={"small"}></Grid>
+          groupable={true}></Grid>
       </GridPDFExport>
     </div>
   );

@@ -14,7 +14,7 @@ export default function Page() {
       <>
         <div className="flex items-center gap-2 py-4">
           <img src={"/images/dot_subtitle.gif"} alt="" />
-          <span>Condition</span>
+          <span className="font-bold text-[#656565]">Condition</span>
         </div>
         <div className="flex justify-between gap-4 bg-[#dde6f0] p-4">
           <div className="flex items-center gap-4">
@@ -45,7 +45,7 @@ export default function Page() {
       <div>
         <div className="flex items-center gap-2 py-4">
           <img src={"/images/dot_subtitle.gif"} alt="" style={{}} />
-          <span>List</span>
+          <span className="font-bold text-[#656565]">List</span>
         </div>
         <RoleManagementTable />
       </div>

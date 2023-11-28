@@ -20,7 +20,7 @@ export default function Page() {
       <div>
         <div className="flex items-center gap-2 py-4">
           <img src={"/images/dot_subtitle.gif"} alt="" style={{}} />
-          <span>Condition</span>
+          <span className="font-bold text-[#656565]">Condition</span>
           <button
             className="border border-[#999999] bg-[#f6f6f6f6] px-[4px] py-[2px]"
             onClick={() => toggleExpansion()}>
@@ -81,11 +81,11 @@ export default function Page() {
       {/* table */}
       <div className="flex items-center gap-2 py-4">
         <img src={"/images/dot_subtitle.gif"} alt="" style={{}} />
-        <span>List</span>
+        <span className="font-bold text-[#656565]">List</span>
       </div>
       <ErrorCodeTable />
       <div className="flex justify-end">
-        <Button svgIcon={arrowRightIcon} className="mt-2 flex items-center  justify-end">
+        <Button svgIcon={arrowRightIcon} className="mt-2 flex items-center justify-end">
           ADD
         </Button>
       </div>

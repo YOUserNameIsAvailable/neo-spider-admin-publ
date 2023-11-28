@@ -217,8 +217,7 @@ export function ErrorCodeTable() {
           selectedField={SELECTED_FIELD}
           onHeaderSelectionChange={onHeaderSelectionChange}
           onSelectionChange={onSelectionChange}
-          groupable={false}
-          size={"small"}>
+          groupable={false}>
           <Column
             field="budget"
             title="Error Code"
@@ -281,8 +280,7 @@ export function ErrorCodeTable() {
           selectedField={SELECTED_FIELD}
           onHeaderSelectionChange={onHeaderSelectionChange}
           onSelectionChange={onSelectionChange}
-          groupable={true}
-          size={"small"}></Grid>
+          groupable={true}></Grid>
       </GridPDFExport>
     </div>
   );

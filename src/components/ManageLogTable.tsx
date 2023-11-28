@@ -25,7 +25,7 @@ const processWithGroups = (data: any, dataState: any) => {
   return newDataState;
 };
 
-export function CodeManageTable() {
+export function ManageLogTable() {
   const idGetter = getter("id");
   const [filterValue, setFilterValue] = React.useState();
   const [filteredData, setFilteredData] = React.useState(EMPLOYEES);
@@ -216,16 +216,62 @@ export function CodeManageTable() {
           selectedField={SELECTED_FIELD}
           onHeaderSelectionChange={onHeaderSelectionChange}
           onSelectionChange={onSelectionChange}
-          groupable={false}
-          size={"small"}>
-          <Column field="budget" width="110px" title="Serial no" columnMenu={ColumnMenu} />
-          <Column field="full_name" width="200px" title="Log tracking number" columnMenu={ColumnMenu} />
-          <Column field="target" width="150px" title="Customer ID" columnMenu={ColumnMenu} />
-          <Column field="budget" width="200px" title="Channel ID" columnMenu={ColumnMenu} />
-          <Column field="budget" width="250px" title="Outgoing Incomming" columnMenu={ColumnMenu} />
-          <Column field="budget" width="100px" title="요청 응답" />
-          <Column field="budget" width="150px" title="Processing result" columnMenu={ColumnMenu} />
-          <Column field="budget" width="150px" title="Result message" columnMenu={ColumnMenu} />
+          groupable={false}>
+          <Column
+            field="budget"
+            headerClassName="justify-center bg-[#adc6f4] col-width12per"
+            className="col-width12per"
+            title="Serial no"
+            columnMenu={ColumnMenu}
+          />
+          <Column
+            field="full_name"
+            headerClassName="justify-center bg-[#adc6f4] col-width20per"
+            className="col-width20per"
+            title="Log tracking number"
+            columnMenu={ColumnMenu}
+          />
+          <Column
+            field="target"
+            headerClassName="justify-center bg-[#adc6f4] col-width20per"
+            className="col-width20per"
+            title="Customer ID"
+            columnMenu={ColumnMenu}
+          />
+          <Column
+            field="budget"
+            headerClassName="justify-center bg-[#adc6f4] col-width8per"
+            className="col-width8per"
+            title="Channel ID"
+            columnMenu={ColumnMenu}
+          />
+          <Column
+            field="budget"
+            headerClassName="justify-center bg-[#adc6f4] col-width6per"
+            className="col-width6per"
+            title="Outgoing Incomming"
+            columnMenu={ColumnMenu}
+          />
+          <Column
+            field="budget"
+            headerClassName="justify-center bg-[#adc6f4] col-width6per"
+            className="col-width6per"
+            title="요청 응답"
+          />
+          <Column
+            field="budget"
+            headerClassName="justify-center bg-[#adc6f4] col-width12per"
+            className="col-width12per"
+            title="Processing result"
+            columnMenu={ColumnMenu}
+          />
+          <Column
+            field="budget"
+            headerClassName="justify-center bg-[#adc6f4] col-width14per"
+            className="col-width14per"
+            title="Result message"
+            columnMenu={ColumnMenu}
+          />
         </Grid>
       </ExcelExport>
       <GridPDFExport margin="1cm">
@@ -247,8 +293,7 @@ export function CodeManageTable() {
           selectedField={SELECTED_FIELD}
           onHeaderSelectionChange={onHeaderSelectionChange}
           onSelectionChange={onSelectionChange}
-          groupable={true}
-          size={"small"}></Grid>
+          groupable={true}></Grid>
       </GridPDFExport>
     </div>
   );
