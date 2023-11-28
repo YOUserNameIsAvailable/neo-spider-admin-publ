@@ -232,32 +232,23 @@ export function PropertyDbManagementTable() {
             className="col-width25per"
             columnMenu={ColumnMenu}
           />
-
           <Column
             field="budget"
             headerClassName="justify-center bg-[#adc6f4] col-width15per"
-            className="col-width15per"
-            headerCell={() => <div style={{ textAlign: "center", fontWeight: "bold" }}>Detail view</div>}
+            headerCell={() => <div className="text-center font-bold">Detail view</div>}
             cell={(props) => (
-              <td style={{ textAlign: "center" }}>
-                {" "}
-                <Button size={"small"} className="px-4" themeColor={"primary"}>
-                  Detail view
-                </Button>
+              <td className="col-width15per" style={{ textAlign: "center" }}>
+                <Button className="td-btn">Detail view</Button>
               </td>
             )}
           />
           <Column
             field="budget"
             headerClassName="justify-center bg-[#adc6f4] col-width20per"
-            className="col-width20per"
-            headerCell={() => <div style={{ textAlign: "center", fontWeight: "bold" }}>Setting vaolue per WAS</div>}
+            headerCell={() => <div className="text-center font-bold">Setting vaolue per WAS</div>}
             cell={(props) => (
-              <td style={{ textAlign: "center" }}>
-                {" "}
-                <Button size={"small"} className="px-4" themeColor={"primary"}>
-                  Setting value per WAS
-                </Button>
+              <td className="col-width20per" style={{ textAlign: "center" }}>
+                <Button className="td-btn">Setting value per WAS</Button>
               </td>
             )}
           />
@@ -265,13 +256,10 @@ export function PropertyDbManagementTable() {
             field="budget"
             headerClassName="justify-center bg-[#adc6f4] col-width15per"
             className="col-width15per"
-            headerCell={() => <div style={{ textAlign: "center", fontWeight: "bold" }}>Reload</div>}
+            headerCell={() => <div className="text-center font-bold">Reload</div>}
             cell={(props) => (
-              <td style={{ textAlign: "center" }}>
-                {" "}
-                <Button size={"small"} className="px-4" themeColor={"primary"}>
-                  Reload
-                </Button>
+              <td className="col-width15per" style={{ textAlign: "center" }}>
+                <Button className="td-btn">Reload</Button>
               </td>
             )}
           />

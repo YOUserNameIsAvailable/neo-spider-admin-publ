@@ -56,41 +56,11 @@
     color-stop(50%, #36518f),
     color-stop(100%, #3d5691)
   );
-  background-image: -webkit-linear-gradient(
-    to top,
-    #8c9cbf 0%,
-    #546a9e 50%,
-    #36518f 50%,
-    #3d5691 100%
-  );
-  background-image: -moz-linear-gradient(
-    to top,
-    #8c9cbf 0%,
-    #546a9e 50%,
-    #36518f 50%,
-    #3d5691 100%
-  );
-  background-image: -ms-linear-gradient(
-    to top,
-    #8c9cbf 0%,
-    #546a9e 50%,
-    #36518f 50%,
-    #3d5691 100%
-  );
-  background-image: -o-linear-gradient(
-    to top,
-    #8c9cbf 0%,
-    #546a9e 50%,
-    #36518f 50%,
-    #3d5691 100%
-  );
-  background-image: linear-gradient(
-    to top,
-    #8c9cbf 0%,
-    #546a9e 50%,
-    #36518f 50%,
-    #3d5691 100%
-  );
+  background-image: -webkit-linear-gradient(to top, #8c9cbf 0%, #546a9e 50%, #36518f 50%, #3d5691 100%);
+  background-image: -moz-linear-gradient(to top, #8c9cbf 0%, #546a9e 50%, #36518f 50%, #3d5691 100%);
+  background-image: -ms-linear-gradient(to top, #8c9cbf 0%, #546a9e 50%, #36518f 50%, #3d5691 100%);
+  background-image: -o-linear-gradient(to top, #8c9cbf 0%, #546a9e 50%, #36518f 50%, #3d5691 100%);
+  background-image: linear-gradient(to top, #8c9cbf 0%, #546a9e 50%, #36518f 50%, #3d5691 100%);
   border: 1px solid #172d6e;
   border-bottom: 1px solid #0e1d45;
   border-radius: 5px;
@@ -101,6 +71,39 @@
   text-decoration: none;
   text-align: center;
   text-shadow: 0 -1px 1px #000f4d;
+}
+
+.td-btn {
+  background-color: #ffffff;
+  background-image: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    color-stop(0%, #f8f8f8),
+    color-stop(50%, #ffffff),
+    color-stop(50%, #ffffff),
+    color-stop(100%, #f0f0f0)
+  );
+  background-image: -webkit-linear-gradient(to top, #dddddd 0%, #c7c7c7 50%, #a8a8a8 50%, #cdcdcd 100%);
+  background-image: -moz-linear-gradient(to top, #dddddd 0%, #c7c7c7 50%, #a8a8a8 50%, #cdcdcd 100%);
+  background-image: -ms-linear-gradient(to top, #dddddd 0%, #c7c7c7 50%, #a8a8a8 50%, #cdcdcd 100%);
+  background-image: -o-linear-gradient(to top, #dddddd 0%, #c7c7c7 50%, #a8a8a8 50%, #cdcdcd 100%);
+  background-image: linear-gradient(to top, #dddddd 0%, #c7c7c7 50%, #a8a8a8 50%, #cdcdcd 100%);
+  border: 1px solid #b2b2b2;
+  border-bottom: 1px solid #aaaaaa;
+  border-radius: 5px;
+  -webkit-box-shadow: inset 0 1px 0 0 #c8cbd1;
+  box-shadow: inset 0 1px 0 0 #d4d4d4;
+  text-decoration: none;
+  text-align: center;
+  text-shadow: 0 -1px 1px #8c8c8c;
+
+  margin-left: 0.16em;
+  margin-right: 0.16em;
+  height: 20px;
+  padding: 4px 20px 4px 20px;
+  font-size: 12px;
+  border: 1px solid #676464;
 }
 
 .print-btn {
