@@ -18,9 +18,9 @@ export default function Page() {
         </div>
         <div className="flex justify-between gap-4 bg-[#dde6f0] p-4">
           <div className="flex items-center gap-4">
-            <div className="flex flex-row" style={{ minWidth: "120px" }}>
+            <div className="flex flex-row items-center justify-center">
               <DropDownList
-                className="mr-2"
+                className="mr-2 h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
                 size={"small"}
                 data={SPORTS}
                 defaultValue="Option 1"
@@ -34,7 +34,7 @@ export default function Page() {
           <div className="flex items-center gap-8">
             <div className="flex items-center gap-2">
               <DropDownList size={"small"} data={PAGES} defaultValue="20" filterable={false} />
-              <span>Items</span>
+              <span className="font-bold">Items</span>
             </div>
             <Button imageUrl="/images/refresh.png" className="basic-btn">
               Find

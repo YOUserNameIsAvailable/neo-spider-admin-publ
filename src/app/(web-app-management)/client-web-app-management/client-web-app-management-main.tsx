@@ -113,7 +113,7 @@ export const ClientWebAppMain: React.FC<ClientWebProps> = ({ onRowClick }) => {
               <div className="flex items-center gap-2">
                 <span className="text-sm">e채널 로그 분류코드</span>
                 <DropDownList
-                  className="h-7 w-40"
+                  className="h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
                   size={"small"}
                   data={SPORTS}
                   defaultValue="Option 1"
@@ -123,7 +123,7 @@ export const ClientWebAppMain: React.FC<ClientWebProps> = ({ onRowClick }) => {
               <div className="flex items-center gap-2">
                 <span className="text-sm">Required</span>
                 <DropDownList
-                  className="h-7 w-40"
+                  className="h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
                   size={"small"}
                   data={SPORTS}
                   defaultValue="Option 1"
@@ -133,7 +133,7 @@ export const ClientWebAppMain: React.FC<ClientWebProps> = ({ onRowClick }) => {
               <div className="flex items-center gap-2">
                 <span className="text-sm">Whether electronic signature is required</span>
                 <DropDownList
-                  className="h-7 w-40"
+                  className="h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
                   size={"small"}
                   data={SPORTS}
                   defaultValue="Option 1"
@@ -147,7 +147,7 @@ export const ClientWebAppMain: React.FC<ClientWebProps> = ({ onRowClick }) => {
               <div className="flex items-center gap-2">
                 <span className="text-sm">입력유형</span>
                 <DropDownList
-                  className="h-7 w-40"
+                  className="h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
                   size={"small"}
                   data={SPORTS}
                   defaultValue="Option 1"
@@ -157,7 +157,7 @@ export const ClientWebAppMain: React.FC<ClientWebProps> = ({ onRowClick }) => {
               <div className="flex items-center gap-2">
                 <span className="text-sm">IN/OUTuse message</span>
                 <DropDownList
-                  className="h-7 w-40"
+                  className="h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
                   size={"small"}
                   data={SPORTS}
                   defaultValue="Option 1"
@@ -167,7 +167,7 @@ export const ClientWebAppMain: React.FC<ClientWebProps> = ({ onRowClick }) => {
               <div className="flex items-center gap-2">
                 <span className="text-sm">Biz class</span>
                 <DropDownList
-                  className="h-7 w-40"
+                  className="h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
                   size={"small"}
                   data={SPORTS}
                   defaultValue="Option 1"

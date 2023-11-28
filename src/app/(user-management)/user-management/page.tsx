@@ -21,9 +21,9 @@ export default function Page() {
           <span className="font-bold text-[#656565]">Condition</span>
         </div>
         <div className="flex justify-between gap-4 bg-[#dde6f0] p-4">
-          <div className="shrink-1 flex flex-grow items-center gap-4">
+          <div className="flex w-full items-center gap-4">
             <DropDownList
-              className="h-[24px] w-32"
+              className="h-[30px] w-[100px] border bg-[#f6f6f6f6] text-[#656565]"
               size={"small"}
               data={SPORTS}
               defaultValue="Option 1"
