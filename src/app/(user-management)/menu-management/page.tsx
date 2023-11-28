@@ -16,28 +16,29 @@ export default function Page() {
           <img src={"/images/dot_subtitle.gif"} alt="" />
           <span>Condition</span>
         </div>
-        <div className="searchbox flex min-h-[40px] justify-between gap-2">
+        <div className="flex justify-between gap-4 bg-[#dde6f0] p-4">
           <div className="flex items-center gap-4">
-            <div className="minw input-group" style={{ minWidth: "120px", marginLeft: "2px" }}>
+            <div className="flex flex-row" style={{ minWidth: "120px" }}>
               <DropDownList
-                className="ml-5 mr-2 h-7 w-32 text-xs"
+                className="mr-2"
                 size={"small"}
                 data={SPORTS}
                 defaultValue="Option 1"
                 filterable={false}
+                style={{ width: "100px" }}
               />
 
-              <Input className="h-7 w-40" />
+              <Input className="h-[24px] w-[148px]" />
             </div>
 
-            <div className="minw input-group" style={{ minWidth: "120px", marginLeft: "2px" }}>
-              <span className="mr-2 text-xs">Menu URL</span>
-              <Input className="h-7 w-40" />
+            <div className="" style={{ minWidth: "120px", marginLeft: "2px" }}>
+              <span className="mr-2">Menu URL</span>
+              <Input className="h-[24px] w-[148px]" />
             </div>
 
-            <div className="minw input-group" style={{ minWidth: "120px", marginLeft: "2px" }}>
-              <span className="mr-2 text-xs">Top menu ID</span>
-              <Input className="h-7 w-40" />
+            <div className="" style={{ minWidth: "120px", marginLeft: "2px" }}>
+              <span className="text-mdmr-2">Top menu ID</span>
+              <Input className="h-[24px] w-[148px]" />
             </div>
             <button data-role="button" role="button" className="search_btn no-text" aria-disabled="false">
               <img src="/images/search.gif" alt="" />
@@ -46,8 +47,8 @@ export default function Page() {
 
           <div className="flex items-center gap-8">
             <div className="flex items-center gap-2">
-              <DropDownList className="h-7 w-16" size={"small"} data={PAGES} defaultValue="20" filterable={false} />
-              <span className="text-xs">Items</span>
+              <DropDownList size={"small"} data={PAGES} defaultValue="20" filterable={false} />
+              <span className="text-md">Items</span>
             </div>
 
             <Button imageUrl="/images/refresh.png" className="basic-btn">
@@ -57,7 +58,7 @@ export default function Page() {
         </div>
       </>
       <div>
-        <div className="flex items-center gap-2 pb-4">
+        <div className="flex items-center gap-2 py-4">
           <img src={"/images/dot_subtitle.gif"} alt="" style={{}} />
           <span>List</span>
         </div>

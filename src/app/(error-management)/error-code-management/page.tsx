@@ -21,26 +21,28 @@ export default function Page() {
         <div className="flex items-center gap-2 py-4">
           <img src={"/images/dot_subtitle.gif"} alt="" style={{}} />
           <span>Condition</span>
-          <button className="bg-[#f6f6f6f6] px-[4px] py-[2px] border border-[#999999]" onClick={() => toggleExpansion()}>
+          <button
+            className="border border-[#999999] bg-[#f6f6f6f6] px-[4px] py-[2px]"
+            onClick={() => toggleExpansion()}>
             Enlargement/Reduction
           </button>
         </div>
-        <div className="bg-[#dde6f0] flex justify-between p-4 gap-4">
+        <div className="flex justify-between gap-4 bg-[#dde6f0] p-4">
           <div className="flex items-center gap-4">
             <DropDownList
-              className="w-32 h-7"
+              className="h-[24px] w-32"
               size={"small"}
               data={SPORTS}
               defaultValue="Option 1"
               filterable={false}
             />
 
-            <Input className="w-40 h-7" />
+            <Input className="h-[24px] w-[148px]" />
 
             <div className="flex items-center gap-2">
-              <span className="text-sm">Error handler</span>
+              <span>Error handler</span>
               <DropDownList
-                className="w-40 h-7"
+                className="h-[24px] w-40"
                 size={"small"}
                 data={SPORTS}
                 defaultValue="Option 1"
@@ -51,8 +53,8 @@ export default function Page() {
 
           <div className="flex items-center gap-8">
             <div className="flex items-center gap-2">
-              <DropDownList className="w-16 h-7" size={"small"} data={PAGES} defaultValue="20" filterable={false} />
-              <span className="text-sm">Items</span>
+              <DropDownList className="h-[24px]" size={"small"} data={PAGES} defaultValue="20" filterable={false} />
+              <span>Items</span>
             </div>
 
             <Button svgIcon={searchIcon}>Find</Button>
@@ -60,12 +62,12 @@ export default function Page() {
         </div>
         {/* exandable */}
         {isExpanded ? (
-          <div className="bg-[#dde6f0] flex justify-between p-4 gap-4 border-t border-[#ccc]">
+          <div className="flex justify-between gap-4 border-t border-[#ccc] bg-[#dde6f0] p-4">
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
-                <span className="text-sm">Tran name</span>
+                <span>Tran name</span>
                 <DropDownList
-                  className="w-60 h-7"
+                  className="h-[24px] w-60"
                   size={"small"}
                   data={SPORTS}
                   defaultValue="Option 1"
@@ -83,7 +85,7 @@ export default function Page() {
       </div>
       <ErrorCodeTable />
       <div className="flex justify-end">
-        <Button svgIcon={arrowRightIcon} className="flex items-center justify-end  mt-2">
+        <Button svgIcon={arrowRightIcon} className="mt-2 flex items-center  justify-end">
           ADD
         </Button>
       </div>

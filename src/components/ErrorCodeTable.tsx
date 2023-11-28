@@ -66,10 +66,10 @@ export function ErrorCodeTable() {
     processWithGroups(
       EMPLOYEES.map((item: any) => ({
         ...item,
-        "selected": currentSelectedState[idGetter(item)],
+        selected: currentSelectedState[idGetter(item)],
       })),
-      initialDataState
-    )
+      initialDataState,
+    ),
   );
 
   const dataStateChange = (event: any) => {
@@ -98,7 +98,7 @@ export function ErrorCodeTable() {
         });
       }
     },
-    [dataResult]
+    [dataResult],
   );
 
   const setSelectedValue = (data: any) => {
@@ -111,7 +111,7 @@ export function ErrorCodeTable() {
       } else {
         return {
           ...item,
-          "selected": currentSelectedState[idGetter(item)],
+          selected: currentSelectedState[idGetter(item)],
         };
       }
     });
@@ -139,7 +139,7 @@ export function ErrorCodeTable() {
       const newDataResult = processWithGroups(newData, dataState);
       setDataResult(newDataResult);
     },
-    [data, dataState]
+    [data, dataState],
   );
 
   const onSelectionChange = (event: any) => {
@@ -218,8 +218,7 @@ export function ErrorCodeTable() {
           onHeaderSelectionChange={onHeaderSelectionChange}
           onSelectionChange={onSelectionChange}
           groupable={false}
-          size={"small"}
-        >
+          size={"small"}>
           <Column
             field="budget"
             title="Error Code"
@@ -252,9 +251,14 @@ export function ErrorCodeTable() {
             field="budget"
             width="150px"
             title="Handler per error"
-            cell={(props) => <td style={{ textAlign: "center" }}> <Button size={"small"} className="px-4 cell-inside-btn" themeColor={"primary"}>
-              Handler
-            </Button></td>}
+            headerClassName="justify-center bg-[#adc6f4]"
+            cell={(props) => (
+              <td style={{ textAlign: "center" }}>
+                <Button size={"small"} className="cell-inside-btn px-4" themeColor={"primary"}>
+                  Handler
+                </Button>
+              </td>
+            )}
           />
         </Grid>
       </ExcelExport>
@@ -278,8 +282,7 @@ export function ErrorCodeTable() {
           onHeaderSelectionChange={onHeaderSelectionChange}
           onSelectionChange={onSelectionChange}
           groupable={true}
-          size={"small"}
-        ></Grid>
+          size={"small"}></Grid>
       </GridPDFExport>
     </div>
   );

@@ -268,7 +268,13 @@ export function UserManagementTable() {
             className="col-width11per"
             columnMenu={ColumnMenu}
           />
-          <Column field="budget" title="Modified  date" width="140px" columnMenu={ColumnMenu} />
+          <Column
+            field="budget"
+            title="Modified  date"
+            headerClassName="justify-center bg-[#adc6f4] col-width15per"
+            className="col-width15per"
+            columnMenu={ColumnMenu}
+          />
           <Column
             field="Menu init"
             title="Menu init"

@@ -7,6 +7,7 @@ import { searchIcon, arrowRightIcon } from "@progress/kendo-svg-icons";
 import { useTab } from "@/providers/TabProvider";
 import { PAGES, SPORTS } from "@/constants";
 import { UserManagementTable } from "@/components/UserManagementTable";
+import React from "react";
 
 export default function Page() {
   const { selectedTab } = useTab();
@@ -19,22 +20,22 @@ export default function Page() {
           <img src={"/images/dot_subtitle.gif"} alt="" style={{}} />
           <span>Condition</span>
         </div>
-        <div className="flex justify-between gap-4 bg-neutral-50 p-4">
+        <div className="flex justify-between gap-4 bg-[#dde6f0] p-4">
           <div className="flex items-center gap-4">
             <DropDownList
-              className="h-7 w-32"
+              className="h-[24px] w-32"
               size={"small"}
               data={SPORTS}
               defaultValue="Option 1"
               filterable={false}
             />
 
-            <Input className="h-7 w-40" />
+            <Input className="h-[24px] w-40" />
 
             <div className="flex items-center gap-2">
-              <span className="text-sm">User status:</span>
+              <span>User status:</span>
               <DropDownList
-                className="h-7 w-20"
+                className="h-[24px] w-20"
                 size={"small"}
                 data={SPORTS}
                 defaultValue="Option 1"
@@ -43,9 +44,9 @@ export default function Page() {
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="text-sm">Auth:</span>
+              <span>Auth:</span>
               <DropDownList
-                className="w-25 h-7"
+                className="w-25 h-[24px]"
                 size={"small"}
                 data={SPORTS}
                 defaultValue="Option 1"
@@ -54,9 +55,9 @@ export default function Page() {
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="text-sm">Rank:</span>
+              <span>Rank:</span>
               <DropDownList
-                className="w-25 h-7"
+                className="w-25 h-[24px]"
                 size={"small"}
                 data={SPORTS}
                 defaultValue="Option 1"
@@ -67,11 +68,19 @@ export default function Page() {
 
           <div className="flex items-center gap-8">
             <div className="flex items-center gap-2">
-              <DropDownList className="h-7 w-16" size={"small"} data={PAGES} defaultValue="20" filterable={false} />
-              <span className="text-sm">Items</span>
+              <DropDownList
+                size={"small"}
+                data={PAGES}
+                defaultValue="20"
+                filterable={false}
+                style={{ width: "80px" }}
+              />
+              <span>Items</span>
             </div>
 
-            <Button svgIcon={searchIcon}>Find</Button>
+            <Button imageUrl="/images/refresh.png" className="basic-btn">
+              Find
+            </Button>
           </div>
         </div>
       </>
