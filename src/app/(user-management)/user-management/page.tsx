@@ -1,16 +1,14 @@
 "use client";
 
 import React, { useState } from "react";
-import { Input, Checkbox } from "@progress/kendo-react-inputs";
+import { Input } from "@progress/kendo-react-inputs";
 import { Button } from "@progress/kendo-react-buttons";
-import { DropDownList, ListItemProps } from "@progress/kendo-react-dropdowns";
-import { arrowRightIcon } from "@progress/kendo-svg-icons";
+import { DropDownList } from "@progress/kendo-react-dropdowns";
 import { useTab } from "@/providers/TabProvider";
 import { PAGES, SPORTS } from "@/constants";
 import { UserManagementTable } from "@/components/UserManagementTable";
-import { getter } from "@progress/kendo-react-common";
 
-export default function Page() {
+export default async function Page() {
   const { selectedTab } = useTab();
   const [isExpanded, setIsExpanded] = useState(false);
 

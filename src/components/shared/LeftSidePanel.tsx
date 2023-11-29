@@ -28,7 +28,7 @@ const TreeItem = (props: ItemRenderProps) => {
   );
 };
 
-export function LeftSideBar({ clickCollapseBtn }: () => void) {
+export function LeftSideBar({ clickCollapseBtn }: { clickCollapseBtn: () => void }) {
   const { tabs, setTabs, setSelectedTab } = useTab();
 
   const router = useRouter();
