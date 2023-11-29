@@ -1,8 +1,9 @@
 "use client";
 
-import { MENUS } from "@/constants";
+import { MENU_ITEMS } from "@/constants";
+// import { DEFAULT_TAB, MENUS } from "@/constants";
 import { ITab } from "@/types";
-import { useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import {
   createContext,
   useContext,
@@ -38,7 +39,10 @@ export const useTab = () => {
 };
 
 export const TabProvider: FC<TabProviderProps> = ({ children }) => {
-  const [tabs, setTabs] = useState<ITab[]>([...MENUS.filter((x) => x.url === "/service-management")]);
+  const pathname = usePathname();
+  const item = MENU_ITEMS.find((x) => x.url === pathname);
+
+  const [tabs, setTabs] = useState<ITab[]>(item ? [item] : []);
   const [selectedTab, setSelectedTab] = useState<ITab>(tabs[0]);
 
   const router = useRouter();

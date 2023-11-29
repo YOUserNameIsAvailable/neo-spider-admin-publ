@@ -48,8 +48,19 @@ code {
   padding: 8px 16px !important;
 }
 
-.title-bar {
-  @apply flex w-full items-center justify-between gap-4 bg-neutral-50 px-4 py-2.5;
+.k-button-sm,
+.k-input-sm,
+.k-picker-sm,
+.k-table-sm {
+  font-size: 13px !important;
+}
+
+.k-column-title {
+  font-weight: 500 !important;
+}
+
+.page-titlebar {
+  @apply flex w-full items-center justify-between gap-4 bg-slate-50 px-4 py-2.5;
 
   .title {
     @apply font-medium capitalize;
@@ -58,4 +69,51 @@ code {
   .actions {
     @apply flex gap-2;
   }
+}
+
+.page-container {
+  @apply flex h-full flex-col;
+}
+
+.page-subtitle {
+  @apply flex items-center gap-2 p-4;
+
+  .dot {
+    @apply h-[13px] w-[13px] bg-[url("/images/dot\_subtitle.gif")] bg-cover bg-center bg-no-repeat;
+  }
+}
+
+.table-filter {
+  @apply mx-4 flex flex-col rounded-lg bg-neutral-50 divide-y;
+
+  .filter {
+    @apply flex justify-between gap-4 p-3;
+  }
+
+  .filter-item {
+    @apply flex items-center gap-2;
+    span {
+      @apply text-sm capitalize;
+    }
+  }
+
+  .start {
+    @apply flex items-center gap-4;
+  }
+
+  .end {
+    @apply flex items-center gap-8;
+  }
+}
+
+.table-container {
+  @apply flex min-h-0 w-full px-4;
+
+  .k-grid.k-grid-sm {
+    @apply w-full overflow-auto rounded-lg;
+  }
+}
+
+.table-b-actions {
+  @apply flex justify-end gap-4 p-4;
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import { getter } from "@progress/kendo-react-common";
 import { process } from "@progress/kendo-data-query";
 import { GridPDFExport } from "@progress/kendo-react-pdf";
@@ -8,6 +8,8 @@ import { setGroupIds, setExpandedState } from "@progress/kendo-react-data-tools"
 import { EMPLOYEES } from "@/constants";
 import { ColumnMenu } from "./ColumnMenu";
 import { Button } from "@progress/kendo-react-buttons";
+import { Dialog, DialogActionsBar, Window } from "@progress/kendo-react-dialogs";
+import { UserRoleManagementDialog } from "./dialogs/UserRoleManagementDialog";
 
 const DATA_ITEM_KEY = "id";
 const SELECTED_FIELD = "selected";
@@ -28,12 +30,37 @@ const processWithGroups = (data: any, dataState: any) => {
 
 export function UserManagementTable() {
   const idGetter = getter("id");
-  const [filterValue, setFilterValue] = React.useState();
-  const [filteredData, setFilteredData] = React.useState(EMPLOYEES);
-  const [currentSelectedState, setCurrentSelectedState] = React.useState<any>({});
-  const [dataState, setDataState] = React.useState(initialDataState);
-  const [dataResult, setDataResult] = React.useState(process(filteredData, dataState));
-  const [data, setData] = React.useState(filteredData);
+  const [filterValue, setFilterValue] = useState();
+  const [filteredData, setFilteredData] = useState([...EMPLOYEES, ...EMPLOYEES]);
+  const [currentSelectedState, setCurrentSelectedState] = useState<any>({});
+  const [dataState, setDataState] = useState(initialDataState);
+  const [dataResult, setDataResult] = useState(process(filteredData, dataState));
+  const [data, setData] = useState(filteredData);
+  const _export = useRef<ExcelExport | null>(null);
+
+  const [openUserRoleManagementDialog, setOpenUserRoleManagementDialog] = useState(false);
+
+  function onCloseUserRoleManagementDialog(payload?: any) {
+    if (payload) {
+      // TODO
+    }
+
+    setOpenUserRoleManagementDialog(false);
+  }
+
+  const exportExport = () => {
+    if (_export.current !== null) {
+      _export.current.save(dataResult);
+    }
+  };
+
+  let gridPDFExport: GridPDFExport | null;
+
+  const exportPDF = () => {
+    if (gridPDFExport !== null) {
+      gridPDFExport.save();
+    }
+  };
 
   const onFilterChange = (ev: any) => {
     let value = ev.value;
@@ -196,113 +223,94 @@ export function UserManagementTable() {
     </td>
   );
 
+  const DataGrid = () => (
+    <Grid
+      {...dataState}
+      data={dataResult}
+      dataItemKey={DATA_ITEM_KEY}
+      expandField="expanded"
+      groupable={false}
+      onDataStateChange={dataStateChange}
+      onExpandChange={onExpandChange}
+      onHeaderSelectionChange={onHeaderSelectionChange}
+      onSelectionChange={onSelectionChange}
+      pageable={{ pageSizes: true }}
+      selectedField={SELECTED_FIELD}
+      size={"small"}
+      sortable={false}
+      scrollable="scrollable"
+      fixedScroll={true}
+      total={resultState.total}>
+      <Column field="budget" title="User ID" columnMenu={ColumnMenu} />
+      <Column field="full_name" title="User Name" columnMenu={ColumnMenu} />
+      <Column field="target" title="Rank" columnMenu={ColumnMenu} />
+      <Column field="budget" title="Emp no" columnMenu={ColumnMenu} />
+      <Column field="budget" title="Role name" columnMenu={ColumnMenu} />
+      <Column field="budget" title="Belong" columnMenu={ColumnMenu} />
+      <Column field="budget" title="User status" columnMenu={ColumnMenu} />
+      <Column field="budget" title="Modified  date" columnMenu={ColumnMenu} />
+      <Column
+        title="Menu init"
+        width={100}
+        cell={(props) => (
+          <td className="text-center">
+            <Button size={"small"} className="px-4" themeColor={"primary"}>
+              Reset
+            </Button>
+          </td>
+        )}
+      />
+      <Column
+        title="Menu authority"
+        width={100}
+        cell={(props) => (
+          <td className="text-center">
+            <Button
+              size={"small"}
+              className="px-4"
+              themeColor={"primary"}
+              onClick={() => setOpenUserRoleManagementDialog(true)}>
+              Menu
+            </Button>
+          </td>
+        )}
+      />
+      <Column
+        title="Status(Error count)"
+        width={130}
+        cell={(props) => (
+          <td className="text-center">
+            <Button size={"small"} className="px-4" themeColor={"primary"}>
+              Unloack(0)
+            </Button>
+          </td>
+        )}
+      />
+      <Column
+        title="DO Login"
+        width={100}
+        cell={(props) => (
+          <td className="text-center">
+            <Button size={"small"} className="px-4" themeColor={"primary"}>
+              Login
+            </Button>
+          </td>
+        )}
+      />
+    </Grid>
+  );
+
   return (
-    <div>
-      <ExcelExport>
-        <Grid
-          style={{
-            height: "500px",
-          }}
-          pageable={{
-            pageSizes: true,
-          }}
-          data={dataResult}
-          sortable={false}
-          total={resultState.total}
-          onDataStateChange={dataStateChange}
-          {...dataState}
-          onExpandChange={onExpandChange}
-          expandField="expanded"
-          dataItemKey={DATA_ITEM_KEY}
-          selectedField={SELECTED_FIELD}
-          onHeaderSelectionChange={onHeaderSelectionChange}
-          onSelectionChange={onSelectionChange}
-          groupable={false}
-          size={"small"}>
-          <Column field="budget" title="User ID" width="105px" columnMenu={ColumnMenu} />
-          <Column field="full_name" title="User Name" width="105px" columnMenu={ColumnMenu} />
-          <Column field="target" title="Rank" width="105px" columnMenu={ColumnMenu} />
-          <Column field="budget" title="Emp no" width="105px" columnMenu={ColumnMenu} />
-          <Column field="budget" title="Role name" width="105px" columnMenu={ColumnMenu} />
-          <Column field="budget" title="Belong" width="105px" columnMenu={ColumnMenu} />
-          <Column field="budget" title="User status" width="105px" columnMenu={ColumnMenu} />
-          <Column field="budget" title="Modified  date" width="140px" columnMenu={ColumnMenu} />
-          <Column
-            field="Menu init"
-            title="Menu init"
-            width="105px"
-            cell={(props) => (
-              <td style={{ textAlign: "center" }}>
-                {" "}
-                <Button size={"small"} className="px-4" themeColor={"primary"}>
-                  Reset
-                </Button>
-              </td>
-            )}
-          />
-          <Column
-            field="Menu authority"
-            title="Menu authorityt"
-            width="105px"
-            cell={(props) => (
-              <td style={{ textAlign: "center" }}>
-                {" "}
-                <Button size={"small"} className="px-4" themeColor={"primary"}>
-                  Menu
-                </Button>
-              </td>
-            )}
-          />
-          <Column
-            field="Status(Error count)"
-            title="Status(Error count)"
-            width="135px"
-            cell={(props) => (
-              <td style={{ textAlign: "center" }}>
-                {" "}
-                <Button size={"small"} className="px-4" themeColor={"primary"}>
-                  Unloack(0)
-                </Button>
-              </td>
-            )}
-          />
-          <Column
-            field="DO Login"
-            title="DO Login"
-            width="105px"
-            cell={(props) => (
-              <td style={{ textAlign: "center" }}>
-                {" "}
-                <Button size={"small"} className="px-4" themeColor={"primary"}>
-                  Login
-                </Button>
-              </td>
-            )}
-          />
-        </Grid>
+    <>
+      <ExcelExport ref={_export}>
+        <DataGrid />
       </ExcelExport>
+
       <GridPDFExport margin="1cm">
-        <Grid
-          style={{
-            height: "500px",
-          }}
-          pageable={{
-            pageSizes: true,
-          }}
-          data={dataResult}
-          sortable={false}
-          total={resultState.total}
-          onDataStateChange={dataStateChange}
-          {...dataState}
-          onExpandChange={onExpandChange}
-          expandField="expanded"
-          dataItemKey={DATA_ITEM_KEY}
-          selectedField={SELECTED_FIELD}
-          onHeaderSelectionChange={onHeaderSelectionChange}
-          onSelectionChange={onSelectionChange}
-          groupable={true}
-          size={"small"}></Grid>
+        <DataGrid />
       </GridPDFExport>
-    </div>
+
+      <UserRoleManagementDialog open={openUserRoleManagementDialog} onClose={onCloseUserRoleManagementDialog} />
+    </>
   );
 }

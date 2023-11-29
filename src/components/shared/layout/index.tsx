@@ -15,6 +15,7 @@ import { LeftSideBar } from "../LeftSidePanel";
 import { BottomBar } from "./BottomBar";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@progress/kendo-react-buttons";
+import NextTopLoader from "nextjs-toploader";
 
 const TabTitle = ({
   tab,
@@ -56,9 +57,9 @@ interface LayoutProps {
 
 export const Layout: FC<LayoutProps> = ({ children }) => {
   const [panes, setPanes] = useState<SplitterPaneProps[]>([
-    { size: "20%", min: "290px", collapsible: true },
+    { size: "17%", min: "270px", collapsible: true },
     {},
-    { size: "80%", min: "20px", collapsible: false },
+    { size: "83%", min: "20px", collapsible: false },
   ]);
 
   const { tabs, selectedTab, selectedTabIndex, setSelectedTab, setTabs } = useTab();
@@ -83,9 +84,9 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
     const newTabs = tabs.filter((item) => item.url !== tab.url);
     setTabs(newTabs);
 
-    if (selectedTab.url === tab.url) {
-      // setSelectedTab(null); // TODO
-    }
+    // if (selectedTab.url === tab.url) {
+    // setSelectedTab(null); // TODO
+    // }
 
     // navigate(-1);
   };
@@ -103,7 +104,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
         {/* left side panel */}
         <LeftSideBar />
 
-        <div className="pane-content">
+        <div className="grid h-full grid-rows-[auto_minmax(0,_1fr)]">
           {/* tabs */}
           <TabStrip selected={selectedTabIndex} scrollable={true}>
             {tabs.map((tab, index) => (
@@ -120,18 +121,9 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
             ))}
           </TabStrip>
 
-          {/* title bar */}
-          <div className="title-bar">
-            <div className="title">{selectedTab?.text}</div>
-            <div className="actions">
-              <Button svgIcon={exportIcon}>Export</Button>
-              <Button svgIcon={printIcon}>Print</Button>
-              <Button svgIcon={searchIcon} />
-            </div>
-          </div>
-
           {/* content */}
-          <div className="w-full px-4">{children}</div>
+          {/* <NextTopLoader /> */}
+          <div className="flex h-full flex-col">{children}</div>
         </div>
       </Splitter>
 

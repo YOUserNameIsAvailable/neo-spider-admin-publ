@@ -23,7 +23,7 @@ const TreeItem = (props: ItemRenderProps) => {
       ) : (
         <img className="w-5" src="/images/document.png" alt="" />
       )}
-      <span className="capitalize">{props.item.text}</span>
+      <span className="capitalize text-[13px]">{props.item.text}</span>
     </div>
   );
 };
