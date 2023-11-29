@@ -8,6 +8,8 @@ import { setGroupIds, setExpandedState } from "@progress/kendo-react-data-tools"
 import { EMPLOYEES } from "@/constants";
 import { ColumnMenu } from "./ColumnMenu";
 import { Button } from "@progress/kendo-react-buttons";
+import { Window,WindowMoveEvent } from '@progress/kendo-react-dialogs';
+import { DropDownList } from "@progress/kendo-react-dropdowns";
 
 const DATA_ITEM_KEY = "id";
 const SELECTED_FIELD = "selected";
@@ -26,6 +28,14 @@ const processWithGroups = (data: any, dataState: any) => {
   return newDataState;
 };
 
+interface PositionInterface {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+}
+
+
 export function MenuManagementTable() {
   const idGetter = getter("id");
   const [filterValue, setFilterValue] = React.useState();
@@ -34,6 +44,26 @@ export function MenuManagementTable() {
   const [dataState, setDataState] = React.useState(initialDataState);
   const [dataResult, setDataResult] = React.useState(process(filteredData, dataState));
   const [data, setData] = React.useState(filteredData);
+
+  const [visible,setVisible] = React.useState(false);  // <3-2> Menu management - detail
+  const [position, setPosition] = React.useState<PositionInterface>({
+    left: 400,
+    top:182,
+    width: 760,
+    height: 463,
+  });
+
+  const handleMove = (event: WindowMoveEvent) => {
+    setPosition({ ...position, left: event.left, top: event.top });
+  };
+  const handleResize = (event: WindowMoveEvent) => {
+    setPosition({
+      left: event.left,
+      top: event.top,
+      width: event.width,
+      height: event.height,
+    });
+  };
 
   const onFilterChange = (ev: any) => {
     let value = ev.value;
@@ -197,6 +227,7 @@ export function MenuManagementTable() {
   );
 
   return (
+    <>
     <div>
       <ExcelExport>
         <Grid
@@ -217,7 +248,11 @@ export function MenuManagementTable() {
           selectedField={SELECTED_FIELD}
           onHeaderSelectionChange={onHeaderSelectionChange}
           onSelectionChange={onSelectionChange}
-          groupable={false}>
+          groupable={false}
+          onRowClick={()=>{
+            setVisible(true);
+          }}
+          >
           <Column
             field="budget"
             title="Menu ID"
@@ -314,5 +349,81 @@ export function MenuManagementTable() {
           groupable={true}></Grid>
       </GridPDFExport>
     </div>
+
+    {visible && (
+        <>
+        <div className="k-overlay" />
+        <Window
+          minimizeButton={() => null}
+          maximizeButton={() => null}
+          restoreButton={() => null}
+          doubleClickStageChange={false}
+          title={'메뉴상세'}
+          left={position.left}
+          top={position.top}
+          width={position.width}
+          height={position.height}
+          onMove={handleMove}
+          onResize={handleResize}
+          onClose={()=>{setVisible(false)}}
+        >
+          <div className='flex flex-col gap-[15px]'>
+            <div className="flex flex-col gap-[12px]">
+            <div className="flex pb-[4px] items-center gap-1">
+              <img src="./images/dot_subtitle.gif" className="w-[12px] h-[12px]"/>
+              <div className="text-[14px] text-[#656565] font-bold">
+             상세정보
+              </div>
+            </div>
+            <div className="flex flex-col">
+              {[
+                {id:'메뉴ID',type:"input",dot:true,disabled:true},
+                {id:'메뉴명',type:"input",dot:true,disabled:false},
+                {id:'영문메뉴명',type:"input",dot:true,disabled:false},
+                {id:'상위메뉴ID',type:"input",dot:true,disabled:true},
+                {id:'메뉴URL',type:"textarea",dot:true,disabled:false},
+                {id:'메뉴 IMAGE',type:"input",dot:false,disabled:false},
+                {id:'정렬순서',type:"input",dot:true,disabled:false},
+                {id:'web App ID',type:"textarea",dot:false,disabled:false},
+                {id:'출력여부',id2:'사용여부',type:"select",dot:false,disabled:false},
+            ].map((v)=>{
+              return(
+                 <div key={v.id} className={`flex w-full border-[1px] h-${v.type === 'textarea' ? 'auto' : '[30px]'}`}>
+                   <div className={`flex items-center w-[${v.type === 'input' ? 50 : 100}%]`} >
+                   <label className="bg-[#d1daec] text-[12px] p-1 w-[150px] min-w-[150px] text-black h-full flex items-center">{v.id}</label>
+                   {v.type === 'input' ? <input className="w-full ml-[2px] py-[2px] border-[1px] border-[#999999] rounded-[2px]" disabled={v.disabled} /> :v.type === 'textarea' ?
+                     <textarea className="w-full ml-[2px] my-[2px] h-auto rounded-[3px] border-[1px] border-[#999999]" />
+                   :
+                   <DropDownList style={{width:'40%',fontSize:"12px",marginLeft:'2px',paddingTop:"2px",paddingBottom:'2px'}} size={'small'} data={['미사용','안전','주의','경계']} defaultValue={'미사용'} />
+                   }
+                    </div>
+                   {v.dot ? <span className="required">*</span> : <span></span>}
+                    {v.type === 'select' && 
+                    <div className="flex items-center w-full">
+<label className="bg-[#d1daec] text-[12px] p-1 w-[150px] min-w-[150px] text-black h-full flex items-center">{v.id2}</label>
+<DropDownList style={{width:'40%',fontSize:"12px",marginLeft:'2px',paddingTop:"2px",paddingBottom:'2px'}} size={'small'} data={['미사용','안전','주의','경계']} defaultValue={'미사용'} />
+                    </div>}
+                    {v.id === '상위메뉴ID' && <div className="flex items-center text-[#FF575E] text-[12px]">
+                    <button className="w-[23px] border-[#999999] h-[23px] mx-1 flex items-center justify-center border-[1px] rounded-[3px]" ><img src='./images/search.gif'/></button>
+                    (상위메뉴는 검색으로만 등록 가능)
+                      </div>
+                      }
+                  </div>
+              )
+            })}
+            </div>
+            </div>
+            <div className="flex flex-row-reverse gap-[3px]">
+        <button style={{background:"url(./images/btn_error_report_close.png)",backgroundRepeat:"no-repeat",backgroundSize:"cover"}} className="w-[55px] h-[23px]" onClick={()=>{
+          setVisible(false)
+        }} />
+        <button style={{background:"url(./images/btn_error_report_save.png)",backgroundRepeat:"no-repeat",backgroundSize:"cover"}} className="w-[55px] h-[23px]" />
+        <button style={{background:"url(./images/btn_menu_delete.png)",backgroundRepeat:"no-repeat",backgroundSize:"cover"}} className="w-[55px] h-[23px]" />
+        </div>
+          </div>
+        </Window>
+        </>
+      )}
+    </>
   );
 }

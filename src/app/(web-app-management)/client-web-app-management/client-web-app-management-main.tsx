@@ -7,9 +7,39 @@ import { useState } from "react";
 import { ClientWebTable } from "@/components/ClientWebTable";
 import { PAGES, SPORTS } from "@/constants";
 import { ClientWebProps } from "@/types";
+import { Window,WindowMoveEvent } from '@progress/kendo-react-dialogs';
+
+interface PositionInterface {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+}
 
 export const ClientWebAppMain: React.FC<ClientWebProps> = ({ onRowClick }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+
+  const [visible,setVisible] = useState(false);  // <5-3> Client WebApp Manage - stop selection
+  const [position, setPosition] = useState<PositionInterface>({
+    left: 320,
+    top:188,
+    width: 810,
+    height: 450,
+  });
+
+  const handleMove = (event: WindowMoveEvent) => {
+    setPosition({ ...position, left: event.left, top: event.top });
+  };
+  const handleResize = (event: WindowMoveEvent) => {
+    setPosition({
+      left: event.left,
+      top: event.top,
+      width: event.width,
+      height: event.height,
+    });
+  };
+
+
 
   const toggleExpansion = () => {
     setIsExpanded(!isExpanded);
@@ -188,7 +218,9 @@ export const ClientWebAppMain: React.FC<ClientWebProps> = ({ onRowClick }) => {
         <div className="flex w-[90%] justify-end gap-1">
           <Button
             imageUrl="/images/dot-right-arrow.png"
-            className="w-30 basic-btn mt-2 flex  h-7 items-center justify-start">
+            className="w-30 basic-btn mt-2 flex  h-7 items-center justify-start"
+            onClick={()=>{setVisible(true)}}
+            >
             stop selection
           </Button>
           <Button
@@ -210,6 +242,60 @@ export const ClientWebAppMain: React.FC<ClientWebProps> = ({ onRowClick }) => {
           ADD
         </Button>
       </div>
+       {/* <5-3> Client WebApp Manage - stop selection */}
+
+       {visible && (
+        <>
+        <div className="k-overlay" />
+        <Window
+          minimizeButton={() => null}
+          maximizeButton={() => null}
+          restoreButton={() => null}
+          doubleClickStageChange={false}
+          title={'중지 사유 등록'}
+          left={position.left}
+          top={position.top}
+          width={position.width}
+          height={position.height}
+          onMove={handleMove}
+          onResize={handleResize}
+          onClose={()=>{setVisible(false)}}
+        >
+          <div className='flex flex-col gap-[15px]'>
+            <div className="flex flex-col gap-[12px]">
+            <div className="flex pb-[4px] items-center gap-1">
+              <img src="./images/dot_subtitle.gif" className="w-[12px] h-[12px]"/>
+              <div className="text-[14px] text-[#656565] font-bold">
+             중지 메세지
+              </div>
+              <div className="text-[11px] text-[#656565] font-bold">
+          (선택된 web app의 상태를 중지로 변경하고, 중지 사유를 입력합니다. )
+              </div>
+            </div>
+            <div className="flex flex-col">
+              {[
+                {id:'중지 사유(국문)'},
+                {id:'중지 사유(영문)'},
+            ].map((v)=>{
+              return(
+                 <div key={v.id} className={`flex w-full border-[1px] h-[137px]`}>
+                   <div className={`flex items-center w-full`} >
+                   <label className="bg-[#d1daec] text-[12px] p-1 w-[150px] min-w-[150px] text-black h-full flex items-center">{v.id}</label>
+                     <textarea className="w-full h-[108px] rounded-[3px] border-[1px] border-[#999999] my-[10px] mx-[15px]" />
+                    </div>
+                  </div>
+              )
+            })}
+            </div>
+            </div>
+            <div className="flex flex-row-reverse gap-[24px]">
+        <button style={{background:"url(./images/btn_error_report_close.png)",backgroundRepeat:"no-repeat",backgroundSize:"cover"}} className="w-[55px] h-[23px]" />
+        <button style={{background:"url(./images/btn_client_save.png)",backgroundRepeat:"no-repeat",backgroundSize:"cover"}} className="w-[90px] h-[23px]" />
+        </div>
+          </div>
+        </Window>
+        </>
+      )}
     </>
   );
 };
