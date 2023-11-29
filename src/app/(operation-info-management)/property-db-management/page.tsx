@@ -1,18 +1,13 @@
 "use client";
 
 import React from 'react'
-import { Input } from "@progress/kendo-react-inputs";
 import { Button } from "@progress/kendo-react-buttons";
 import { DropDownList } from "@progress/kendo-react-dropdowns";
-import { searchIcon, arrowRightIcon } from "@progress/kendo-svg-icons";
 import { getter } from "@progress/kendo-react-common";
 import { useState } from "react";
-import { SPORTS, PAGES } from "@/constants";
-import { CodeMappingManagementTable } from "@/components/CodeMappingManagementTable";
 import { PropertyDbManagementTable } from "@/components/PropertyDbManagementTable";
 import { Window,WindowMoveEvent } from '@progress/kendo-react-dialogs';
 import { Grid, GridColumn as Column,getSelectedState,GridNoRecords } from "@progress/kendo-react-grid";
-import products from "@/utils/text.json";
 import { filterBy } from "@progress/kendo-data-query";
 
 interface PositionInterface {
