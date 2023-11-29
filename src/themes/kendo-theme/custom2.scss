@@ -128,3 +128,14 @@
 .k-splitter .k-pane:first-child {
   transition: all 0.3s ease 0s;
 }
+
+.k-grid-md .k-table-th {
+  padding-block: 6px;
+  padding-inline: 6px;
+}
+
+.k-grid-md td,
+.k-grid-md .k-table-td {
+  padding-block: 6px;
+  padding-inline: 6px;
+}

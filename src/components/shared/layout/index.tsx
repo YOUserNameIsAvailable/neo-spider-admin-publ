@@ -35,7 +35,7 @@ const TabTitle = ({
         onSelectTab(tab);
       }}>
       <img className="w-3" src="/images/tab-icon.png" alt="" />
-      <span>{tab.text}</span>
+      <span className="text-[11px] font-bold">{tab.text}</span>
       {!hideClose && (
         <span
           className="k-button k-button-md k-rounded-md k-button-flat k-button-flat-base k-icon-button !p-0"
@@ -164,7 +164,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
           <LeftSideBar clickCollapseBtn={clickCollapseBtn} />
         </div>
 
-        <div className="pane-content h-full bg-[#fff]">
+        <div className="pane-content h-full">
           {/* tabs */}
           <TabStrip selected={selectedTabIndex} scrollable={true}>
             {tabs.map((tab, index) => (
@@ -183,7 +183,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
 
           {/* title bar */}
           <div className="title-bar">
-            <div className="title">{selectedTab?.text}</div>
+            <div className="title text-[15px] font-bold text-[#656565]">{selectedTab?.text}</div>
             <div className="actions">
               <Button imageUrl="/images/btn_excel_off.gif" className="excel-btn" />
               <Button imageUrl="/images/btn_print_off.gif" className="ml-px-10 print-btn" />
