@@ -8,7 +8,7 @@ import { useTab } from "@/providers/TabProvider";
 import { PAGES, SPORTS } from "@/constants";
 import { UserManagementTable } from "@/components/UserManagementTable";
 
-export default async function Page() {
+export default function Page() {
   const { selectedTab } = useTab();
   const [isExpanded, setIsExpanded] = useState(false);
 
