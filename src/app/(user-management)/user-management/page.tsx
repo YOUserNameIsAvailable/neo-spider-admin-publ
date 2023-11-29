@@ -1,23 +1,19 @@
 "use client";
 
-import React,{useState} from "react";
-import { Input,Checkbox } from "@progress/kendo-react-inputs";
+import React, { useState } from "react";
+import { Input, Checkbox } from "@progress/kendo-react-inputs";
 import { Button } from "@progress/kendo-react-buttons";
-import { DropDownList,ListItemProps } from "@progress/kendo-react-dropdowns";
+import { DropDownList, ListItemProps } from "@progress/kendo-react-dropdowns";
 import { arrowRightIcon } from "@progress/kendo-svg-icons";
 import { useTab } from "@/providers/TabProvider";
 import { PAGES, SPORTS } from "@/constants";
 import { UserManagementTable } from "@/components/UserManagementTable";
 import { getter } from "@progress/kendo-react-common";
 
-
-
 export default function Page() {
   const { selectedTab } = useTab();
   const [isExpanded, setIsExpanded] = useState(false);
 
-
-  
   const toggleExpansion = () => {
     setIsExpanded(!isExpanded);
   };
@@ -101,13 +97,11 @@ export default function Page() {
           <img src={"/images/dot_subtitle.gif"} alt="" style={{}} />
           <span className="font-bold text-[#656565]">List</span>
         </div>
-        <UserManagementTable  />
+        <UserManagementTable />
       </>
 
       <div className="flex justify-end">
-        <Button svgIcon={arrowRightIcon} className="mt-2 flex items-center  justify-end">
-          ADD
-        </Button>
+        <Button className="basic-btn mt-2 flex h-7 items-center justify-start">+ ADD</Button>
       </div>
     </>
   );

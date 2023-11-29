@@ -149,13 +149,20 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
       {/* top bar */}
       <TopBar />
 
-      <Splitter style={{ height: "calc(100dvh - 94px)" }} panes={panes} onChange={onChangeTab}>
+      <Splitter
+        style={{
+          height: "calc(100dvh - 91px)",
+          border: "none",
+          background: "linear-gradient( to bottom, rgba(227, 234, 242, 1) 1%, rgba(30, 84, 158, 1) 100% )",
+        }}
+        panes={panes}
+        onChange={onChangeTab}>
         {/* left side panel */}
         <div className="transition: all 0.3s h-full overflow-x-hidden pl-2">
           <LeftSideBar clickCollapseBtn={clickCollapseBtn} />
         </div>
 
-        <div className="pane-content">
+        <div className="pane-content h-full bg-[#fff]">
           {/* tabs */}
           <TabStrip selected={selectedTabIndex} scrollable={true}>
             {tabs.map((tab, index) => (

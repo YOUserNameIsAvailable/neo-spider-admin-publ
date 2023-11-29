@@ -50,9 +50,17 @@ export default function Page() {
         <RoleManagementTable />
       </div>
 
-      <div className="flex justify-end">
-        <Button svgIcon={arrowRightIcon} className="mt-2 flex items-center  justify-end">
-          ADD
+      <div className="flex justify-end gap-6">
+        <div className="flex flex-row gap-1">
+          <Button imageUrl="" className="mt-2 flex h-7 items-center justify-start px-[4px] py-[2px] text-[12px]">
+            Add row
+          </Button>
+          <Button imageUrl="" className="mt-2 flex h-7 items-center justify-start px-[4px] py-[2px] text-[12px]">
+            Del row
+          </Button>
+        </div>
+        <Button imageUrl="/images/dot-right-arrow.png" className="basic-btn mt-2 flex h-7 items-center justify-start">
+          Save
         </Button>
       </div>
     </>

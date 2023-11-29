@@ -9,7 +9,6 @@ import { MenuManagementTable } from "@/components/MenuManagementTable";
 import React from "react";
 
 export default function Page() {
-
   return (
     <>
       <>
@@ -67,7 +66,7 @@ export default function Page() {
       </div>
 
       <div className="flex justify-end">
-        <Button svgIcon={arrowRightIcon} className="mt-2 flex items-center justify-end">
+        <Button imageUrl="/images/dot-right-arrow.png" className="basic-btn mt-2 flex h-7 items-center justify-start">
           ADD
         </Button>
       </div>
