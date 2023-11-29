@@ -11,7 +11,7 @@ import { SPORTS, PAGES } from "@/constants";
 import { CodeMappingManagementTable } from "@/components/CodeMappingManagementTable";
 import { PropertyDbManagementTable } from "@/components/PropertyDbManagementTable";
 import { Window,WindowMoveEvent } from '@progress/kendo-react-dialogs';
-import { Grid, GridColumn as Column,getSelectedState } from "@progress/kendo-react-grid";
+import { Grid, GridColumn as Column,getSelectedState,GridNoRecords } from "@progress/kendo-react-grid";
 import products from "@/utils/text.json";
 import { filterBy } from "@progress/kendo-data-query";
 
@@ -37,7 +37,7 @@ export default function Page() {
 const idGetters = getter(DATA_ITEM_KEYS);
 
   const [checkData, setCheckData] = React.useState(
-    products.map((dataItem:any) =>
+    [].map((dataItem:any) =>
       Object.assign(
         {
           selected: false,
@@ -229,13 +229,15 @@ const idGetters = getter(DATA_ITEM_KEYS);
         onSelectionChange={onSelectionChanges}
         onHeaderSelectionChange={onHeaderSelectionChanges}
       >
-       {/* <Column cell={()}>
-       <div className='p-[30px] h-[100px] flex items-center justify-center rounded-[10px]' style={{background:`linear-gradient(to bottom, #ffffff 30%, #f6f6f6 60%, #eeeeee,#e5e5e5)`,boxShadow:`0px 0px 2px 1px rgba(0,0,0,.2)`}}>
+      <GridNoRecords  >
+        <div className='h-[268px] w-full flex items-center justify-center'>
+      <div className='p-[30px] h-[100px] flex items-center justify-center rounded-[10px]' style={{background:`linear-gradient(to bottom, #ffffff 30%, #f6f6f6 60%, #eeeeee,#e5e5e5)`,boxShadow:`0px 0px 2px 1px rgba(0,0,0,.2)`}}>
         No Recode Found
         </div>
-       </Column> */}
+        </div>
+        </GridNoRecords>
        
-        {/* <Column className='truncate whitespace-nowrap'
+        <Column className='truncate whitespace-nowrap'
           field={SELECTED_FIELDS}
           headerSelectionValue={
             checkData.findIndex((item) => !selectedState[idGetters(item)]) === -1
@@ -248,7 +250,7 @@ const idGetters = getter(DATA_ITEM_KEYS);
         <Column className='truncate whitespace-nowrap'   field="firstNum" title="초기값" />
         <Column className='truncate whitespace-nowrap'   field="num" title="유효값" />
         <Column className='truncate whitespace-nowrap'  field="dataType" title="data타입" />
-        <Column className='truncate whitespace-nowrap'  field="WAS" title="WAS별 설정"/> */}
+        <Column className='truncate whitespace-nowrap'  field="WAS" title="WAS별 설정"/>
       </Grid>
             <div className="flex justify-between">
               <div className='flex gap-[2px]'>
