@@ -149,7 +149,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
       {/* top bar */}
       <TopBar />
 
-      <Splitter style={{ height: "calc(100dvh - 84px)" }} panes={panes} onChange={onChangeTab}>
+      <Splitter style={{ height: "calc(100dvh - 94px)" }} panes={panes} onChange={onChangeTab}>
         {/* left side panel */}
         <div className="transition: all 0.3s h-full overflow-x-hidden pl-2">
           <LeftSideBar clickCollapseBtn={clickCollapseBtn} />

@@ -5,12 +5,12 @@ import { FC } from "react";
 
 export const BottomBar: FC = () => {
   return (
-    <AppBar className="border-t-2 border-t-gray-200">
+    <AppBar className="box-border flex h-[38px] bg-[#285ba2] p-0">
       <AppBarSection>
         <ul className="m-0 my-0 flex list-none items-center p-0 text-sm [&>li]:mx-2.5">
           <li>
             <ComboBox
-              className="!w-44 text-sm"
+              className="!w-44"
               size={"small"}
               fillMode={"solid"}
               data={SPORTS}

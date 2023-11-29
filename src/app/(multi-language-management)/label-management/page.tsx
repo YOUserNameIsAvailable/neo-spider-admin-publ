@@ -51,7 +51,9 @@ export default function Page() {
               <span>Items</span>
             </div>
 
-            <Button svgIcon={searchIcon} className="basic-btn">Find</Button>
+            <Button svgIcon={searchIcon} className="basic-btn">
+              Find
+            </Button>
           </div>
         </div>
       </div>
@@ -63,6 +65,11 @@ export default function Page() {
         </div>
       </div>
       <LabelManagementTable />
+      <div className="flex justify-end">
+        <Button imageUrl="/images/dot-right-arrow.png" className="basic-btn mt-2 flex h-7 items-center justify-start">
+          ADD
+        </Button>
+      </div>
     </>
   );
 }
