@@ -192,7 +192,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
           </div>
 
           {/* content */}
-          <div className="w-full px-4">{children}</div>
+          <div className="w-full bg-[#fff] px-4">{children}</div>
         </div>
       </Splitter>
 
