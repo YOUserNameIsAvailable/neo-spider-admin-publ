@@ -154,11 +154,13 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
           height: "calc(100dvh - 91px)",
           border: "none",
           background: "linear-gradient( to bottom, rgba(227, 234, 242, 1) 1%, rgba(30, 84, 158, 1) 100% )",
+          paddingLeft: "8px",
+          paddingRight: "8px",
         }}
         panes={panes}
         onChange={onChangeTab}>
         {/* left side panel */}
-        <div className="transition: all 0.3s h-full overflow-x-hidden pl-2">
+        <div className="transition: all 0.3s h-full overflow-x-hidden">
           <LeftSideBar clickCollapseBtn={clickCollapseBtn} />
         </div>
 

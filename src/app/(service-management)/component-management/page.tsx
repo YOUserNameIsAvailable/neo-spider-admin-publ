@@ -4,7 +4,7 @@ import { Checkbox, Input } from "@progress/kendo-react-inputs";
 import { Button } from "@progress/kendo-react-buttons";
 import { DropDownList } from "@progress/kendo-react-dropdowns";
 import { searchIcon, arrowRightIcon } from "@progress/kendo-svg-icons";
-import { useState } from "react";
+import React, { useState } from "react";
 import { PAGES, SPORTS } from "@/constants";
 import { ServiceManagementTable } from "@/components/ServiceManagementTable";
 import { ComponentManagementTable } from "@/components/ComponentManagementTable";
@@ -32,7 +32,7 @@ export default function Page() {
           <div className="flex justify-between gap-4 bg-[#dde6f0] p-[5px]">
             <div className="flex items-center gap-4">
               <DropDownList
-                className="min-w-[120px] h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
+                className="h-[30px] min-w-[120px] border bg-[#f6f6f6f6] text-[#656565]"
                 size={"small"}
                 data={SPORTS}
                 defaultValue="Option"
@@ -46,9 +46,9 @@ export default function Page() {
                 <Input className="w-[148px] border border-[#999999]" />
               </div>
               <div className="flex items-center gap-2">
-                <span className="font-bold text-[#6f7071] whitespace-nowrap">Biz class</span>
+                <span className="whitespace-nowrap font-bold text-[#6f7071]">Biz class</span>
                 <DropDownList
-                  className="min-w-[120px] h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
+                  className="h-[30px] min-w-[120px] border bg-[#f6f6f6f6] text-[#656565]"
                   size={"small"}
                   data={SPORTS}
                   defaultValue="Option 1"
@@ -77,9 +77,9 @@ export default function Page() {
             <div className="flex justify-between gap-4 border-t border-[#ccc]  bg-[#dde6f0] p-[5px]">
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
-                  <span className="font-bold text-[#6f7071] whitespace-nowrap">Component type</span>
+                  <span className="whitespace-nowrap font-bold text-[#6f7071]">Component type</span>
                   <DropDownList
-                    className="min-w-[148px] h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
+                    className="h-[30px] min-w-[148px] border bg-[#f6f6f6f6] text-[#656565]"
                     size={"small"}
                     data={SPORTS}
                     defaultValue="Option 1"
@@ -87,9 +87,9 @@ export default function Page() {
                   />
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="font-bold text-[#6f7071] whitespace-nowrap">Creation type</span>
+                  <span className="whitespace-nowrap font-bold text-[#6f7071]">Creation type</span>
                   <DropDownList
-                    className="min-w-[148px] h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
+                    className="h-[30px] min-w-[148px] border bg-[#f6f6f6f6] text-[#656565]"
                     size={"small"}
                     data={SPORTS}
                     defaultValue="Option 1"
@@ -97,9 +97,9 @@ export default function Page() {
                   />
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="font-bold text-[#6f7071] whitespace-nowrap">select order</span>
+                  <span className="whitespace-nowrap font-bold text-[#6f7071]">select order</span>
                   <DropDownList
-                    className="min-w-[148px] h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
+                    className="h-[30px] min-w-[148px] border bg-[#f6f6f6f6] text-[#656565]"
                     size={"small"}
                     data={SPORTS}
                     defaultValue="Option 1"
@@ -122,7 +122,7 @@ export default function Page() {
       </div>
       <ComponentManagementTable />
       <div className="flex justify-end">
-        <Button svgIcon={arrowRightIcon} className="mt-2 flex items-center  justify-end">
+        <Button imageUrl="/images/dot-right-arrow.png" className="basic-btn mt-2 flex h-7 items-center justify-start">
           ADD
         </Button>
       </div>
