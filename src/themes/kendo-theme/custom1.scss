@@ -82,6 +82,10 @@ justify-content: center;
   background-color:#fcbc9c;
 }
 
+.k-table-tbody .k-grid-norecords.k-table-row:hover > td{
+  background-color: transparent;
+}
+
 .k-pager-numbers button.k-selected .k-button-text {
   color:white;
   z-index: 10;
