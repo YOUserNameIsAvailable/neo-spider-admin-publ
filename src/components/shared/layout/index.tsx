@@ -64,17 +64,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
 
   const { tabs, selectedTab, selectedTabIndex, setSelectedTab, setTabs } = useTab();
 
-  const router = useRouter();
-
-  // const pathname = usePathname()
-  // const searchParams = useSearchParams()
-
-  // useEffect(() => {
-  //   const url = `${pathname}?${searchParams}`
-  //   console.log(url)
-  //   // You can now use the current URL
-  //   // ...
-  // }, [pathname, searchParams])
+  const pathname = usePathname();
 
   const onSelectTab = (tab: ITab, index: number) => {
     setSelectedTab(tab);
@@ -94,6 +84,10 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
   const onChangeTab = (event: SplitterOnChangeEvent) => {
     setPanes(event.newState);
   };
+
+  if (pathname === "/login") {
+    return <div className="flex h-screen w-full items-center justify-center">{children}</div>;
+  }
 
   return (
     <>

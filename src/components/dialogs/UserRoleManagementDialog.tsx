@@ -4,7 +4,6 @@ import { Dialog, DialogActionsBar } from "@progress/kendo-react-dialogs";
 import { DropDownList } from "@progress/kendo-react-dropdowns";
 import { Grid, GridColumn } from "@progress/kendo-react-grid";
 import { Checkbox, Input } from "@progress/kendo-react-inputs";
-import { arrowRightIcon } from "@progress/kendo-svg-icons";
 import { FC, ReactElement, cloneElement, useState, DragEvent } from "react";
 
 export interface UserRoleManagementDialogProps {
@@ -89,8 +88,8 @@ export const UserRoleManagementDialog: FC<UserRoleManagementDialogProps> = ({ on
   if (!open) return <></>;
 
   return (
-    <Dialog title={"User menu role management - 9834187"} onClose={(e) => onClose()} width={1150}>
-      <div className="flex items-center gap-4 pb-4 ">
+    <Dialog title={"User menu role management - 9834187"} onClose={(e: any) => onClose()} width={1200}>
+      <div className="flex  gap-2 ">
         <img src={"/images/dot_subtitle.gif"} alt="" />
         <span>A list of menus except user menu</span>
       </div>
@@ -115,10 +114,12 @@ export const UserRoleManagementDialog: FC<UserRoleManagementDialogProps> = ({ on
         </div>
 
         <div>
-          <div className="-pt-[20] flex items-center gap-2 pb-4">
+          <div className=" -mt-[15px]  flex gap-2 pb-5  ">
             <img src={"/images/dot_subtitle.gif"} alt="" />
             <span>User menu list</span>
           </div>
+          <div></div>
+
           <Grid style={{ height: "450px" }} data={gridDataTwo} rowRender={rowForGridTwo}>
             <GridColumn field="ProductID" title="Menu ID" width="200px" />
             <GridColumn field="ProductName" title="Menu Name	" width="280px" />
@@ -149,13 +150,8 @@ export const UserRoleManagementDialog: FC<UserRoleManagementDialogProps> = ({ on
       </div>
       <DialogActionsBar>
         <div className="flex justify-end gap-2">
-          <Button svgIcon={arrowRightIcon} className="mt-2 flex items-center  justify-end">
-            Save
-          </Button>
-          <Button
-            svgIcon={arrowRightIcon}
-            className="mt-2 flex items-center  justify-end"
-            onClick={() => closeDialog()}>
+          <Button className="mt-2 flex items-center  justify-end">Save</Button>
+          <Button className="mt-2 flex items-center  justify-end" onClick={() => closeDialog()}>
             Close
           </Button>
         </div>
