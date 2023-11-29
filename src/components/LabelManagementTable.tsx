@@ -318,7 +318,7 @@ const handleResize = (event: WindowMoveEvent) => {
           maximizeButton={() => null}
           restoreButton={() => null}
           doubleClickStageChange={false}
-          title={'LABEL 등록'}
+          title={'LABEL 관리 상세조회'}
           left={position.left}
           top={position.top}
           width={position.width}

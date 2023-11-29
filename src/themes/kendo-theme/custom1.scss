@@ -66,3 +66,18 @@ input:disabled {
   padding-left: 4px;
   padding-right: 4px;
 }
+
+.k-window-titlebar-actions {
+  button{
+    span{
+      background: url('../../../public/images/btn_window_close.png');
+      background-repeat: no-repeat;
+      background-size: cover;
+      width: 16px;
+      height: 16px;
+      svg{
+        display: none;
+      }
+    }
+  }
+}

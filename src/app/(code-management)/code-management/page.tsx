@@ -48,10 +48,16 @@ export default function Page() {
   const [visible,setVisible] = React.useState(false);  // <7-2> Code management - code info
   const [visible2,setVisible2]=React.useState(false);
   const [position, setPosition] = React.useState<PositionInterface>({
-    left: 341,
-    top:241,
-    width: 810,
+    left: 307,
+    top:225,
+    width: 905,
     height: 308,
+  });
+  const [position2, setPosition2] = React.useState<PositionInterface>({
+    left: 383,
+    top:116,
+    width: 747,
+    height: 572,
   });
 
   let initialState = createDataState({
@@ -72,6 +78,17 @@ export default function Page() {
   };
   const handleResize = (event: WindowMoveEvent) => {
     setPosition({
+      left: event.left,
+      top: event.top,
+      width: event.width,
+      height: event.height,
+    });
+  };
+  const handleMove2 = (event: WindowMoveEvent) => {
+    setPosition2({ ...position2, left: event.left, top: event.top });
+  };
+  const handleResize2 = (event: WindowMoveEvent) => {
+    setPosition2({
       left: event.left,
       top: event.top,
       width: event.width,
@@ -252,7 +269,9 @@ export default function Page() {
             })}
             </div>
             <div className="flex flex-row-reverse gap-1">
-        <button style={{background:"url(./images/btn_error_report_close.png)",backgroundRepeat:"no-repeat",backgroundSize:"cover"}} className="w-[54px] h-[23px]" />
+        <button style={{background:"url(./images/btn_error_report_close.png)",backgroundRepeat:"no-repeat",backgroundSize:"cover"}} className="w-[54px] h-[23px]" onClick={()=>{
+          setVisible(false)
+        }} />
         <button style={{background:"url(./images/btn_error_report_save.png)",backgroundRepeat:"no-repeat",backgroundSize:"cover"}} className="w-[54px] h-[23px]" />
         </div>
           </div>
@@ -268,12 +287,12 @@ export default function Page() {
           restoreButton={() => null}
           doubleClickStageChange={false}
           title={'코드 그룹 검색'}
-          left={position.left}
-          top={position.top}
-          width={position.width}
-          height={position.height}
-          onMove={handleMove}
-          onResize={handleResize}
+          left={position2.left}
+          top={position2.top}
+          width={position2.width}
+          height={position2.height}
+          onMove={handleMove2}
+          onResize={handleResize2}
           onClose={()=>{setVisible2(false)}}
         >
           <div className='flex flex-col gap-[15px]'>
@@ -317,7 +336,9 @@ export default function Page() {
     </Grid>
     </LocalizationProvider>
             <div className="flex flex-row-reverse gap-1">
-        <button style={{background:"url(./images/btn_error_report_close.png)",backgroundRepeat:"no-repeat",backgroundSize:"cover"}} className="w-[54px] h-[23px]" />
+        <button style={{background:"url(./images/btn_error_report_close.png)",backgroundRepeat:"no-repeat",backgroundSize:"cover"}} className="w-[54px] h-[23px]" onClick={()=>{
+          setVisible2(false)
+        }} />
         </div>
           </div>
         </Window>
