@@ -68,7 +68,7 @@ export default function Page() {
             </div>
           </div>
           {isExpanded ? (
-            <div className="flex w-full justify-between bg-[#dde6f0]">
+            <div className="flex w-full justify-between border-t border-[#ccc] bg-[#dde6f0] p-[5px]">
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
                   <Input className="w-48 border border-[#999999]" type="date" />

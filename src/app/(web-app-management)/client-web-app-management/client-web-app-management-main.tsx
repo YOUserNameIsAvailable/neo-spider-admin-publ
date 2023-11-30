@@ -136,7 +136,7 @@ export const ClientWebAppMain: React.FC<ClientWebProps> = ({ onRowClick }) => {
       </div>
       {isExpanded ? (
         <>
-          <div className="flex justify-between gap-4 overflow-x-scroll border-t border-[#ccc] bg-[#dde6f0] p-4">
+          <div className="flex justify-between gap-4 overflow-x-scroll border-t border-[#ccc] bg-[#dde6f0] p-[5px]">
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
                 <span className="whitespace-nowrap font-bold text-[#6f7071]">e채널 로그 분류코드</span>

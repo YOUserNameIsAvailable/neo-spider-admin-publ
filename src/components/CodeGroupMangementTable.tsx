@@ -216,13 +216,42 @@ export function CodeGroupManagementTable() {
           selectedField={SELECTED_FIELD}
           onHeaderSelectionChange={onHeaderSelectionChange}
           onSelectionChange={onSelectionChange}
-          groupable={false}
-          size={"small"}>
-          <Column field="budget" width="200px" title="Code group ID" columnMenu={ColumnMenu} />
-          <Column field="full_name" width="200px" title="Code group name" columnMenu={ColumnMenu} />
-          <Column field="target" width="200px" title="Code desc." columnMenu={ColumnMenu} />
-          <Column field="budget" width="200px" title="Biz class" columnMenu={ColumnMenu} />
-          <Column field="budget" width="200px" title="Code count" columnMenu={ColumnMenu} />
+          groupable={false}>
+          <Column
+            field="budget"
+            headerClassName="justify-center col-width70per"
+            className="col-width70per"
+            title="Code group ID"
+            columnMenu={ColumnMenu}
+          />
+          <Column
+            field="full_name"
+            headerClassName="justify-center col-width100per"
+            className="col-width100per"
+            title="Code group name"
+            columnMenu={ColumnMenu}
+          />
+          <Column
+            field="target"
+            headerClassName="justify-center col-width200per"
+            className="col-width200per"
+            title="Code desc."
+            columnMenu={ColumnMenu}
+          />
+          <Column
+            field="budget"
+            headerClassName="justify-center col-width70per"
+            className="col-width70per"
+            title="Biz class"
+            columnMenu={ColumnMenu}
+          />
+          <Column
+            field="budget"
+            headerClassName="justify-center col-width70per"
+            className="col-width70per"
+            title="Code count"
+            columnMenu={ColumnMenu}
+          />
         </Grid>
       </ExcelExport>
       <GridPDFExport margin="1cm">
@@ -244,8 +273,7 @@ export function CodeGroupManagementTable() {
           selectedField={SELECTED_FIELD}
           onHeaderSelectionChange={onHeaderSelectionChange}
           onSelectionChange={onSelectionChange}
-          groupable={true}
-          size={"small"}></Grid>
+          groupable={true}></Grid>
       </GridPDFExport>
     </div>
   );
