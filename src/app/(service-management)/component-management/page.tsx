@@ -28,8 +28,8 @@ export default function Page() {
             Expand/Colapse
           </button>
         </div>
-        <div className="bg-[#dde6f0] px-[10px]">
-          <div className="flex justify-between gap-4 bg-[#dde6f0] p-[5px]">
+        <div className="overflow-x-scroll bg-[#dde6f0] px-[10px]">
+          <div className="flex flex-wrap justify-between gap-4 bg-[#dde6f0] p-[5px]">
             <div className="flex items-center gap-4">
               <DropDownList
                 className="h-[30px] min-w-[120px] border bg-[#f6f6f6f6] text-[#656565]"
@@ -74,7 +74,7 @@ export default function Page() {
             </div>
           </div>
           {isExpanded ? (
-            <div className="flex justify-between gap-4 border-t border-[#ccc]  bg-[#dde6f0] p-[5px]">
+            <div className="flex flex-wrap justify-between gap-4 border-t border-[#ccc] bg-[#dde6f0] p-[5px]">
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
                   <span className="whitespace-nowrap font-bold text-[#6f7071]">Component type</span>

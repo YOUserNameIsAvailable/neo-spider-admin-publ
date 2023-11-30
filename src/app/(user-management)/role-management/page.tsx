@@ -16,7 +16,7 @@ export default function Page() {
           <img src={"/images/dot_subtitle.gif"} alt="" />
           <span className="font-bold text-[#656565]">Condition</span>
         </div>
-        <div className="flex justify-between gap-4 bg-[#dde6f0] p-4">
+        <div className="flex flex-wrap justify-between gap-4 overflow-x-scroll bg-[#dde6f0] p-[5px]">
           <div className="flex items-center gap-4">
             <div className="flex flex-row items-center justify-center">
               <DropDownList

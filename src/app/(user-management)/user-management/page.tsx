@@ -24,17 +24,17 @@ export default function Page() {
           <img src={"/images/dot_subtitle.gif"} alt="" style={{}} />
           <span className="font-bold text-[#656565]">Condition</span>
         </div>
-        <div className="flex justify-between gap-4 bg-[#dde6f0] p-4">
-          <div className="flex w-full items-center gap-4">
+        <div className="flex flex-wrap justify-between gap-4 overflow-x-scroll bg-[#dde6f0] p-[5px]">
+          <div className="flex items-center gap-4">
             <DropDownList
-              className="h-[30px] w-[100px] border bg-[#f6f6f6f6] text-[#656565]"
+              className="h-[30px] w-[100px] min-w-[100px] border bg-[#f6f6f6f6] text-[#656565]"
               size={"small"}
               data={SPORTS}
               defaultValue="Option 1"
               filterable={false}
             />
 
-            <Input className="h-[24px] w-[148px] border border-[#999999]" />
+            <Input className="h-[24px] w-[148px] min-w-[148px] border border-[#999999]" />
 
             <div className="flex items-center gap-2">
               <span className="whitespace-nowrap font-bold text-[#6f7071]">User status:</span>

@@ -111,11 +111,11 @@ export default function Page() {
             Expand / Colapse
           </button>
         </div>
-        <div className="bg-[#dde6f0] px-[10px]">
-          <div className="flex justify-between bg-[#dde6f0] p-[5px]">
+        <div className="flex flex-wrap overflow-x-scroll bg-[#dde6f0] px-[10px]">
+          <div className="flex w-full flex-wrap justify-between gap-4 bg-[#dde6f0] p-[5px]">
             <div className="flex min-w-[410px] items-center gap-4">
               <div className="flex w-full items-center gap-2">
-                <span className="w-full text-sm font-bold text-[#6f7071]">Code group per biz group</span>
+                <span className="whitespace-nowrap font-bold text-[#6f7071]">Code group per biz group</span>
                 <DropDownList
                   className="h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
                   size={"small"}
@@ -142,7 +142,7 @@ export default function Page() {
                   defaultValue="20"
                   filterable={false}
                 />
-                <span className="text-sm font-bold">Items</span>
+                <span className="font-bold text-[#333333]">Items</span>
               </div>
               <Button svgIcon={searchIcon} className="basic-btn">
                 Find
@@ -150,7 +150,7 @@ export default function Page() {
             </div>
           </div>
           {isExpanded ? (
-            <div className="flex justify-between bg-[#dde6f0] p-[5px]">
+            <div className="flex w-full justify-between bg-[#dde6f0] p-[5px]">
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
                   <DropDownList

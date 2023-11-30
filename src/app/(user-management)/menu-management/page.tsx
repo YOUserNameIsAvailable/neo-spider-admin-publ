@@ -35,7 +35,7 @@ export default function Page() {
           <img src={"/images/dot_subtitle.gif"} alt="" />
           <span className="font-bold text-[#656565]">Condition</span>
         </div>
-        <div className="flex justify-between gap-4 bg-[#dde6f0] p-4">
+        <div className="flex flex-wrap justify-between gap-4 overflow-x-scroll bg-[#dde6f0] p-[5px]">
           <div className="flex items-center gap-4">
             <div className="flex flex-row items-center justify-center">
               <DropDownList
@@ -50,13 +50,13 @@ export default function Page() {
               <Input className="h-[24px] w-[148px] border border-[#999999]" />
             </div>
 
-            <div className="">
-              <span className="mr-2 font-bold text-[#6f7071]">Menu URL</span>
+            <div className="flex items-center">
+              <span className="mr-2 whitespace-nowrap font-bold text-[#6f7071]">Menu URL</span>
               <Input className="h-[24px] w-[148px]" />
             </div>
 
-            <div className="">
-              <span className="mr-2 font-bold text-[#6f7071]">Top menu ID</span>
+            <div className="flex items-center">
+              <span className="mr-2 whitespace-nowrap font-bold text-[#6f7071]">Top menu ID</span>
               <Input className="h-[24px] w-[148px]" />
             </div>
             <button data-role="button" role="button" className="search_btn no-text" aria-disabled="false">

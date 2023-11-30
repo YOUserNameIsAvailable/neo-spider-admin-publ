@@ -28,7 +28,7 @@ export default function Page() {
             Expand / Colapse
           </button>
         </div>
-        <div className="flex justify-between gap-4 bg-[#dde6f0] p-4">
+        <div className="flex flex-wrap justify-between gap-4 overflow-x-scroll bg-[#dde6f0] p-[5px]">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
               <span className="font-bold text-[#6f7071]">Log tracking number</span>
