@@ -427,7 +427,9 @@ export function CodeGroupManagementTable() {
               </div>
               {/*  */}
               <Grid
-                className="h-[88%]"
+                style={{
+                  height: "300px",
+                }}
                 rowHeight={29}
                 fixedScroll={true}
                 data={dataResult}
