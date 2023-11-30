@@ -80,6 +80,11 @@ export default function Page() {
         <span className="font-bold text-[#656565]">List</span>
       </div>
       <CodeGroupManagementTable />
+      <div className="flex justify-end">
+        <Button imageUrl="/images/dot-right-arrow.png" className="basic-btn mt-2 flex h-7 items-center justify-start">
+          ADD
+        </Button>
+      </div>
     </>
   );
 }
