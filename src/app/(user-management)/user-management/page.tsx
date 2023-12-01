@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "@progress/kendo-react-inputs";
 import { Button } from "@progress/kendo-react-buttons";
 import { DropDownList } from "@progress/kendo-react-dropdowns";
@@ -9,12 +9,35 @@ import { PAGES, SPORTS } from "@/constants";
 import { UserManagementTable } from "@/components/UserManagementTable";
 
 export default function Page() {
-  const { selectedTab } = useTab();
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [result, setResult] = useState<any[]>([]);
 
-  const toggleExpansion = () => {
-    setIsExpanded(!isExpanded);
+  const getUsers = async () => {
+    await fetch("/api/admin/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: "Admin",
+        pw: "spider99!",
+      }),
+    });
+
+    const usersJson = await fetch("/api/spider/userMng/list", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const users = await usersJson.json();
+    console.log("users: ", users);
+    setResult(users?.body?.list);
   };
+
+  useEffect(() => {
+    getUsers();
+  }, []);
 
   return (
     <>
@@ -95,7 +118,7 @@ export default function Page() {
           <img src={"/images/dot_subtitle.gif"} alt="" style={{}} />
           <span className="font-bold text-[#656565]">List</span>
         </div>
-        <UserManagementTable />
+        <UserManagementTable result={result} />
       </>
 
       <div className="flex justify-end">
