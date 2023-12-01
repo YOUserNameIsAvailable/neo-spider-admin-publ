@@ -4,35 +4,41 @@ import React, { useEffect, useState } from "react";
 import { Input } from "@progress/kendo-react-inputs";
 import { Button } from "@progress/kendo-react-buttons";
 import { DropDownList } from "@progress/kendo-react-dropdowns";
-import { useTab } from "@/providers/TabProvider";
-import { PAGES, SPORTS } from "@/constants";
+import { PAGES, SPORTS, USERS } from "@/constants";
 import { UserManagementTable } from "@/components/UserManagementTable";
 
 export default function Page() {
   const [result, setResult] = useState<any[]>([]);
 
   const getUsers = async () => {
-    await fetch("/api/admin/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id: "Admin",
-        pw: "spider99!",
-      }),
-    });
+    try {
+      await fetch("/api/admin/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: "Admin",
+          pw: "spider99!",
+        }),
+      });
 
-    const usersJson = await fetch("/api/spider/userMng/list", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+      const usersJson = await fetch("/api/spider/userMng/list", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-    const users = await usersJson.json();
-    console.log("users: ", users);
-    setResult(users?.body?.list);
+      const users = await usersJson.json();
+      console.log("users: ", users);
+      setResult(users?.body?.list);
+    } catch (err) {
+      console.error(err);
+
+      // TODO: remove this after testing
+      setResult(USERS);
+    }
   };
 
   useEffect(() => {
