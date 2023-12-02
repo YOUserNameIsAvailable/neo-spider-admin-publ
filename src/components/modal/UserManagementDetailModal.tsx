@@ -1,7 +1,8 @@
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { Window, WindowMoveEvent } from "@progress/kendo-react-dialogs";
-import { DropDownList } from "@progress/kendo-react-dropdowns";
 import { Button } from "@progress/kendo-react-buttons";
+import { Form, FormElement, FormRenderProps } from "@progress/kendo-react-form";
+import { ConditionRow } from "../ConditionRow";
 
 interface PositionInterface {
   left: number;
@@ -18,9 +19,10 @@ export const UserManagementDetailModal: FC<{
   const [position, setPosition] = useState<PositionInterface>({
     left: 341,
     top: 241,
-    width: 760,
+    width: 695,
     height: 330,
   });
+  const [form, setForm] = useState<any>({});
 
   const handleMove = (event: WindowMoveEvent) => {
     setPosition({ ...position, left: event.left, top: event.top });
@@ -51,7 +53,7 @@ export const UserManagementDetailModal: FC<{
     setResult(user?.body?.detail[0]);
   };
 
-  const updateUserDetail = async () => {
+  const updateUserDetail = async (e: any) => {
     const userJson = await fetch("/api/spider/userMng/update", {
       method: "POST",
       headers: {
@@ -114,138 +116,147 @@ export const UserManagementDetailModal: FC<{
               <div className="text-[14px] font-bold text-[#656565]">상세정보</div>
             </div>
             <div className="flex flex-col">
-              {[
-                {
-                  firstId: "사용자ID",
-                  secondId: "사용자명",
-                  type: "input",
-                  dot1: true,
-                  dot2: true,
-                  disabled: true,
-                  firstValue: result?.userId,
-                  secondValue: result?.userName,
-                },
-                {
-                  firstId: "패스워드",
-                  secondId: "접근 허용 IP",
-                  type: "input2",
-                  dot1: false,
-                  dot2: true,
-                  disabled: false,
-                  firstValue: null,
-                  secondValue: result?.accessIp,
-                },
-                {
-                  firstId: "직번",
-                  secondId: "지점코드",
-                  type: "input",
-                  dot1: true,
-                  dot2: false,
-                  disabled: false,
-                  firstValue: result?.userSsn,
-                  secondValue: result?.roleId,
-                },
-                {
-                  firstId: "연락처(-생략)",
-                  secondId: "이메일",
-                  type: "input",
-                  dot1: false,
-                  dot2: false,
-                  disabled: false,
-                  firstValue: result?.phone,
-                  secondValue: result?.email,
-                },
-                {
-                  firstId: "권한명",
-                  secondId: "직급",
-                  type: "select",
-                  dot1: true,
-                  dot2: false,
-                  disabled: false,
-                  firstValue: result?.roleName,
-                  secondValue: result?.className,
-                },
-                {
-                  firstId: "부서명",
-                  secondId: "사용자 상태",
-                  type: "select2",
-                  dot1: true,
-                  dot2: false,
-                  disabled: false,
-                  firstValue: result?.positionName,
-                  secondValue: result?.userStateCodeNm,
-                },
-              ].map((v) => {
-                return (
-                  <div key={v.firstId} className="flex h-[30px] w-full  border-[1px]">
-                    <div className="flex w-[50%] items-center">
-                      <label className="flex h-full w-[150px] min-w-[150px] items-center bg-[#d1daec] p-1 text-[12px] text-black">
-                        {v.firstId}
-                      </label>
-                      {v.type === "input2" ? (
-                        <Button className="basic-btn mt-2 flex h-7 items-center justify-start">초기화</Button>
-                      ) : v.type === "select" ? (
-                        <DropDownList
-                          style={{ width: "40%", marginRight: "2px", fontSize: "12px", marginLeft: "2px" }}
-                          size={"small"}
-                          data={["선택 안 함", "안전", "주의", "경계"]}
-                          defaultValue={"선택 안 함"}
-                          value={v.firstValue}
-                        />
-                      ) : (
-                        <input
-                          className="ml-[2px] mr-[2px] w-[45%] rounded-[2px] border-[1px] border-[#999999] py-[2px]"
-                          disabled={v.disabled}
-                          defaultValue={v.firstValue}
-                        />
-                      )}
-                      {v.dot1 && <span className="required">*</span>}
-                    </div>
-                    <div className="flex w-[50%] items-center">
-                      <label className="flex h-full w-[150px] min-w-[150px] items-center bg-[#d1daec]  p-1  text-[12px] text-black">
-                        {v.secondId}
-                      </label>
-                      {v.type === "select" || v.type === "select2" ? (
-                        <DropDownList
-                          style={{ width: "40%", marginRight: "2px", fontSize: "12px", marginLeft: "2px" }}
-                          size={"small"}
-                          data={["선택 안 함", "안전", "주의", "경계"]}
-                          defaultValue={"선택 안 함"}
-                          value={v.secondValue}
-                        />
-                      ) : (
-                        <input
-                          className="ml-[2px] mr-[2px] w-[45%] rounded-[2px] border-[1px] border-[#999999] py-[2px]"
-                          value={v.secondValue}
-                        />
-                      )}
-                      {v.dot2 && <span className="required">*</span>}
-                    </div>
-                  </div>
-                );
-              })}
+              <div className="flex h-[30px] w-full border-b-[1px] border-r-[1px] border-t-[1px]">
+                <ConditionRow
+                  label={"사용자ID"}
+                  type="input"
+                  value={result?.userId}
+                  disabled={true}
+                  isDot={true}
+                  Key="userId"
+                  setForm={setForm}
+                />
+                <ConditionRow
+                  label={"사용자명"}
+                  type="input"
+                  value={result?.userName}
+                  disabled={false}
+                  isDot={true}
+                  Key="userName"
+                  setForm={setForm}
+                />
+              </div>
+              <div className="flex h-[30px] w-full border-b-[1px] border-r-[1px]">
+                <ConditionRow
+                  label={"패스워드"}
+                  type="button"
+                  value={""}
+                  disabled={false}
+                  isDot={false}
+                  btnText={"초기화"}
+                  btnEvent={resetPassword}
+                  Key="password"
+                />
+                <ConditionRow
+                  label={"접근 허용 IP"}
+                  type="input"
+                  value={result?.accessIp}
+                  disabled={false}
+                  isDot={true}
+                  Key="accessIp"
+                  setForm={setForm}
+                />
+              </div>
+              <div className="flex h-[30px] w-full border-b-[1px] border-r-[1px]">
+                <ConditionRow
+                  label={"직번"}
+                  type="input"
+                  value={result?.userSsn}
+                  disabled={false}
+                  isDot={true}
+                  Key="userSsn"
+                  setForm={setForm}
+                />
+                <ConditionRow
+                  label={"지점코드"}
+                  type="input"
+                  value={result?.roleId}
+                  disabled={false}
+                  isDot={false}
+                  Key="roleId"
+                  setForm={setForm}
+                />
+              </div>
+              <div className="flex h-[30px] w-full border-b-[1px] border-r-[1px]">
+                <ConditionRow
+                  label={"연락처(-생략)"}
+                  type="input"
+                  value={result?.phone}
+                  disabled={false}
+                  isDot={false}
+                  Key="phone"
+                  setForm={setForm}
+                />
+                <ConditionRow
+                  label={"이메일"}
+                  type="input"
+                  value={result?.email}
+                  disabled={false}
+                  isDot={false}
+                  Key="email"
+                  setForm={setForm}
+                />
+              </div>
+              <div className="flex h-[30px] w-full border-b-[1px] border-r-[1px]">
+                <ConditionRow
+                  label={"권한명"}
+                  type="select"
+                  value={result?.roleName}
+                  disabled={false}
+                  isDot={true}
+                  listData={["관리자", "사용자"]}
+                  Key="roleName"
+                  setForm={setForm}
+                />
+                <ConditionRow
+                  label={"직급"}
+                  type="input"
+                  value={result?.className}
+                  disabled={false}
+                  isDot={false}
+                  listData={["사원", "대리", "과장", "차장", "부장", "이사", "상무", "전무", "사장"]}
+                  Key="className"
+                  setForm={setForm}
+                />
+              </div>
+              <div className="flex h-[30px] w-full border-b-[1px] border-r-[1px]">
+                <ConditionRow
+                  label={"부서명"}
+                  type="input"
+                  value={result?.positionName}
+                  disabled={false}
+                  isDot={true}
+                  Key="positionName"
+                  setForm={setForm}
+                />
+                <ConditionRow
+                  label={"사용자 상태"}
+                  type="select"
+                  value={result?.userStateCodeNm}
+                  disabled={false}
+                  isDot={false}
+                  listData={["정상", "중지", "삭제"]}
+                  Key="userStateCodeNm"
+                  setForm={setForm}
+                />
+              </div>
             </div>
           </div>
-          <div className="flex flex-row-reverse">
-            <button
-              style={{
-                background: "url(./images/btn_error_report_close.png)",
-                backgroundRepeat: "no-repeat",
-                backgroundSize: "cover",
-              }}
-              className="h-[23px] w-[54px]"
+          <div className="flex flex-row justify-end">
+            <Button
+              imageUrl="/images/dot-right-arrow.png"
+              className="basic-btn mr-1 flex h-7 items-center justify-start"
+              onClick={updateUserDetail}>
+              저장
+            </Button>
+            <Button
+              imageUrl="/images/dot-right-arrow.png"
+              className="basic-btn  flex h-7 items-center justify-start"
               onClick={() => {
                 setShowDetailModal(false);
-              }}
-            />
-            <button
-              style={{
-                background: "url(./images/btn_error_report_save.png)",
-                backgroundRepeat: "no-repeat",
-                backgroundSize: "cover",
-              }}
-              className="h-[23px] w-[54px]"
-            />
+              }}>
+              닫기
+            </Button>
           </div>
         </div>
       </Window>
