@@ -15,7 +15,7 @@ export const ConditionRow: FC<{
   btnEvent?: () => void;
 }> = ({ label, type, value, listData, disabled, isDot, Key, btnText, btnEvent, setForm }) => {
   const updateHandler = () => {
-    setForm({ [Key]: value });
+    setForm((prev: any) => ({ ...prev, [Key]: value }));
   };
 
   return (
