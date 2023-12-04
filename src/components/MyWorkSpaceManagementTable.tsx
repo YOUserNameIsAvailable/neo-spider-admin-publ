@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { getter } from "@progress/kendo-react-common";
 import { process } from "@progress/kendo-data-query";
 import { GridPDFExport } from "@progress/kendo-react-pdf";
@@ -36,7 +36,7 @@ interface PositionInterface {
   height: number;
 }
 
-export function MyWorkSpaceManagementTable() {
+export function MyWorkSpaceManagementTable({ onExport }) {
   const idGetter = getter("id");
   const [filterValue, setFilterValue] = React.useState();
   const [filteredData, setFilteredData] = React.useState(EMPLOYEES);
@@ -232,10 +232,23 @@ export function MyWorkSpaceManagementTable() {
     </td>
   );
 
+  const _exporter = React.createRef();
+  const excelExport = () => {
+    if (_exporter.current) {
+      console.log('_exporter.current:', _exporter.current, dataResult)
+      _exporter.current.save(dataResult);
+    }
+  };
+
+  useEffect(() => {
+    onExport(excelExport);
+  }, [onExport, excelExport]);
+
   return (
     <>
       <div>
-        <ExcelExport>
+        {/*<div onClick={excelExport}>test btn77</div>*/}
+        <ExcelExport ref={_exporter}>
           <Grid
             style={{
               height: "500px",
@@ -521,7 +534,7 @@ export function MyWorkSpaceManagementTable() {
                     </div>
                   </div>
                   {/*  */}
-                  <div className="flex h-[29px] flex-row justify-between border-b-[1px] border-[#dfe1e1]">
+                  <div className="flex h-[28px] flex-row justify-between">
                     <div className="flex w-[40%] flex-row items-center">
                       <label className="flex h-full w-[75px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
                         사전로딩여부
@@ -547,6 +560,99 @@ export function MyWorkSpaceManagementTable() {
                       />
                     </div>
                   </div>
+                </div>
+                <div className="mt-4 flex items-center gap-1 pb-[4px]">
+                  <img src="./images/dot_subtitle.gif" className="h-[12px] w-[12px]" />
+                  <div className="text-[14px] font-bold text-[#656565]">전문 상세정보</div>
+                  <Button className="ml-4 bg-neutral-50 p-2" onClick={undefined}>
+                    Expand / Colapse
+                  </Button>
+                  <div className="shrink-1 flex flex-grow flex-row items-center justify-end gap-2">
+                    <Button
+                      imageUrl="/images/dot-right-arrow.png"
+                      className="basic-btn flex items-center justify-start">
+                      엑셀저장
+                    </Button>
+                    <Button
+                      imageUrl="/images/dot-right-arrow.png"
+                      className="basic-btn flex items-center justify-start">
+                      헤더전문포함조회
+                    </Button>
+                    <Button
+                      imageUrl="/images/dot-right-arrow.png"
+                      className="basic-btn flex items-center justify-start">
+                      필드풀 검증
+                    </Button>
+                    <Button
+                      imageUrl="/images/dot-right-arrow.png"
+                      className="basic-btn flex items-center justify-start">
+                      다국어 검증
+                    </Button>
+                  </div>
+                </div>
+                {/*  */}
+                <div className="flex flex-row items-center">
+                  <div className="flex items-center">※Excel Copy >> Excel복사버튼 클릭하세요</div>
+                  <div className="flex flex-grow shrink-1 flex-row items-center justify-end gap-2">
+                    <Button
+                        size={"small"}
+                        className="cell-inside-btn px-4"
+                        themeColor={"primary"}
+                        onClick={undefined}
+                    >
+                      Excel복사
+                    </Button>
+                    <Button
+                        size={"small"}
+                        className="cell-inside-btn px-4"
+                        themeColor={"primary"}
+                        onClick={undefined}
+                    >
+                      유사전문복사
+                    </Button>
+                    <Button
+                        size={"small"}
+                        className="cell-inside-btn px-4"
+                        themeColor={"primary"}
+                        onClick={undefined}
+                    >
+                      테이블
+                    </Button>
+                    <Button
+                        size={"small"}
+                        className="cell-inside-btn px-4"
+                        themeColor={"primary"}
+                        onClick={undefined}
+                    >
+                      행 추가
+                    </Button>
+                    <Button
+                        size={"small"}
+                        className="cell-inside-btn px-4"
+                        themeColor={"primary"}
+                        onClick={undefined}
+                    >
+                      선택형 삭제
+                    </Button>
+                  </div>
+                </div>
+              {/*  */}
+                <div className="shrink-1 flex flex-grow flex-row items-center justify-end gap-2 mt-4">
+                  <Button
+                      imageUrl="/images/dot-right-arrow.png"
+                      className="basic-btn flex items-center justify-start">
+                    삭제
+                  </Button>
+                  <Button
+                      imageUrl="/images/dot-right-arrow.png"
+                      className="basic-btn flex items-center justify-start">
+                    저장
+                  </Button>
+                  <Button
+                      imageUrl="/images/dot-right-arrow.png"
+                      className="basic-btn flex items-center justify-start">
+                    목록
+                  </Button>
                 </div>
               </div>
             </div>
