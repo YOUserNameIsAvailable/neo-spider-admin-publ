@@ -27,6 +27,7 @@ const TabTitle = ({
   onRemoveTab: (tab: ITab) => void;
   hideClose?: boolean;
 }) => {
+  const pathname = usePathname();
   return (
     <div
       className="flex items-center gap-2 px-3 py-1.5"
@@ -35,7 +36,9 @@ const TabTitle = ({
         onSelectTab(tab);
       }}>
       <img className="w-3" src="/images/tab-icon.png" alt="" />
-      <span className="text-[11px] font-bold">{tab.text}</span>
+      <span className={`text-[11px] font-bold text-[#000] ${tab.url === pathname ? "text-[#656565]" : ""}`}>
+        {tab.text}
+      </span>
       {!hideClose && (
         <span
           className="k-button k-button-md k-rounded-md k-button-flat k-button-flat-base k-icon-button !p-0"
@@ -43,7 +46,11 @@ const TabTitle = ({
             e.stopPropagation();
             onRemoveTab(tab);
           }}>
-          <SvgIcon icon={xIcon} size="small" className="" />
+          <SvgIcon
+            icon={xIcon}
+            size="small"
+            className={`text-[#000] ${tab.url === pathname ? "text-[#656565]" : ""}`}
+          />
         </span>
       )}
     </div>
@@ -91,6 +98,8 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
   const onRemoveTab = (tab: ITab, index: number) => {
     const newTabs = tabs.filter((item) => item.url !== tab.url);
     setTabs(newTabs);
+
+    console.log("selectedTabIndex: ", selectedTabIndex);
 
     if (selectedTab.url === tab.url) {
       // setSelectedTab(null); // TODO

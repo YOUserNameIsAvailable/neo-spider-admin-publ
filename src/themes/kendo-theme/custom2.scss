@@ -152,3 +152,73 @@
   padding-block: 6px;
   padding-inline: 6px;
 }
+
+.component-info-btn {
+  background-color: #f0f2f7;
+  border-radius: 5px;
+  -webkit-box-shadow: inset 0 1px 0 0 #b1b9cb;
+  box-shadow: 0 1px 0 0 #b1b9cb;
+  color: #000;
+  text-decoration: none;
+  text-align: center;
+}
+
+.btn_green {
+  background-color: #10ff44;
+  background-image: -webkit-gradient(
+                  linear,
+                  left top,
+                  left bottom,
+                  color-stop(0%, #10ff44),
+                  color-stop(50%, #40ca09),
+                  color-stop(50%, #0faf0f),
+                  color-stop(100%, #068d0d)
+  );
+  background-image: -webkit-linear-gradient(
+                  top,
+                  #10ff44 0%,
+                  #40ca09 50%,
+                  #0faf0f 50%,
+                  #068d0d 100%
+  );
+  background-image: -moz-linear-gradient(
+                  top,
+                  #10ff44 0%,
+                  #40ca09 50%,
+                  #0faf0f 50%,
+                  #068d0d 100%
+  );
+  background-image: -ms-linear-gradient(
+                  top,
+                  #10ff44 0%,
+                  #40ca09 50%,
+                  #0faf0f 50%,
+                  #068d0d 100%
+  );
+  background-image: -o-linear-gradient(
+                  top,
+                  #10ff44 0%,
+                  #40ca09 50%,
+                  #0faf0f 50%,
+                  #068d0d 100%
+  );
+  background-image: linear-gradient(
+                  to bottom,
+                  #10ff44 0%,
+                  #40ca09 50%,
+                  #0faf0f 50%,
+                  #068d0d 100%
+  );
+  border: 1px solid #1ef843;
+  border-radius: 5px;
+  color: #000;
+  text-shadow: none;
+  padding: 3px 10px 3px;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+}
+
+.workspace-window .k-window-content {
+  padding: 0;
+}
