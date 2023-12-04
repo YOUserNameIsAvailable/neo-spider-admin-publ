@@ -3,7 +3,7 @@ import { getter } from "@progress/kendo-react-common";
 import { process } from "@progress/kendo-data-query";
 import { GridPDFExport } from "@progress/kendo-react-pdf";
 import { ExcelExport } from "@progress/kendo-react-excel-export";
-import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
+import { Grid, GridColumn as Column, GridRowClickEvent } from "@progress/kendo-react-grid";
 import { setGroupIds, setExpandedState } from "@progress/kendo-react-data-tools";
 import { EMPLOYEES } from "@/constants";
 import { ColumnMenu } from "./ColumnMenu";
@@ -243,6 +243,14 @@ export function MyWorkSpaceManagementTable() {
             pageable={{
               pageSizes: true,
             }}
+            onRowClick={(event: GridRowClickEvent) => {
+              setPosition({
+                ...position,
+                width: 1000,
+                height: 700,
+              });
+              setVisible(true);
+            }}
             data={dataResult}
             sortable={true}
             total={resultState.total}
@@ -321,8 +329,10 @@ export function MyWorkSpaceManagementTable() {
                         size={"small"}
                         className="cell-inside-btn px-4"
                         themeColor={"primary"}
-                        onClick={() => [setVisible(true)]}>
-                        Menu
+                        onClick={(e) => {
+                          setVisible(true);
+                        }}>
+                        생성
                       </Button>
                     </td>
                   );
@@ -371,19 +381,18 @@ export function MyWorkSpaceManagementTable() {
             groupable={true}></Grid>
         </GridPDFExport>
       </div>
-      {/* <4-2> Role management - RoleMenu authority management */}
 
       {visible && (
         <>
           <div className="k-overlay" />
           <Window
+            className="workspace-window"
             minimizeButton={() => null}
             maximizeButton={() => null}
             restoreButton={() => null}
             doubleClickStageChange={false}
-            title={"Role메뉴 권한 관리"}
-            left={position.left}
-            top={position.top}
+            // left={position.left}
+            // top={position.top}
             width={position.width}
             height={position.height}
             onMove={handleMove}
@@ -391,118 +400,154 @@ export function MyWorkSpaceManagementTable() {
             onClose={() => {
               setVisible(false);
             }}>
-            <div className="flex w-full flex-col p-4">
-              <div className="pb-[10px] text-[17px] font-bold text-[#656565]">권한ID별 메뉴 권한 체크</div>
-              <div className="flex h-[75vh] w-full">
-                <Splitter
-                  panes={nestedPanes}
-                  onChange={(e) => {
-                    setNestedPanes(e.newState);
-                  }}>
-                  <div className="flex w-full flex-col gap-[15px] border-[1px]">
-                    <div className="flex items-center gap-1">
-                      <img src="./images/dot_subtitle.gif" className="h-[12px] w-[12px]" />
-                      <div className="text-[14px] font-bold text-[#656565]">권한ID 메뉴를 뺀 메뉴 목록</div>
-                    </div>
-                    <div className="flex flex-col">
-                      <div className="flex h-[40px] items-center gap-[8px] bg-[#dde6f0] px-[13px] py-[7px]">
-                        <DropDownList
-                          style={{
-                            width: "40%",
-                            fontSize: "12px",
-                            marginLeft: "2px",
-                            paddingTop: "2px",
-                            paddingBottom: "2px",
-                            fontWeight: "bold",
-                            color: "#656565",
-                          }}
-                          size={"small"}
-                          data={["메뉴명", "안전", "주의", "경계"]}
-                          defaultValue={"메뉴명"}
-                        />
-                        <input className="ml-[2px] w-[30%] rounded-[2px] border-[1px] border-[#999999] py-[6px]" />
-                      </div>
-                      <Grid
-                        className="h-[88%]"
-                        rowHeight={29}
-                        fixedScroll={true}
-                        data={[
-                          { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
-                          { 메뉴ID: "nsb_msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > M_거래관리" },
-                          { 메뉴ID: "message_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 전문 관리" },
-                          {
-                            메뉴ID: "neb_msg_trx_manage",
-                            메뉴명: "Framework 관리메뉴 > 거래전문 관리 > N_전문등록조회",
-                          },
-                          { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
-                          { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
-                          { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
-                          { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
-                          { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
-                          { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
-                          { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
-                          { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
-                          { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
-                          { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
-                          { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
-                          { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
-                          { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
-                          { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
-                          { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
-                          { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
-                          { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
-                          { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
-                          { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
-                          { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
-                        ]}>
-                        {["메뉴ID", "메뉴명"].map((v) => {
-                          return (
-                            <Column key={v} field={v} title={v} width={setPercentage(v === "메뉴ID" ? 50 : 120)} />
-                          );
-                        })}
-                      </Grid>
-                    </div>
-                  </div>
-                  <div className="flex w-full flex-col gap-[15px] border-[1px]">
-                    <div className="flex items-center gap-1">
-                      <img src="./images/dot_subtitle.gif" className="h-[12px] w-[12px]" />
-                      <div className="text-[14px] font-bold text-[#656565]">권한ID 메뉴 목록</div>
-                    </div>
-                    <div className="flex flex-col">
-                      <Grid className="h-[88%]" rowHeight={29} fixedScroll={true}>
-                        {[
-                          { id: "메뉴ID", w: 30 },
-                          { id: "메뉴명", w: 80 },
-                          { id: "Read", w: 20 },
-                          { id: "R/Write", w: 25 },
-                        ].map((v) => {
-                          return <Column key={v.id} field={v.id} title={v.id} width={setPercentage(v.w)} />;
-                        })}
-                      </Grid>
-                    </div>
-                  </div>
-                </Splitter>
+            <div className="flex w-full flex-col">
+              <div className="flex flex-row items-center justify-between bg-[#cdd5eb] p-4">
+                <div className=" text-[17px] font-bold text-[#656565]">전문 수정</div>
+                <div className="actions">
+                  <Button imageUrl="/images/btn_excel_off.gif" className="excel-btn" />
+                  <Button imageUrl="/images/btn_print_off.gif" className="ml-px-10 print-btn" />
+                </div>
               </div>
-              <div className="my-[10px] flex flex-row-reverse gap-1">
-                <button
-                  style={{
-                    background: "url(./images/btn_user_close.png)",
-                    backgroundRepeat: "no-repeat",
-                    backgroundSize: "cover",
-                  }}
-                  className="h-[23px] w-[40px]"
-                  onClick={() => {
-                    setVisible(false);
-                  }}
-                />
-                <button
-                  style={{
-                    background: "url(./images/btn_rolemenu_save.png)",
-                    backgroundRepeat: "no-repeat",
-                    backgroundSize: "cover",
-                  }}
-                  className="h-[23px] w-[80px]"
-                />
+              <div className="flex flex-col p-4">
+                <div className="flex items-center gap-1 pb-[4px]">
+                  <img src="./images/dot_subtitle.gif" className="h-[12px] w-[12px]" />
+                  <div className="text-[14px] font-bold text-[#656565]">전문 정보</div>
+                  <Button className="ml-4 bg-neutral-50 p-2" onClick={undefined}>
+                    Expand / Colapse
+                  </Button>
+                </div>
+                {/*  */}
+                <div className="mt-4 flex flex-col border-[1px] border-[#dfe1e1]">
+                  <div className="flex h-[29px] flex-row justify-between border-b-[1px] border-[#dfe1e1]">
+                    <div className="flex w-[40%] flex-row items-center">
+                      <label className="flex h-full w-[75px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
+                        기관명
+                      </label>
+                      <DropDownList
+                        style={{ width: 110, marginRight: "2px", fontSize: "12px", marginLeft: "2px" }}
+                        size={"small"}
+                        data={["선택 안 함", "안전", "주의", "경계"]}
+                        defaultValue={"선택 안 함"}
+                        className="my-[2px]"
+                        disabled={true}
+                      />
+                      <span className="required">*</span>
+                    </div>
+                    <div className="flex w-[60%] flex-row items-center">
+                      <label className="flex h-full w-[140px] min-w-[140px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
+                        상위전문ID
+                      </label>
+                      <DropDownList
+                        style={{ width: 250, marginRight: "2px", fontSize: "12px", marginLeft: "2px" }}
+                        size={"small"}
+                        data={["선택 안 함", "안전", "주의", "경계"]}
+                        defaultValue={"선택 안 함"}
+                        className="my-[2px]"
+                      />
+                    </div>
+                  </div>
+                  {/*  */}
+                  <div className="flex h-[29px] flex-row justify-between border-b-[1px] border-[#dfe1e1]">
+                    <div className="flex w-[40%] flex-row items-center">
+                      <label className="flex h-full w-[75px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
+                        전문ID
+                      </label>
+                      <input className="my-[2px] ml-[2px] w-[150px] rounded-[2px] border-[1px] border-[#999999] py-[2px]" />
+                      <span className="required">*</span>
+                    </div>
+                    <div className="flex w-[60%] flex-row items-center">
+                      <label className="flex h-full w-[140px] min-w-[140px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
+                        전문명
+                      </label>
+                      <input className="my-[2px] ml-[2px] w-[190px] rounded-[2px] border-[1px] border-[#999999] py-[2px]" />
+                      <span className="required">*</span>
+                    </div>
+                  </div>
+                  {/*  */}
+                  <div className="flex h-[29px] flex-row justify-between border-b-[1px] border-[#dfe1e1]">
+                    <div className="flex w-[40%] flex-row items-center">
+                      <label className="flex h-full w-[75px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
+                        전문설명
+                      </label>
+                      <input className="my-[2px] ml-[2px] w-[150px] rounded-[2px] border-[1px] border-[#999999] py-[2px]" />
+                    </div>
+                    <div className="flex w-[60%] flex-row items-center">
+                      <label className="flex h-full w-[140px] min-w-[140px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
+                        로그레벨
+                      </label>
+                      <DropDownList
+                        style={{ width: 110, marginRight: "2px", fontSize: "12px", marginLeft: "2px" }}
+                        size={"small"}
+                        data={["선택 안 함", "안전", "주의", "경계"]}
+                        defaultValue={"선택 안 함"}
+                        className="my-[2px]"
+                      />
+                    </div>
+                  </div>
+                  {/*  */}
+                  <div className="flex h-[29px] flex-row justify-between border-b-[1px] border-[#dfe1e1]">
+                    <div className="flex w-[40%] flex-row items-center">
+                      <label className="flex h-full w-[75px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
+                        헤더전문여부
+                      </label>
+                      <DropDownList
+                        style={{ width: 110, marginRight: "2px", fontSize: "12px", marginLeft: "2px" }}
+                        size={"small"}
+                        data={["선택 안 함", "안전", "주의", "경계"]}
+                        defaultValue={"선택 안 함"}
+                        className="my-[2px]"
+                      />
+                    </div>
+                    <div className="flex w-[60%] flex-row items-center">
+                      <label className="flex h-full w-[140px] min-w-[140px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
+                        전문유형/요청응답구분
+                      </label>
+                      <DropDownList
+                        style={{ width: 110, marginRight: "2px", fontSize: "12px", marginLeft: "2px" }}
+                        size={"small"}
+                        data={["선택 안 함", "안전", "주의", "경계"]}
+                        defaultValue={"선택 안 함"}
+                        className="my-[2px]"
+                      />
+                      <span className="required">*</span>
+                      /
+                      <DropDownList
+                        style={{ width: 80, marginRight: "2px", fontSize: "12px" }}
+                        size={"small"}
+                        data={["선택 안 함", "안전", "주의", "경계"]}
+                        defaultValue={"선택 안 함"}
+                        className="my-[2px] ml-[8px]"
+                      />
+                    </div>
+                  </div>
+                  {/*  */}
+                  <div className="flex h-[29px] flex-row justify-between border-b-[1px] border-[#dfe1e1]">
+                    <div className="flex w-[40%] flex-row items-center">
+                      <label className="flex h-full w-[75px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
+                        사전로딩여부
+                      </label>
+                      <DropDownList
+                        style={{ width: 110, marginRight: "2px", fontSize: "12px", marginLeft: "2px" }}
+                        size={"small"}
+                        data={["선택 안 함", "안전", "주의", "경계"]}
+                        defaultValue={"선택 안 함"}
+                        className="my-[2px]"
+                      />
+                    </div>
+                    <div className="flex w-[60%] flex-row items-center">
+                      <label className="flex h-full w-[140px] min-w-[140px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
+                        업무분류
+                      </label>
+                      <DropDownList
+                        style={{ width: "100%", marginRight: "2px", fontSize: "12px", marginLeft: "2px" }}
+                        size={"small"}
+                        data={["선택 안 함", "안전", "주의", "경계"]}
+                        defaultValue={"선택 안 함"}
+                        className="my-[2px]"
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </Window>
