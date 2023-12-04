@@ -143,7 +143,7 @@ export default function Page() {
   );
   const [selectedState, setSelectedState] = React.useState({});
   const onSelectionChange = React.useCallback(
-    (event) => {
+    (event: any) => {
       const newSelectedState = getSelectedState({
         event,
         selectedState: selectedState,
@@ -153,11 +153,11 @@ export default function Page() {
     },
     [selectedState],
   );
-  const onHeaderSelectionChange = React.useCallback((event) => {
+  const onHeaderSelectionChange = React.useCallback((event: any) => {
     const checkboxElement = event.syntheticEvent.target;
     const checked = checkboxElement.checked;
-    const newSelectedState = {};
-    event.dataItems.forEach((item) => {
+    const newSelectedState: { [key: string]: boolean } = {};
+    event.dataItems.forEach((item: any) => {
       newSelectedState[idGetter(item)] = checked;
     });
     setSelectedState(newSelectedState);
@@ -311,7 +311,7 @@ export default function Page() {
                 style={{ height: "300px" }}
                 data={dataState.map((item) => ({
                   ...item,
-                  [SELECTED_FIELD]: selectedState[idGetter(item)],
+                  [SELECTED_FIELD]: selectedState[idGetter(item) as keyof typeof selectedState],
                 }))}
                 sortable={true}
                 pageable={true}
@@ -325,7 +325,10 @@ export default function Page() {
                   field={SELECTED_FIELD}
                   width="30px"
                   title="체크"
-                  headerSelectionValue={dataState.findIndex((item) => !selectedState[idGetter(item)]) === -1}
+                  headerSelectionValue={
+                    dataState.findIndex((item: any) => !selectedState[idGetter(item) as keyof typeof selectedState]) ===
+                    -1
+                  }
                   headerCell={(props: GridHeaderCellProps) => <th {...props}>체크</th>}
                 />
                 <Column

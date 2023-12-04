@@ -42,7 +42,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Layout>{children}</Layout>
           </TabProvider>
         ) : (
-          <>{children}</>
+          <TabProvider>
+            <>{children}</>
+          </TabProvider>
         )}
       </body>
     </html>
