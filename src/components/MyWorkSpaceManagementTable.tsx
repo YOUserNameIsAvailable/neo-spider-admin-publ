@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, {useEffect, useState} from "react";
 import { getter } from "@progress/kendo-react-common";
 import { process } from "@progress/kendo-data-query";
 import { GridPDFExport } from "@progress/kendo-react-pdf";
@@ -53,11 +53,7 @@ export function MyWorkSpaceManagementTable({ onExport }) {
     height: 728,
   });
 
-  const setPercentage = (percentage: number) => {
-    return Math.round(300 / 100) * percentage;
-  };
-
-  const [nestedPanes, setNestedPanes] = React.useState<Array<any>>([{ size: "50%", resizable: true }, {}]);
+  const [scriptView, setScriptView] = useState(false);
 
   const handleMove = (event: WindowMoveEvent) => {
     setPosition({ ...position, left: event.left, top: event.top });
@@ -240,10 +236,6 @@ export function MyWorkSpaceManagementTable({ onExport }) {
     }
   };
 
-  useEffect(() => {
-    onExport(excelExport);
-  }, [onExport, excelExport]);
-
   return (
     <>
       <div>
@@ -334,31 +326,47 @@ export function MyWorkSpaceManagementTable({ onExport }) {
               field="budget"
               title="이행스크립트생성"
               sortable={false}
+              headerClassName="justify-center bg-[#adc6f4]"
+              width={83}
               cells={{
                 data: ({ dataItem, ...props }) => {
                   return (
-                    <td {...props.tdProps} style={{ textAlign: "center" }}>
-                      <Button
-                        size={"small"}
-                        className="cell-inside-btn px-4"
-                        themeColor={"primary"}
-                        onClick={(e) => {
-                          setVisible(true);
-                        }}>
-                        생성
-                      </Button>
-                    </td>
+                      <td {...props.tdProps} style={{ textAlign: "center" }}>
+                        <Button
+                            size={"small"}
+                            className="cell-inside-btn px-4"
+                            themeColor={"primary"}
+                            onClick={(e) => {
+                              setVisible(true);
+                            }}>
+                          생성
+                        </Button>
+                      </td>
                   );
                 },
               }}
-              headerClassName="justify-center bg-[#adc6f4]"
-              width={83}
             />
             <Column
               field="budget"
               title="이행스크립트 View"
               sortable={false}
               headerClassName="justify-center bg-[#adc6f4]"
+              cells={{
+                data: ({ dataItem, ...props }) => {
+                  return (
+                      <td {...props.tdProps} style={{ textAlign: "center" }}>
+                        <Button
+                            size={"small"}
+                            className="cell-inside-btn px-4"
+                            themeColor={"primary"}
+                            onClick={() => setScriptView(true)}
+                        >
+                          View
+                        </Button>
+                      </td>
+                  );
+                },
+              }}
             />
             <Column
               filterable={false}
@@ -394,6 +402,35 @@ export function MyWorkSpaceManagementTable({ onExport }) {
             groupable={true}></Grid>
         </GridPDFExport>
       </div>
+      {scriptView && (
+          <>
+            <div className="k-overlay" />
+            <Window
+                className="workspace-window"
+                minimizeButton={() => null}
+                maximizeButton={() => null}
+                restoreButton={() => null}
+                doubleClickStageChange={false}
+                // left={position.left}
+                // top={position.top}
+                width={position.width}
+                height={position.height}
+                onMove={handleMove}
+                onResize={handleResize}
+                onClose={() => {
+                  setScriptView(false);
+                }}>
+              <div className="flex flex-col w-full">
+                <div className="flex w-full flex-row items-center">
+                  <label className="flex h-full w-[75px] min-w-[75px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
+                    파일명
+                  </label>
+                  <input className="my-[2px] ml-[2px] mr-4 w-full rounded-[2px] border-[1px] border-[#999999] py-[2px]" />
+                </div>
+              </div>
+            </Window>
+          </>
+      )}
 
       {visible && (
         <>
@@ -591,7 +628,7 @@ export function MyWorkSpaceManagementTable({ onExport }) {
                   </div>
                 </div>
                 {/*  */}
-                <div className="flex flex-row items-center">
+                <div className="flex flex-row items-center mb-4">
                   <div className="flex items-center">※Excel Copy >> Excel복사버튼 클릭하세요</div>
                   <div className="flex flex-grow shrink-1 flex-row items-center justify-end gap-2">
                     <Button
@@ -636,6 +673,123 @@ export function MyWorkSpaceManagementTable({ onExport }) {
                     </Button>
                   </div>
                 </div>
+              {/*  */}
+                <ExcelExport>
+                  <Grid
+                      style={{
+                        height: "500px",
+                      }}
+                      pageable={{
+                        pageSizes: true,
+                      }}
+                      data={dataResult}
+                      sortable={true}
+                      total={resultState.total}
+                      onDataStateChange={dataStateChange}
+                      {...dataState}
+                      onExpandChange={onExpandChange}
+                      expandField="expanded"
+                      dataItemKey={DATA_ITEM_KEY}
+                      selectedField={SELECTED_FIELD}
+                      onHeaderSelectionChange={onHeaderSelectionChange}
+                      onSelectionChange={onSelectionChange}
+                      groupable={false}>
+                    <Column
+                        filterable={false}
+                        sortable={false}
+                        field={SELECTED_FIELD}
+                        // headerSelectionValue={checkHeaderSelectionValue()}
+                        headerClassName="bg-[#adc6f4] overflow-none"
+                        className="overflow-none"
+                        width={30}
+                    />
+                    <Column
+                        field="budget"
+                        title="CRUD"
+                        sortable={false}
+                        headerClassName="justify-center bg-[#adc6f4]"
+                    />
+                    <Column
+                        field="full_name"
+                        title="순번"
+                        sortable={false}
+                        headerClassName="justify-center bg-[#adc6f4]"
+                    />
+                    <Column
+                        field="target"
+                        title="전문필드명"
+                        sortable={false}
+                        headerClassName="justify-center bg-[#adc6f4]"
+                    />
+                    <Column
+                        field="budget"
+                        title="data타입"
+                        sortable={false}
+                        headerClassName="justify-center bg-[#adc6f4]"
+                    />
+                    <Column
+                        field="budget"
+                        title="data길이"
+                        sortable={false}
+                        headerClassName="justify-center bg-[#adc6f4]"
+                    />
+                    <Column
+                        field="budget"
+                        title="정렬기준"
+                        sortable={false}
+                        headerClassName="justify-center bg-[#adc6f4]"
+                    />
+                    <Column
+                        field="budget"
+                        title="특이사항"
+                        sortable={false}
+                        headerClassName="justify-center bg-[#adc6f4]"
+                    />
+                    <Column
+                        field="budget"
+                        title="필수여부"
+                        sortable={false}
+                        headerClassName="justify-center bg-[#adc6f4]"
+                        width={83}
+                    />
+                    <Column
+                        field="budget"
+                        title="스케일"
+                        sortable={false}
+                        headerClassName="justify-center bg-[#adc6f4]"
+                    />
+                    <Column
+                        field="budget"
+                        title="삽입문자"
+                        sortable={false}
+                        headerClassName="justify-center bg-[#adc6f4]"
+                    />
+                    <Column
+                        field="budget"
+                        title="입력구분"
+                        sortable={false}
+                        headerClassName="justify-center bg-[#adc6f4]"
+                    />
+                    <Column
+                        field="budget"
+                        title="코드그룹"
+                        sortable={false}
+                        headerClassName="justify-center bg-[#adc6f4]"
+                    />
+                    <Column
+                        field="budget"
+                        title="코드맵핑"
+                        sortable={false}
+                        headerClassName="justify-center bg-[#adc6f4]"
+                    />
+                    <Column
+                        field="budget"
+                        title="초기값"
+                        sortable={false}
+                        headerClassName="justify-center bg-[#adc6f4]"
+                    />
+                  </Grid>
+                </ExcelExport>
               {/*  */}
                 <div className="shrink-1 flex flex-grow flex-row items-center justify-end gap-2 mt-4">
                   <Button
