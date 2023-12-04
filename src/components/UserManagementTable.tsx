@@ -28,13 +28,6 @@ const processWithGroups = (data: any, dataState: any) => {
   return newDataState;
 };
 
-interface PositionInterface {
-  left: number;
-  top: number;
-  width: number;
-  height: number;
-}
-
 export const UserManagementTable: FC<{ result: any[] }> = ({ result }) => {
   const idGetter = getter("id");
   const [filterValue, setFilterValue] = useState();

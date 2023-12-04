@@ -12,16 +12,16 @@ export default function Page() {
 
   const getUsers = async () => {
     try {
-      await fetch("/api/admin/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id: "Admin",
-          pw: "spider99!",
-        }),
-      });
+      // await fetch("/api/admin/login", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({
+      //     id: "Admin",
+      //     pw: "spider99!",
+      //   }),
+      // });
 
       const usersJson = await fetch("/api/spider/userMng/list", {
         method: "POST",

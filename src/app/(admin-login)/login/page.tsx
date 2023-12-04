@@ -1,6 +1,44 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+
 export default function Page() {
+  const router = useRouter();
+  const [form, setForm] = useState<any>({});
+
+  const handleChange = (e: any) => {
+    setForm((prev: any) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleLogin = async (e: any) => {
+    try {
+      e.preventDefault();
+
+      console.log(123123, form);
+
+      await fetch("/api/admin/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: form.id,
+          pw: form.pw,
+        }),
+      });
+
+      // TODO: remove this after testing
+      sessionStorage.setItem("token", "123123");
+      router.push("/");
+    } catch (err) {
+      console.error(1111, err);
+
+      // TODO: remove this after testing
+      sessionStorage.setItem("token", "123123");
+    }
+  };
+
   return (
     <div className="flex h-full w-full items-center justify-center">
       <style>
@@ -49,8 +87,10 @@ export default function Page() {
               <div className="p-[2px]">
                 <input
                   className="login-page-component-class h-[19px] px-[2px] py-[1px] text-[11px] font-normal"
+                  name="id"
                   type="text"
                   style={{ width: "200px" }}
+                  onChange={handleChange}
                 />
               </div>
             </div>
@@ -64,8 +104,10 @@ export default function Page() {
               <div className="p-[2px]">
                 <input
                   className="login-page-component-class h-[19px] px-[2px] py-[1px] text-[11px] font-normal"
+                  name="pw"
                   type="text"
                   style={{ width: "200px" }}
+                  onChange={handleChange}
                 />
               </div>
             </div>
@@ -115,6 +157,7 @@ export default function Page() {
                 className="login-page-input-button-class h-[19px] w-[80px] rounded-[2px] text-[11px] font-normal hover:bg-[#e4e4e4]"
                 style={{ fontFamily: "tahoma" }}
                 value="Login"
+                onClick={handleLogin}
               />
               <input
                 type="reset"

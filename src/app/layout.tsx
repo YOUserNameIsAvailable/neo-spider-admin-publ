@@ -5,6 +5,8 @@ import { Inter } from "next/font/google";
 import "./globals.scss";
 import { TabProvider } from "@/providers/TabProvider";
 import { Layout } from "@/components/shared/layout";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -14,12 +16,34 @@ const inter = Inter({ subsets: ["latin"] });
 // };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const [isLoaded, setIsLoaded] = useState(true);
+
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+
+    if (token) {
+      router.push("/");
+    } else {
+      router.push("/login");
+    }
+
+    setTimeout(() => {
+      setIsLoaded(false);
+    }, 500);
+  }, []);
+
   return (
     <html lang="en">
       <body className={inter.className}>
-        <TabProvider>
-          <Layout>{children}</Layout>
-        </TabProvider>
+        {!isLoaded && pathname !== "/login" ? (
+          <TabProvider>
+            <Layout>{children}</Layout>
+          </TabProvider>
+        ) : (
+          <>{children}</>
+        )}
       </body>
     </html>
   );

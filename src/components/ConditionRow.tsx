@@ -1,6 +1,8 @@
 import { Button } from "@progress/kendo-react-buttons";
 import { DropDownList } from "@progress/kendo-react-dropdowns";
-import { FC, useState } from "react";
+import { Input } from "@progress/kendo-react-inputs";
+import { Tooltip } from "@progress/kendo-react-tooltip";
+import { FC, useRef, useState } from "react";
 
 export const ConditionRow: FC<{
   label?: string;
@@ -8,14 +10,18 @@ export const ConditionRow: FC<{
   value?: string;
   listData?: string[];
   disabled?: boolean;
-  isDot?: boolean;
+  isRequired?: boolean;
   Key: string;
   btnText?: string;
   setForm?: any;
   btnEvent?: () => void;
-}> = ({ label, type, value, listData, disabled, isDot, Key, btnText, btnEvent, setForm }) => {
-  const updateHandler = () => {
-    setForm((prev: any) => ({ ...prev, [Key]: value }));
+  isValidate?: boolean;
+}> = ({ label, type, value, listData, disabled, isRequired, Key, btnText, btnEvent, setForm, isValidate = false }) => {
+  const tooltip = useRef<Tooltip>(null);
+
+  const updateHandler = (e: any) => {
+    console.log("updateHandler: ", e.target.value);
+    setForm((prev: any) => ({ ...prev, [Key]: e.target.value }));
   };
 
   return (
@@ -31,23 +37,65 @@ export const ConditionRow: FC<{
           {btnText}
         </Button>
       ) : type === "select" ? (
-        <DropDownList
-          style={{ width: "40%", marginRight: "2px", fontSize: "12px", marginLeft: "2px" }}
-          size={"small"}
-          data={listData}
-          defaultValue={"선택 안 함"}
-          value={value}
-          onChange={updateHandler}
-        />
+        <div
+          className="h-full w-[40%]"
+          onMouseOver={(e) => {
+            // console.log(tooltip.current);
+            tooltip.current && tooltip.current.handleMouseOver(e);
+          }}
+          onMouseOut={(e) => tooltip.current && tooltip.current.handleMouseOut(e)}>
+          <DropDownList
+            validationMessage=""
+            className="test"
+            validityStyles={isValidate}
+            style={{ marginRight: "2px", fontSize: "12px", marginLeft: "2px", paddingTop: "0px" }}
+            size={"small"}
+            defaultValue={"선택 안함"}
+            data={listData}
+            value={value}
+            title="Select sport"
+            required={isRequired}
+            onChange={updateHandler}
+          />
+          {isValidate && isRequired && (
+            <Tooltip
+              ref={tooltip}
+              style={{ width: "max-content", height: "26px", whiteSpace: "nowrap" }}
+              anchorElement="target"
+              position="right"
+              openDelay={300}
+            />
+          )}
+        </div>
       ) : (
-        <input
-          className="ml-[2px] mr-[2px] w-[45%] rounded-[2px] border-[1px] border-[#999999] py-[2px]"
-          disabled={disabled}
-          defaultValue={value}
-          onChange={updateHandler}
-        />
+        <div
+          className="w-[45%]"
+          onMouseOver={(e) => isValidate && tooltip.current && tooltip.current.handleMouseOver(e)}
+          onMouseOut={(e) => isValidate && tooltip.current && tooltip.current.handleMouseOut(e)}>
+          <Input
+            validityStyles={isValidate}
+            className="ml-[2px] mr-[2px] rounded-[2px] border-[1px] border-[#999999] py-[2px]"
+            disabled={disabled}
+            defaultValue={value}
+            required={isRequired}
+            title={`${label}을(를) 입력하세요`}
+            onChange={updateHandler}
+            onInvalid={(e) => {
+              e.preventDefault();
+            }}
+          />
+          {isValidate && isRequired && (
+            <Tooltip
+              ref={tooltip}
+              style={{ width: "max-content", height: "26px", whiteSpace: "nowrap" }}
+              anchorElement="target"
+              position="right"
+              openDelay={300}
+            />
+          )}
+        </div>
       )}
-      {isDot && <span className="required">*</span>}
+      {isRequired && <span className="required">*</span>}
     </div>
   );
 };
