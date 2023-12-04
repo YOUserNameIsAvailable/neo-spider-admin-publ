@@ -17,7 +17,7 @@ export default function Page() {
 
       console.log(123123, form);
 
-      await fetch("/api/admin/login", {
+      const loginJson = await fetch("/api/admin/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -28,19 +28,28 @@ export default function Page() {
         }),
       });
 
-      // TODO: remove this after testing
-      sessionStorage.setItem("token", "123123");
-      router.push("/");
+      const login = await loginJson.json();
+
+      console.log("handleLogin: ", login);
+      if (login.result.status === "success") {
+        sessionStorage.setItem("isLogin", "true");
+        router.push("/front/");
+      } else {
+        alert("권한이 없거나 ID나 비밀번호가 틀립니다. 관리자에게 문의하세요");
+        sessionStorage.setItem("isLogin", "false");
+      }
     } catch (err) {
-      console.error(1111, err);
+      console.error(err);
 
       // TODO: remove this after testing
-      sessionStorage.setItem("token", "123123");
+      console.log("handleLogin TEST: ");
+      sessionStorage.setItem("isLogin", "true");
+      router.push("/");
     }
   };
 
   return (
-    <div className="flex h-full w-full items-center justify-center">
+    <div className="flex h-[100vh] w-full items-center justify-center">
       <style>
         {`
               .login-page-component-class {
@@ -105,7 +114,7 @@ export default function Page() {
                 <input
                   className="login-page-component-class h-[19px] px-[2px] py-[1px] text-[11px] font-normal"
                   name="pw"
-                  type="text"
+                  type="password"
                   style={{ width: "200px" }}
                   onChange={handleChange}
                 />

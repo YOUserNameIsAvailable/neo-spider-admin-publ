@@ -7,6 +7,7 @@ import { TabProvider } from "@/providers/TabProvider";
 import { Layout } from "@/components/shared/layout";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import path from "path";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,11 +22,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const [isLoaded, setIsLoaded] = useState(true);
 
   useEffect(() => {
-    const token = sessionStorage.getItem("token");
+    const isLogin = sessionStorage.getItem("isLogin");
+    console.log(777, pathname, isLogin, pathname.indexOf("login"));
 
-    if (token) {
-      router.push("/");
-    } else {
+    if (isLogin === "true") {
+      router.push("/front");
+    } else if (pathname.indexOf("login") == -1) {
       router.push("/login");
     }
 
@@ -37,7 +39,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={inter.className}>
-        {!isLoaded && pathname !== "/login" ? (
+        {!isLoaded && pathname.indexOf("login") == -1 ? (
           <TabProvider>
             <Layout>{children}</Layout>
           </TabProvider>
