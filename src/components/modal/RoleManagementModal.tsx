@@ -1,9 +1,9 @@
-import { Dispatch, FC, SetStateAction, useState } from "react";
+import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { Window, WindowMoveEvent } from "@progress/kendo-react-dialogs";
-import { Splitter } from "@progress/kendo-react-layout";
-import { DropDownList } from "@progress/kendo-react-dropdowns";
-import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
 import { Button } from "@progress/kendo-react-buttons";
+import { DropDownList } from "@progress/kendo-react-dropdowns";
+import { Splitter, SplitterOnChangeEvent } from "@progress/kendo-react-layout";
+import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
 
 interface PositionInterface {
   left: number;
@@ -12,21 +12,25 @@ interface PositionInterface {
   height: number;
 }
 
-export const UserManagementRoleModal: FC<{ setShowRoleModal: Dispatch<SetStateAction<boolean>> }> = ({
-  setShowRoleModal,
-}) => {
+export const RoleManagementModal: FC<{
+  setShowModal: Dispatch<SetStateAction<boolean>>;
+}> = ({ setShowModal }) => {
   const [position, setPosition] = useState<PositionInterface>({
-    left: 111,
-    top: 37,
-    width: 1107,
-    height: 735,
+    left: 250,
+    top: 45,
+    width: 1092,
+    height: 728,
   });
+
+  const setPercentage = (percentage: number) => {
+    return Math.round(300 / 100) * percentage;
+  };
+
   const [nestedPanes, setNestedPanes] = useState<Array<any>>([{ size: "50%", resizable: true }, {}]);
 
   const handleMove = (event: WindowMoveEvent) => {
     setPosition({ ...position, left: event.left, top: event.top });
   };
-
   const handleResize = (event: WindowMoveEvent) => {
     setPosition({
       left: event.left,
@@ -34,10 +38,6 @@ export const UserManagementRoleModal: FC<{ setShowRoleModal: Dispatch<SetStateAc
       width: event.width,
       height: event.height,
     });
-  };
-
-  const setPercentage = (percentage: number) => {
-    return Math.round(300 / 100) * percentage;
   };
 
   return (
@@ -48,7 +48,7 @@ export const UserManagementRoleModal: FC<{ setShowRoleModal: Dispatch<SetStateAc
         maximizeButton={() => null}
         restoreButton={() => null}
         doubleClickStageChange={false}
-        title={"사용자 메뉴 권한 관리"}
+        title={"Role메뉴 권한 관리"}
         left={position.left}
         top={position.top}
         width={position.width}
@@ -56,7 +56,7 @@ export const UserManagementRoleModal: FC<{ setShowRoleModal: Dispatch<SetStateAc
         onMove={handleMove}
         onResize={handleResize}
         onClose={() => {
-          setShowRoleModal(false);
+          setShowModal(false);
         }}>
         <div className="flex w-full flex-col p-4">
           <div className="pb-[10px] text-[17px] font-bold text-[#656565]">권한ID별 메뉴 권한 체크</div>
@@ -97,10 +97,7 @@ export const UserManagementRoleModal: FC<{ setShowRoleModal: Dispatch<SetStateAc
                       { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
                       { 메뉴ID: "nsb_msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > M_거래관리" },
                       { 메뉴ID: "message_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 전문 관리" },
-                      {
-                        메뉴ID: "neb_msg_trx_manage",
-                        메뉴명: "Framework 관리메뉴 > 거래전문 관리 > N_전문등록조회",
-                      },
+                      { 메뉴ID: "neb_msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > N_전문등록조회" },
                       { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
                       { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
                       { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
@@ -149,9 +146,7 @@ export const UserManagementRoleModal: FC<{ setShowRoleModal: Dispatch<SetStateAc
             </Splitter>
           </div>
           <div className="my-[10px] flex flex-row-reverse gap-1">
-            <Button
-              className="basic-btn mt-2 flex h-7 items-center justify-start"
-              onClick={() => setShowRoleModal(false)}>
+            <Button className="basic-btn mt-2 flex h-7 items-center justify-start" onClick={() => setShowModal(false)}>
               닫기
             </Button>
             <Button className="basic-btn mt-2 flex h-7 items-center justify-start">변경사항 저장</Button>

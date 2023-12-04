@@ -7,8 +7,7 @@ import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
 import { setGroupIds, setExpandedState } from "@progress/kendo-react-data-tools";
 import { EMPLOYEES } from "@/constants";
 import { ColumnMenu } from "./ColumnMenu";
-import { Window,WindowMoveEvent } from '@progress/kendo-react-dialogs';
-import { DropDownList } from "@progress/kendo-react-dropdowns";
+import { CodeManagementDetailModal } from "./modal/CodeManagementDetailModal";
 
 const DATA_ITEM_KEY = "id";
 const SELECTED_FIELD = "selected";
@@ -27,12 +26,6 @@ const processWithGroups = (data: any, dataState: any) => {
   return newDataState;
 };
 
-interface PositionInterface {
-  left: number;
-  top: number;
-  width: number;
-  height: number;
-}
 
 export function CodeManagementTable() {
   const idGetter = getter("id");
@@ -43,25 +36,7 @@ export function CodeManagementTable() {
   const [dataResult, setDataResult] = React.useState(process(filteredData, dataState));
   const [data, setData] = React.useState(filteredData);
 
-  const [visible,setVisible] = React.useState(false);  // <7-2> Code management - code info
-  const [position, setPosition] = React.useState<PositionInterface>({
-    left: 341,
-    top:241,
-    width: 810,
-    height: 284,
-  });
-
-  const handleMove = (event: WindowMoveEvent) => {
-    setPosition({ ...position, left: event.left, top: event.top });
-  };
-  const handleResize = (event: WindowMoveEvent) => {
-    setPosition({
-      left: event.left,
-      top: event.top,
-      width: event.width,
-      height: event.height,
-    });
-  };
+  const [showModal,setShowModal] = React.useState(false);  // <7-2> Code management - code info
 
   const onFilterChange = (ev: any) => {
     let value = ev.value;
@@ -248,7 +223,7 @@ export function CodeManagementTable() {
           onSelectionChange={onSelectionChange}
           groupable={false}
           onRowClick={()=>{
-            setVisible(true);
+            setShowModal(true);
           }}
           >
           <Column
@@ -316,91 +291,7 @@ export function CodeManagementTable() {
           size={"small"}></Grid>
       </GridPDFExport>
     </div>
-      {/* <7-2> Code management - code info */}
-
-      {visible && (
-        <>
-        <div className="k-overlay" />
-        <Window
-          minimizeButton={() => null}
-          maximizeButton={() => null}
-          restoreButton={() => null}
-          doubleClickStageChange={false}
-          title={'코드 정보'}
-          left={position.left}
-          top={position.top}
-          width={position.width}
-          height={position.height}
-          onMove={handleMove}
-          onResize={handleResize}
-          onClose={()=>{setVisible(false)}}
-        >
-          <div className='flex flex-col gap-[15px]'>
-          <div className="flex pb-[4px] items-center gap-1">
-              <img src="./images/dot_subtitle.gif" className="w-[12px] h-[12px]"/>
-              <div className="text-[14px] text-[#656565] font-bold">
-             코드 수정
-              </div>
-            </div>
-            <div className='flex flex-col w-full'>
-              {[
-                {id:'코드그룹ID',id2:'코드',type:'input2',disabled:true,disabled2:false,dot1:false,dot2:true},
-                {id:'코드명',id2:'코드영문명',type:'input2',disabled:false,disabled2:false,dot1:true,dot2:true},
-                {id:'코드설명',id2:'',type:'input',disabled:false,disabled2:false,dot1:false,dot2:false},
-                {id:'정렬순선',id2:'사용여부',type:'select',disabled:false,disabled2:false,dot1:true,dot2:true},
-            ].map((v)=>{
-              return(
-                <>  
-              {v.type === 'input' ? 
-                 <div className="flex w-full border-[1px]  h-[30px]" key={v.id}>
-              <div className='flex w-full items-center'>
-              <label className="bg-[#d1daec] text-[12px] p-1 w-[150px] min-w-[150px] text-black h-full flex items-center">{v.id}</label>
-              <input className="w-[70%] border-[1px] ml-[2px] border-[1px] border-[#999999] py-[2px] rounded-[2px]" />
-              </div> 
-                 </div>
-              : v.type === 'select' ? 
-              <div className="flex w-full border-[1px]  h-[30px]" key={v.id}>
-                   <div className="flex w-[50%] items-center">
-            <label className="bg-[#d1daec] text-[12px] p-1 w-[150px] min-w-[150px] text-black h-full flex items-center">{v.id}</label>
-              <input className="w-[20%] border-[1px] ml-[2px] border-[1px] border-[#999999] py-[2px] rounded-[2px]" disabled={v.disabled} />
-              {v.dot1 && <span className='required' >*</span>}
-              <div className='text-[#285BA2] text-[11px]'>
-                  등록된 코드: 261
-              </div>
-              </div>
-              <div className="flex w-[50%] items-center">
-              <label className="bg-[#d1daec] text-[12px] p-1 w-[150px] min-w-[150px] text-black h-full flex items-center">{v.id2}</label>
-              <DropDownList style={{width:'40%',fontSize:"12px",marginLeft:'2px',paddingTop:"2px",paddingBottom:'2px',color:'#656565'}} size={'small'} data={['사용','안전','주의','경계']} defaultValue={'사용'} />
-              {v.dot2 && <span className='required' >*</span>}
-                </div>
-              </div> 
-              : 
-              <div className="flex w-full border-[1px]  h-[30px]" key={v.id}>
-                            <div className="flex w-[50%] items-center">
-            <label className="bg-[#d1daec] text-[12px] p-1 w-[150px] min-w-[150px] text-black h-full flex items-center">{v.id}</label>
-              <input className="w-[40%] border-[1px] ml-[2px] border-[1px] border-[#999999] py-[2px] rounded-[2px]" disabled={v.disabled} />
-              {v.dot1 && <span className='required' >*</span>}
-              </div>
-            <div className="flex w-[50%] items-center">
-            <label className="bg-[#d1daec] text-[12px] p-1 w-[150px] min-w-[150px] text-black h-full flex items-center">{v.id2}</label>
-              <input className="w-[40%] border-[1px] ml-[2px] border-[1px] border-[#999999] py-[2px] rounded-[2px]" disabled={v.disabled2} />
-              {v.dot2 && <span className='required' >*</span>}
-              </div>
-                </div>
-              }
-            </>
-              )
-            })}
-            </div>
-            <div className="flex flex-row-reverse gap-1">
-        <button style={{background:"url(./images/btn_error_report_close.png)",backgroundRepeat:"no-repeat",backgroundSize:"cover"}} className="w-[54px] h-[23px]" onClick={()=>{setVisible(false)}} />
-        <button style={{background:"url(./images/btn_menu_delete.png)",backgroundRepeat:"no-repeat",backgroundSize:"cover"}} className="w-[54px] h-[23px]" />
-        <button style={{background:"url(./images/btn_error_report_save.png)",backgroundRepeat:"no-repeat",backgroundSize:"cover"}} className="w-[54px] h-[23px]" />
-        </div>
-          </div>
-        </Window>
-        </>
-      )}
+    {showModal && <CodeManagementDetailModal setShowModal={setShowModal} />}
 </>
   );
 }

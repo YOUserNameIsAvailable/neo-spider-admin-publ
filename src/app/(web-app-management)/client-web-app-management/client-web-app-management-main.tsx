@@ -2,42 +2,16 @@ import { Input } from "@progress/kendo-react-inputs";
 import { Button } from "@progress/kendo-react-buttons";
 
 import { DropDownList } from "@progress/kendo-react-dropdowns";
-import { arrowRightIcon } from "@progress/kendo-svg-icons";
 import React, { useState } from "react";
 import { ClientWebTable } from "@/components/ClientWebTable";
 import { PAGES, SPORTS } from "@/constants";
 import { ClientWebProps } from "@/types";
-import { Window, WindowMoveEvent } from "@progress/kendo-react-dialogs";
-
-interface PositionInterface {
-  left: number;
-  top: number;
-  width: number;
-  height: number;
-}
+import { ClientWebAppManagementModal } from "@/components/modal/ClientWebAppManagementModal";
 
 export const ClientWebAppMain: React.FC<ClientWebProps> = ({ onRowClick }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const [visible, setVisible] = useState(false); // <5-3> Client WebApp Manage - stop selection
-  const [position, setPosition] = useState<PositionInterface>({
-    left: 320,
-    top: 188,
-    width: 810,
-    height: 450,
-  });
-
-  const handleMove = (event: WindowMoveEvent) => {
-    setPosition({ ...position, left: event.left, top: event.top });
-  };
-  const handleResize = (event: WindowMoveEvent) => {
-    setPosition({
-      left: event.left,
-      top: event.top,
-      width: event.width,
-      height: event.height,
-    });
-  };
+  const [showModal, setShowModal] = useState(false); // <5-3> Client WebApp Manage - stop selection
 
   const toggleExpansion = () => {
     setIsExpanded(!isExpanded);
@@ -220,7 +194,7 @@ export const ClientWebAppMain: React.FC<ClientWebProps> = ({ onRowClick }) => {
             imageUrl="/images/dot-right-arrow.png"
             className="w-30 basic-btn mt-2 flex  h-7 items-center justify-start"
             onClick={() => {
-              setVisible(true);
+              setShowModal(true);
             }}>
             stop selection
           </Button>
@@ -243,73 +217,8 @@ export const ClientWebAppMain: React.FC<ClientWebProps> = ({ onRowClick }) => {
           ADD
         </Button>
       </div>
-
-      {/* <5-3> Client WebApp Manage - stop selection */}
-
-      {visible && (
-        <>
-          <div className="k-overlay" />
-          <Window
-            minimizeButton={() => null}
-            maximizeButton={() => null}
-            restoreButton={() => null}
-            doubleClickStageChange={false}
-            title={"중지 사유 등록"}
-            left={position.left}
-            top={position.top}
-            width={position.width}
-            height={position.height}
-            onMove={handleMove}
-            onResize={handleResize}
-            onClose={() => {
-              setVisible(false);
-            }}>
-            <div className="flex flex-col gap-[15px]">
-              <div className="flex flex-col gap-[12px]">
-                <div className="flex items-center gap-1 pb-[4px]">
-                  <img src="./images/dot_subtitle.gif" className="h-[12px] w-[12px]" />
-                  <div className="text-[14px] font-bold text-[#656565]">중지 메세지</div>
-                  <div className="text-[11px] font-bold text-[#656565]">
-                    (선택된 web app의 상태를 중지로 변경하고, 중지 사유를 입력합니다. )
-                  </div>
-                </div>
-                <div className="flex flex-col">
-                  {[{ id: "중지 사유(국문)" }, { id: "중지 사유(영문)" }].map((v) => {
-                    return (
-                      <div key={v.id} className={`flex h-[137px] w-full border-[1px]`}>
-                        <div className={`flex w-full items-center`}>
-                          <label className="flex h-full w-[150px] min-w-[150px] items-center bg-[#d1daec] p-1 text-[12px] text-black">
-                            {v.id}
-                          </label>
-                          <textarea className="mx-[15px] my-[10px] h-[108px] w-full rounded-[3px] border-[1px] border-[#999999]" />
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-              <div className="flex flex-row-reverse gap-[24px]">
-                <button
-                  style={{
-                    background: "url(./images/btn_error_report_close.png)",
-                    backgroundRepeat: "no-repeat",
-                    backgroundSize: "cover",
-                  }}
-                  className="h-[23px] w-[55px]"
-                />
-                <button
-                  style={{
-                    background: "url(./images/btn_client_save.png)",
-                    backgroundRepeat: "no-repeat",
-                    backgroundSize: "cover",
-                  }}
-                  className="h-[23px] w-[90px]"
-                />
-              </div>
-            </div>
-          </Window>
-        </>
-      )}
+            {showModal && <ClientWebAppManagementModal setShowModal={setShowModal} />}
+     
     </>
   );
 };

@@ -7,7 +7,7 @@ import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
 import { setGroupIds, setExpandedState } from "@progress/kendo-react-data-tools";
 import { EMPLOYEES } from "@/constants";
 import { ColumnMenu } from "./ColumnMenu";
-import { Window,WindowMoveEvent } from '@progress/kendo-react-dialogs';
+import { ManagerLogModal } from "./modal/ManagerLogModal";
 
 const DATA_ITEM_KEY = "id";
 const SELECTED_FIELD = "selected";
@@ -16,13 +16,6 @@ const initialDataState = {
   skip: 0,
   group: [],
 };
-
-interface PositionInterface {
-  left: number;
-  top: number;
-  width: number;
-  height: number;
-}
 
 const processWithGroups = (data: any, dataState: any) => {
 
@@ -43,26 +36,8 @@ export function ManageLogTable() {
   const [dataResult, setDataResult] = React.useState(process(filteredData, dataState));
   const [data, setData] = React.useState(filteredData);
 
-  const [visible,setVisible] = React.useState(false);  // <9-2> Manager Log - User page access log
-  const [position, setPosition] = React.useState<PositionInterface>({
-    left: 400,
-    top:200,
-    width: 746,
-    height: 402,
-  });
+  const [showModal,setShowModal] = React.useState(false);  // <9-2> Manager Log - User page access log
 
-
-  const handleMove = (event: WindowMoveEvent) => {
-    setPosition({ ...position, left: event.left, top: event.top });
-  };
-  const handleResize = (event: WindowMoveEvent) => {
-    setPosition({
-      left: event.left,
-      top: event.top,
-      width: event.width,
-      height: event.height,
-    });
-  };
 
 
   const onFilterChange = (ev: any) => {
@@ -249,7 +224,7 @@ export function ManageLogTable() {
           onHeaderSelectionChange={onHeaderSelectionChange}
           onSelectionChange={onSelectionChange}
           groupable={false}
-          onRowClick={()=>{setVisible(true)}}
+          onRowClick={()=>{setShowModal(true)}}
           >
           <Column
             field="budget"
@@ -330,96 +305,7 @@ export function ManageLogTable() {
           groupable={true}></Grid>
       </GridPDFExport>
     </div>
-    {/* <9-2> Manager Log - User page access log */}
-
-    {visible && (
-        <>
-        <div className="k-overlay" />
-        <Window
-          minimizeButton={() => null}
-          maximizeButton={() => null}
-          restoreButton={() => null}
-          doubleClickStageChange={false}
-          title={'사용자 페이지 접속 로그'}
-          // style={{minWidth:'90px',minHeight:'50px',width:"auto",height:'auto'}}
-          left={position.left}
-          top={position.top}
-          width={position.width}
-          height={position.height}
-          onMove={handleMove}
-          onResize={handleResize}
-          onClose={()=>{setVisible(false)}}
-        >
-          <div className='flex flex-col gap-[15px]'>
-            <div className="flex flex-col gap-[12px]">
-            <div className="flex pb-[4px] items-center gap-1">
-              <img src="./images/dot_subtitle.gif" className="w-[12px] h-[12px]"/>
-              <div className="text-[14px] text-[#656565] font-bold">
-              기본 정보
-              </div>
-            </div>
-            <div className="flex flex-col">
-              {[
-                {title:"로그 일련번호",id:'63',title2:"로그 추적번호",id2:'203012040140120421401240124210420'},
-                {title:"사용자ID",id:'GUEST',title2:"채널 ID",id2:''},
-                {title:"기동/수동",id:'',title2:"요청/응답",id2:''},
-                {title:"처리결과 코드",id:'',title2:"",id2:''},
-                {title:"처리결과 메시지",id:'',title2:"",id2:''},
-                {title:"로그 데이터",id:'',title2:"",id2:''},
-            ].map((v)=>{
-              return(
-                <>
-                {v.title2 === "" ? 
-                v.title === '처리결과 코드' ? 
-                <div className="flex w-full border-[1px] h-[30px]">
-              <label className="bg-[#d1daec] text-[12px] min-w-[150px] p-1 w-[150px] text-black h-full flex items-center">{v.title}</label>
-              <span className="text-[#656565] text-[11px] px-[2px] py-[2px] flex items-center font-bold">
-              {v.id}
-              </span>
-              </div>
-              :
-              v.title === '처리결과 메시지' ? 
-              <div className="flex w-full border-[1px] h-[60px]">
-              <label className="bg-[#d1daec] text-[12px] min-w-[150px] p-1 w-[150px] text-black h-full flex items-center">{v.title}</label>
-              <span className="text-[#656565] text-[11px] px-[2px] py-[2px] flex items-center font-bold">
-              {v.id}
-              </span>
-              </div>
-              :
-              <div className="flex w-full border-[1px] h-[60px]">
-              <label className="bg-[#d1daec] text-[12px] min-w-[150px] p-1 w-[150px] text-black h-full flex items-center">{v.title}</label>
-              <textarea className="w-full h-auto" />
-              </div>
-              :
-              <div className="flex w-full border-[1px] h-[30px]">
-              <div className="flex w-[50%] h-auto">
-              <label className="bg-[#d1daec] text-[12px] min-w-[150px] p-1 w-[150px] text-black h-full flex items-center">{v.title}</label>
-              <div className="text-[#656565] text-[11px] px-[2px] py-[2px] flex items-center font-bold break-all">
-              {v.id}
-              </div>
-              </div>
-              <div className="flex w-[50%] h-auto">
-              <label className="bg-[#d1daec] text-[12px] min-w-[150px] p-1 w-[150px] text-black h-full flex items-center">{v.title2}</label>
-              <div className="text-[#656565] text-[11px] px-[2px] py-[2px] flex items-center font-bold break-all" >
-             {v.id2}
-              </div>
-              </div>
-              </div>
-              }
-                </>
-              )
-            })}
-            </div>
-            </div>
-            <div className="my-[10px] flex flex-row-reverse">
-        <button style={{background:"url(./images/btn_error_report_close.png)",backgroundRepeat:"no-repeat",backgroundSize:"cover"}} className="w-[54px] h-[23px]" onClick={()=>{
-          setVisible(false)
-        }} />
-        </div>
-          </div>
-        </Window>
-        </>
-      )}
+    {showModal && <ManagerLogModal setShowModal={setShowModal} />}
 
     </>
     
