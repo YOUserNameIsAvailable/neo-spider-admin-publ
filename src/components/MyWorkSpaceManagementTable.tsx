@@ -11,6 +11,9 @@ import { Button } from "@progress/kendo-react-buttons";
 import { Window, WindowMoveEvent } from "@progress/kendo-react-dialogs";
 import { DropDownList } from "@progress/kendo-react-dropdowns";
 import { Splitter, SplitterOnChangeEvent } from "@progress/kendo-react-layout";
+import dynamic from "next/dynamic";
+const Editor = dynamic(() => import("react-draft-wysiwyg").then((mod) => mod.Editor), { ssr: false });
+import { EditorState } from "draft-js";
 
 const DATA_ITEM_KEY = "id";
 const SELECTED_FIELD = "selected";
@@ -36,7 +39,13 @@ interface PositionInterface {
   height: number;
 }
 
-export function MyWorkSpaceManagementTable({ onExport }) {
+export function MyWorkSpaceManagementTable() {
+  const [editorState, setEditorState] = React.useState(EditorState.createEmpty());
+  const onEditorStateChange = (editorState: any) => {
+    // editorState에 값 설정
+    setEditorState(editorState);
+  };
+
   const idGetter = getter("id");
   const [filterValue, setFilterValue] = React.useState();
   const [filteredData, setFilteredData] = React.useState(EMPLOYEES);
@@ -228,15 +237,15 @@ export function MyWorkSpaceManagementTable({ onExport }) {
     </td>
   );
 
-  const _exporter = React.createRef();
-  const excelExport = () => {
-    if (_exporter.current) {
-      console.log('_exporter.current:', _exporter.current, dataResult)
-      _exporter.current.save(dataResult);
-    }
-  };
+  // const _exporter = React.createRef();
+  // const excelExport = () => {
+  //   if (_exporter.current) {
+  //     console.log('_exporter.current:', _exporter.current, dataResult)
+  //     _exporter.current.save(dataResult);
+  //   }
+  // };
 
-  return (
+    return (
     <>
       <div>
         {/*<div onClick={excelExport}>test btn77</div>*/}
@@ -420,12 +429,40 @@ export function MyWorkSpaceManagementTable({ onExport }) {
                 onClose={() => {
                   setScriptView(false);
                 }}>
-              <div className="flex flex-col w-full">
-                <div className="flex w-full flex-row items-center">
+              <div className="flex flex-col w-full p-4">
+                <div className="flex w-full flex-row items-center mb-4 border-[1px] border-[#dfe1e1]">
                   <label className="flex h-full w-[75px] min-w-[75px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
                     파일명
                   </label>
-                  <input className="my-[2px] ml-[2px] mr-4 w-full rounded-[2px] border-[1px] border-[#999999] py-[2px]" />
+                  <input className="my-[2px] ml-[2px] mr-8 w-full rounded-[2px] border-[1px] border-[#999999] py-[2px]" />
+                </div>
+                <Editor
+                    // 에디터와 툴바 모두에 적용되는 클래스
+                    wrapperClassName="wrapper-class h-full"
+                    // 에디터 주변에 적용된 클래스
+                    editorClassName="editor !h-[500px] bg-[#fff]"
+                    // 툴바 주위에 적용된 클래스
+                    toolbarClassName="!hidden"
+                    // 한국어 설정
+                    localization={{
+                      locale: "ko",
+                    }}
+                    // 초기값 설정
+                    editorState={editorState}
+                    // 에디터의 값이 변경될 때마다 onEditorStateChange 호출
+                    onEditorStateChange={onEditorStateChange}
+                />
+                <div className="flex items-center justify-end w-full gap-2 mt-4">
+                  <Button
+                      imageUrl="/images/dot-right-arrow.png"
+                      className="basic-btn flex items-center justify-start">
+                    소스저장하기
+                  </Button>
+                  <Button
+                      imageUrl="/images/dot-right-arrow.png"
+                      className="basic-btn flex items-center justify-start">
+                    닫기
+                  </Button>
                 </div>
               </div>
             </Window>
