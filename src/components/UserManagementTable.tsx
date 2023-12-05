@@ -28,7 +28,7 @@ const processWithGroups = (data: any, dataState: any) => {
   return newDataState;
 };
 
-export const UserManagementTable: FC<{ result: any[] }> = ({ result }) => {
+export const UserManagementTable: FC<{ getUsers: () => void; result: any[] }> = ({ getUsers, result }) => {
   const idGetter = getter("id");
   const [filterValue, setFilterValue] = useState();
   const [filteredData, setFilteredData] = useState<any[]>([]);
@@ -391,7 +391,9 @@ export const UserManagementTable: FC<{ result: any[] }> = ({ result }) => {
             groupable={true}></Grid>
         </GridPDFExport>
       </div>
-      {showDetailModal && <UserManagementDetailModal setShowDetailModal={setShowDetailModal} userId={userId} />}
+      {showDetailModal && (
+        <UserManagementDetailModal getUsers={getUsers} setShowDetailModal={setShowDetailModal} userId={userId} />
+      )}
 
       {/* <2-3> User management - Menu authority */}
       {showRoleModal && <UserManagementRoleModal setShowRoleModal={setShowRoleModal} />}

@@ -1,8 +1,8 @@
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { Window, WindowMoveEvent } from "@progress/kendo-react-dialogs";
 import { Button } from "@progress/kendo-react-buttons";
-import { Form, FormElement, FormRenderProps } from "@progress/kendo-react-form";
 import { ConditionRow } from "../ConditionRow";
+import { useRouter } from "next/navigation";
 
 interface PositionInterface {
   left: number;
@@ -12,10 +12,11 @@ interface PositionInterface {
 }
 
 export const UserManagementDetailModal: FC<{
+  getUsers: () => void;
   setShowDetailModal: Dispatch<SetStateAction<boolean>>;
   userId: string;
-}> = ({ setShowDetailModal, userId }) => {
-  const [result, setResult] = useState<any>({});
+}> = ({ getUsers, setShowDetailModal, userId }) => {
+  const router = useRouter();
   const [position, setPosition] = useState<PositionInterface>({
     left: 341,
     top: 241,
@@ -50,12 +51,30 @@ export const UserManagementDetailModal: FC<{
     });
 
     const user = await userJson.json();
-    console.log("user: ", user?.body?.detail[0]);
-    setResult(user?.body?.detail[0]);
+    const detail = user?.body?.detail[0];
+    console.log("user: ", detail);
+    setForm({
+      org_userId: userId,
+      userId: userId,
+      roleId: detail?.roleId,
+      positionName: detail?.positionName,
+      address: detail?.address,
+      classNm: detail?.className,
+      userName: detail?.userName,
+      userSsn: detail?.userSsn,
+      phone: detail?.phone,
+      email: detail?.email,
+      accessIp: detail?.accessIp,
+      userStateCode: detail?.userStateCode,
+    });
   };
 
   const updateUserDetail = async (e: any) => {
     e.preventDefault();
+    if (Object.keys(form).length === 0) {
+      alert("수정할 내용이 없습니다.");
+      return;
+    }
     console.log("form: ", form);
 
     const userJson = await fetch("/api/spider/userMng/update", {
@@ -69,7 +88,7 @@ export const UserManagementDetailModal: FC<{
         roleId: form?.roleId,
         positionName: form?.positionName,
         address: null,
-        className: form?.className,
+        classNm: form?.classNm,
         userName: form?.userName,
         userSsn: form?.userSsn,
         phone: form?.phone,
@@ -79,9 +98,17 @@ export const UserManagementDetailModal: FC<{
       }),
     });
 
-    const user = await userJson.json();
-    console.log("user: ", user?.body?.detail[0]);
-    setResult(user?.body?.detail[0]);
+    const updated = await userJson.json();
+    console.log("user updated: ", updated);
+    if (updated?.body !== "SUCCESS" && updated?.result?.status) {
+      alert("사용자 정보 수정에 실패하였습니다.");
+      sessionStorage.setItem("isLogin", "false");
+
+      // TODO: 로그인 팝업으로 변경
+      router.push("/login");
+    } else {
+      getUsers();
+    }
   };
 
   const resetPassword = async () => {
@@ -95,9 +122,8 @@ export const UserManagementDetailModal: FC<{
       }),
     });
 
-    const user = await userJson.json();
-    console.log("user: ", user?.body?.detail[0]);
-    setResult(user?.body?.detail[0]);
+    const changedPw = await userJson.json();
+    console.log("user changedPw: ", changedPw);
   };
 
   useEffect(() => {
@@ -137,7 +163,7 @@ export const UserManagementDetailModal: FC<{
                     <ConditionRow
                       label={"사용자ID"}
                       type="input"
-                      value={result?.userId}
+                      value={form?.userId}
                       disabled={true}
                       isRequired={true}
                       Key="userId"
@@ -147,7 +173,7 @@ export const UserManagementDetailModal: FC<{
                     <ConditionRow
                       label={"사용자명"}
                       type="input"
-                      value={result?.userName}
+                      value={form?.userName}
                       disabled={false}
                       isRequired={true}
                       Key="userName"
@@ -169,7 +195,7 @@ export const UserManagementDetailModal: FC<{
                     <ConditionRow
                       label={"접근 허용 IP"}
                       type="input"
-                      value={result?.accessIp}
+                      value={form?.accessIp}
                       disabled={false}
                       isRequired={true}
                       Key="accessIp"
@@ -181,7 +207,7 @@ export const UserManagementDetailModal: FC<{
                     <ConditionRow
                       label={"직번"}
                       type="input"
-                      value={result?.userSsn}
+                      value={form?.userSsn}
                       disabled={false}
                       isRequired={true}
                       Key="userSsn"
@@ -191,7 +217,7 @@ export const UserManagementDetailModal: FC<{
                     <ConditionRow
                       label={"지점코드"}
                       type="input"
-                      value={result?.roleId}
+                      value={form?.roleId}
                       disabled={false}
                       isRequired={false}
                       Key="roleId"
@@ -203,7 +229,7 @@ export const UserManagementDetailModal: FC<{
                     <ConditionRow
                       label={"연락처(-생략)"}
                       type="input"
-                      value={result?.phone}
+                      value={form?.phone}
                       disabled={false}
                       isRequired={false}
                       Key="phone"
@@ -213,7 +239,7 @@ export const UserManagementDetailModal: FC<{
                     <ConditionRow
                       label={"이메일"}
                       type="input"
-                      value={result?.email}
+                      value={form?.email}
                       disabled={false}
                       isRequired={false}
                       Key="email"
@@ -225,10 +251,107 @@ export const UserManagementDetailModal: FC<{
                     <ConditionRow
                       label={"권한명"}
                       type="select"
-                      value={result?.roleName}
+                      value={{ NAME: form?.roleName, VALUE: form?.roleId }}
                       disabled={false}
                       isRequired={true}
-                      listData={["관리자", "사용자"]}
+                      listData={[
+                        {
+                          VALUE: "cjhan11",
+                          NAME: "11111111",
+                        },
+                        {
+                          VALUE: "이12나1",
+                          NAME: "1123",
+                        },
+                        {
+                          VALUE: "이12나71",
+                          NAME: "1123",
+                        },
+                        {
+                          VALUE: "이121",
+                          NAME: "1123",
+                        },
+                        {
+                          VALUE: "이1271",
+                          NAME: "1123",
+                        },
+                        {
+                          VALUE: "인11271",
+                          NAME: "1123",
+                        },
+                        {
+                          VALUE: "이11271",
+                          NAME: "1123",
+                        },
+                        {
+                          VALUE: "123",
+                          NAME: "123ss12",
+                        },
+                        {
+                          VALUE: "itdev",
+                          NAME: "IT 개발자",
+                        },
+                        {
+                          VALUE: "itadmin",
+                          NAME: "IT 관리자",
+                        },
+                        {
+                          VALUE: "cms_brUser",
+                          NAME: "cms 지점 사용자",
+                        },
+                        {
+                          VALUE: "fwkMenu2",
+                          NAME: "fwkMenu2",
+                        },
+                        {
+                          VALUE: "qq3",
+                          NAME: "qq3",
+                        },
+                        {
+                          VALUE: "tes",
+                          NAME: "sssss11",
+                        },
+                        {
+                          VALUE: "superadmin",
+                          NAME: "super",
+                        },
+                        {
+                          VALUE: "test0105",
+                          NAME: "test0105",
+                        },
+                        {
+                          VALUE: "test1",
+                          NAME: "test12",
+                        },
+                        {
+                          VALUE: "testtest",
+                          NAME: "testtest2",
+                        },
+                        {
+                          VALUE: "rwqwr",
+                          NAME: "마스터",
+                        },
+                        {
+                          VALUE: "wooriAdmin",
+                          NAME: "우리은행 ADMIN 관리자",
+                        },
+                        {
+                          VALUE: "testrole1",
+                          NAME: "테스트 역할1",
+                        },
+                        {
+                          VALUE: "testrole2",
+                          NAME: "테스트 역할2",
+                        },
+                        {
+                          VALUE: "testrole3",
+                          NAME: "테스트 역할3",
+                        },
+                        {
+                          VALUE: "추가",
+                          NAME: "했다",
+                        },
+                      ]}
                       Key="roleName"
                       setForm={setForm}
                       isValidate={isValidate}
@@ -236,11 +359,10 @@ export const UserManagementDetailModal: FC<{
                     <ConditionRow
                       label={"직급"}
                       type="input"
-                      value={result?.className}
+                      value={form?.classNm}
                       disabled={false}
                       isRequired={false}
-                      listData={["사원", "대리", "과장", "차장", "부장", "이사", "상무", "전무", "사장"]}
-                      Key="className"
+                      Key="classNm"
                       setForm={setForm}
                       isValidate={isValidate}
                     />
@@ -249,7 +371,7 @@ export const UserManagementDetailModal: FC<{
                     <ConditionRow
                       label={"부서명"}
                       type="input"
-                      value={result?.positionName}
+                      value={form?.positionName}
                       disabled={false}
                       isRequired={true}
                       Key="positionName"
@@ -259,10 +381,14 @@ export const UserManagementDetailModal: FC<{
                     <ConditionRow
                       label={"사용자 상태"}
                       type="select"
-                      value={result?.userStateCodeNm}
+                      value={{ NAME: form?.userStateCodeNm, VALUE: form?.userStateCode }}
                       disabled={false}
                       isRequired={false}
-                      listData={["정상", "중지", "삭제"]}
+                      listData={[
+                        { NAME: "정상", VALUE: 1 },
+                        { NAME: "중지", VALUE: 2 },
+                        { NAME: "삭제", VALUE: 3 },
+                      ]}
                       Key="userStateCodeNm"
                       setForm={setForm}
                       isValidate={isValidate}

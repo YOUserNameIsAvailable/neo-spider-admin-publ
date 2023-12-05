@@ -2,13 +2,13 @@ import { Button } from "@progress/kendo-react-buttons";
 import { DropDownList } from "@progress/kendo-react-dropdowns";
 import { Input } from "@progress/kendo-react-inputs";
 import { Tooltip } from "@progress/kendo-react-tooltip";
-import { FC, useRef, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 
 export const ConditionRow: FC<{
   label?: string;
   type?: string;
-  value?: string;
-  listData?: string[];
+  value?: any;
+  listData?: any[];
   disabled?: boolean;
   isRequired?: boolean;
   Key: string;
@@ -24,6 +24,13 @@ export const ConditionRow: FC<{
     setForm((prev: any) => ({ ...prev, [Key]: e.target.value }));
   };
 
+  // useEffect(() => {
+  //   if (value) {
+  //     console.log("ConditionRow: ", label, value);
+  //     setForm((prev: any) => ({ ...prev, [Key]: value }));
+  //   }
+  // }, [value]);
+
   return (
     <div className="flex w-[50%] items-center">
       <label className="flex h-full w-[150px] min-w-[150px] items-center bg-[#d1daec] p-1 text-[12px] text-black">
@@ -38,7 +45,7 @@ export const ConditionRow: FC<{
         </Button>
       ) : type === "select" ? (
         <div
-          className="h-full w-[40%]"
+          className="w-[40%]"
           onMouseOver={(e) => {
             // console.log(tooltip.current);
             tooltip.current && tooltip.current.handleMouseOver(e);
@@ -50,10 +57,12 @@ export const ConditionRow: FC<{
             validityStyles={isValidate}
             style={{ marginRight: "2px", fontSize: "12px", marginLeft: "2px", paddingTop: "0px" }}
             size={"small"}
-            defaultValue={"선택 안함"}
+            defaultItem={{ NAME: "선택 안함", VALUE: "" }}
+            textField="NAME"
+            dataItemKey="VALUE"
             data={listData}
             value={value}
-            title="Select sport"
+            title={`${label}을(를) 입력하세요`}
             required={isRequired}
             onChange={updateHandler}
           />
@@ -76,10 +85,11 @@ export const ConditionRow: FC<{
             validityStyles={isValidate}
             className="ml-[2px] mr-[2px] rounded-[2px] border-[1px] border-[#999999] py-[2px]"
             disabled={disabled}
-            defaultValue={value}
             required={isRequired}
+            defaultValue={value}
+            value={value}
             title={`${label}을(를) 입력하세요`}
-            onChange={updateHandler}
+            onInput={updateHandler}
             onInvalid={(e) => {
               e.preventDefault();
             }}
