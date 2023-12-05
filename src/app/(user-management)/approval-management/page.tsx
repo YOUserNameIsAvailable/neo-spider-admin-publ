@@ -17,27 +17,30 @@ const idGetter = getter(DATA_ITEM_KEY);
 
 export default function Page() {
   const [showApprovalRequest, setShowApprovalRequest] = React.useState(false);
-  const [position, setPosition] = React.useState({
+  const [showApprovalAddItem, setShowApprovalAddItem] = React.useState(false);
+  const [requestPosition, setRequestPosition] = React.useState({
     left: 400,
     top: 182,
     width: 1100,
     height: 700,
   });
-  const [selected, setSelected] = React.useState<number>(-1);
+  const [addItemPosition, setAddItemPosition] = React.useState({
+    left: 400,
+    top: 182,
+    width: 1500,
+    height: 700,
+  });
+  const [selected, setSelected] = React.useState<number>(0);
   const handleSelect = (e: TabStripSelectEventArguments) => {
     setSelected(e.selected);
   };
 
-  const handleMove = (event: WindowMoveEvent) => {
-    setPosition({ ...position, left: event.left, top: event.top });
-  };
-  const handleResize = (event: WindowMoveEvent) => {
-    setPosition({
-      left: event.left,
-      top: event.top,
-      width: event.width,
-      height: event.height,
-    });
+  const handleWindowChange = (type: string, event: WindowMoveEvent) => {
+    if (type === "addItem") {
+      setAddItemPosition({ left: event.left, top: event.top, width: event.width, height: event.height });
+    } else if (type === "request") {
+      setRequestPosition({ left: event.left, top: event.top, width: event.width, height: event.height });
+    }
   };
 
   const historyGridDummy = [
@@ -219,11 +222,11 @@ export default function Page() {
             doubleClickStageChange={false}
             // left={position.left}
             // top={position.top}
-            title={"결제요청서"}
-            width={position.width} // 1100
-            height={position.height} // 700
-            onMove={handleMove}
-            onResize={handleResize}
+            title={"결재요청서"}
+            width={requestPosition.width} // 1100
+            height={requestPosition.height} // 700
+            onMove={(e) => handleWindowChange("request", e)}
+            onResize={(e) => handleWindowChange("request", e)}
             onClose={() => {
               setShowApprovalRequest(false);
             }}>
@@ -334,7 +337,7 @@ export default function Page() {
                     <div className="flex h-[28px] flex-row justify-between">
                       <div className="flex w-[70%] flex-row">
                         <label className="flex h-full w-[70px] min-w-[70px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
-                          최종결재자
+                          최종결제자
                         </label>
                         <DropDownList
                           style={{ width: 100, marginRight: "2px", fontSize: "12px", marginLeft: "2px" }}
@@ -345,6 +348,19 @@ export default function Page() {
                         />
                       </div>
                     </div>
+                  </div>
+                  <div className="mt-4 flex items-center justify-end gap-4">
+                    <Button
+                      imageUrl="/images/dot-right-arrow.png"
+                      className="basic-btn flex items-center justify-start">
+                      저장
+                    </Button>
+                    <Button
+                      imageUrl="/images/dot-right-arrow.png"
+                      className="basic-btn flex items-center justify-start"
+                      onClick={() => setShowApprovalRequest(false)}>
+                      닫기
+                    </Button>
                   </div>
                 </TabStripTab>
 
@@ -386,16 +402,159 @@ export default function Page() {
                     <img src={"/images/dot_subtitle.gif"} alt="" style={{}} />
                     <span className="font-bold text-[#656565]">리스트</span>
                   </div>
+                  {/**/}
+                  <div className="flex h-full w-full items-center py-[2px] pl-[2px]">
+                    <Grid
+                      style={{ height: "350px", width: "100%" }}
+                      data={dataState.map((item) => ({
+                        ...item,
+                        [SELECTED_FIELD]: selectedState[idGetter(item) as keyof typeof selectedState],
+                      }))}
+                      sortable={true}
+                      pageable={true}
+                      dataItemKey={DATA_ITEM_KEY}
+                      selectedField={SELECTED_FIELD}
+                      onSelectionChange={onSelectionChange}
+                      onHeaderSelectionChange={onHeaderSelectionChange}
+                      pageSize={8}>
+                      <Column
+                        editable={false}
+                        field={SELECTED_FIELD}
+                        width="30px"
+                        headerSelectionValue={
+                          dataState.findIndex(
+                            (item: any) => !selectedState[idGetter(item) as keyof typeof selectedState],
+                          ) === -1
+                        }
+                      />
+                      <Column
+                        field="modificationDate"
+                        title="항목"
+                        headerClassName="justify-center bg-[#adc6f4] w-[15%]"
+                        className="w-[20%]"
+                      />
+                      <Column
+                        field="modificationDate"
+                        title="식별자"
+                        headerClassName="justify-center bg-[#adc6f4] w-[25%]"
+                        className="w-[30%]"
+                      />
+                      <Column
+                        field="modificationDate"
+                        title="식별자명"
+                        headerClassName="justify-center bg-[#adc6f4] w-[60%]"
+                        className="w-[50%]"
+                      />
+                    </Grid>
+                  </div>
+                  {/**/}
+                  <div className="mt-4 flex w-full items-center justify-between gap-4">
+                    <div className="flex items-center gap-4">
+                      <span>전체: n건</span>
+                      <Button
+                        imageUrl="/images/dot-right-arrow.png"
+                        className="basic-btn flex items-center justify-start">
+                        배포상태확인
+                      </Button>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        imageUrl="/images/dot-right-arrow.png"
+                        className="basic-btn flex items-center justify-start"
+                        onClick={() => setShowApprovalAddItem(true)}>
+                        결제항목추가
+                      </Button>
+                      <Button
+                        imageUrl="/images/dot-right-arrow.png"
+                        className="basic-btn flex items-center justify-start"
+                        onClick={undefined}>
+                        선택삭제
+                      </Button>
+                      <Button
+                        imageUrl="/images/dot-right-arrow.png"
+                        className="basic-btn flex items-center justify-start"
+                        onClick={undefined}>
+                        결제요청
+                      </Button>
+                      <Button
+                        imageUrl="/images/dot-right-arrow.png"
+                        className="basic-btn flex items-center justify-start"
+                        onClick={() => setShowApprovalRequest(false)}>
+                        닫기
+                      </Button>
+                    </div>
+                  </div>
                 </TabStripTab>
               </TabStrip>
+            </div>
+          </Window>
+        </div>
+      )}
+      {showApprovalAddItem && (
+        <div className="k-overlay">
+          <Window
+            minimizeButton={() => null}
+            maximizeButton={() => null}
+            restoreButton={() => null}
+            doubleClickStageChange={false}
+            // left={position.left}
+            // top={position.top}
+            title={"작업함"}
+            width={addItemPosition.width} // 1100
+            height={addItemPosition.height} // 700
+            onMove={(e) => handleWindowChange("addItem", e)}
+            onResize={(e) => handleWindowChange("addItem", e)}
+            onClose={() => {
+              setShowApprovalAddItem(false);
+            }}>
+            <div className="flex flex-col">
+              <div className="flex items-center gap-1 pb-4">
+                <img src="./images/dot_subtitle.gif" className="h-[12px] w-[12px]" />
+                <div className="text-[14px] font-bold text-[#656565]">작업함</div>
+              </div>
+              <div className="flex flex-wrap justify-between gap-4 overflow-x-scroll bg-[#dde6f0] p-[5px]">
+                <div className="flex items-center gap-4">
+                  <DropDownList
+                    className="h-[30px] w-[100px] min-w-[100px] border bg-[#f6f6f6f6] text-[#656565]"
+                    size={"small"}
+                    data={SPORTS}
+                    defaultValue="Option 1"
+                    filterable={false}
+                  />
+                  <Input className="h-[24px] w-[148px] min-w-[148px] border border-[#999999]" />
+                </div>
+
+                <div className="flex items-center gap-8">
+                  <div className="flex items-center gap-2">
+                    <DropDownList
+                      size={"small"}
+                      data={PAGES}
+                      defaultValue="20"
+                      filterable={false}
+                      style={{ width: "80px" }}
+                    />
+                    <span className="font-bold text-[#333333]">Items</span>
+                  </div>
+
+                  <Button imageUrl="/images/refresh.png" className="basic-btn">
+                    Find
+                  </Button>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 py-4">
+                <img src={"/images/dot_subtitle.gif"} alt="" style={{}} />
+                <span className="font-bold text-[#656565]">리스트</span>
+              </div>
+              {/**/}
+              {/**/}
               <div className="mt-4 flex items-center justify-end gap-4">
                 <Button imageUrl="/images/dot-right-arrow.png" className="basic-btn flex items-center justify-start">
-                  저장
+                  이동
                 </Button>
                 <Button
                   imageUrl="/images/dot-right-arrow.png"
                   className="basic-btn flex items-center justify-start"
-                  onClick={() => setShowApprovalRequest(false)}>
+                  onClick={() => setShowApprovalAddItem(false)}>
                   닫기
                 </Button>
               </div>
