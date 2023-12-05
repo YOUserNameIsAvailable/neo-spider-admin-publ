@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { getter } from "@progress/kendo-react-common";
 import { process } from "@progress/kendo-data-query";
 import { GridPDFExport } from "@progress/kendo-react-pdf";
@@ -245,7 +245,7 @@ export function MyWorkSpaceManagementTable() {
   //   }
   // };
 
-    return (
+  return (
     <>
       <div>
         {/*<div onClick={excelExport}>test btn77</div>*/}
@@ -340,17 +340,17 @@ export function MyWorkSpaceManagementTable() {
               cells={{
                 data: ({ dataItem, ...props }) => {
                   return (
-                      <td {...props.tdProps} style={{ textAlign: "center" }}>
-                        <Button
-                            size={"small"}
-                            className="cell-inside-btn px-4"
-                            themeColor={"primary"}
-                            onClick={(e) => {
-                              setVisible(true);
-                            }}>
-                          생성
-                        </Button>
-                      </td>
+                    <td {...props.tdProps} style={{ textAlign: "center" }}>
+                      <Button
+                        size={"small"}
+                        className="cell-inside-btn px-4"
+                        themeColor={"primary"}
+                        onClick={(e) => {
+                          setVisible(true);
+                        }}>
+                        생성
+                      </Button>
+                    </td>
                   );
                 },
               }}
@@ -363,16 +363,15 @@ export function MyWorkSpaceManagementTable() {
               cells={{
                 data: ({ dataItem, ...props }) => {
                   return (
-                      <td {...props.tdProps} style={{ textAlign: "center" }}>
-                        <Button
-                            size={"small"}
-                            className="cell-inside-btn px-4"
-                            themeColor={"primary"}
-                            onClick={() => setScriptView(true)}
-                        >
-                          View
-                        </Button>
-                      </td>
+                    <td {...props.tdProps} style={{ textAlign: "center" }}>
+                      <Button
+                        size={"small"}
+                        className="cell-inside-btn px-4"
+                        themeColor={"primary"}
+                        onClick={() => setScriptView(true)}>
+                        View
+                      </Button>
+                    </td>
                   );
                 },
               }}
@@ -412,61 +411,57 @@ export function MyWorkSpaceManagementTable() {
         </GridPDFExport>
       </div>
       {scriptView && (
-          <>
-            <div className="k-overlay" />
-            <Window
-                className="workspace-window"
-                minimizeButton={() => null}
-                maximizeButton={() => null}
-                restoreButton={() => null}
-                doubleClickStageChange={false}
-                // left={position.left}
-                // top={position.top}
-                width={position.width}
-                height={position.height}
-                onMove={handleMove}
-                onResize={handleResize}
-                onClose={() => {
-                  setScriptView(false);
-                }}>
-              <div className="flex flex-col w-full p-4">
-                <div className="flex w-full flex-row items-center mb-4 border-[1px] border-[#dfe1e1]">
-                  <label className="flex h-full w-[75px] min-w-[75px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
-                    파일명
-                  </label>
-                  <input className="my-[2px] ml-[2px] mr-8 w-full rounded-[2px] border-[1px] border-[#999999] py-[2px]" />
-                </div>
-                <Editor
-                    // 에디터와 툴바 모두에 적용되는 클래스
-                    wrapperClassName="wrapper-class h-full"
-                    // 에디터 주변에 적용된 클래스
-                    editorClassName="editor !h-[500px] bg-[#fff]"
-                    // 툴바 주위에 적용된 클래스
-                    toolbarClassName="!hidden"
-                    // 한국어 설정
-                    localization={{
-                      locale: "ko",
-                    }}
-                    // 초기값 설정
-                    editorState={editorState}
-                    // 에디터의 값이 변경될 때마다 onEditorStateChange 호출
-                    onEditorStateChange={onEditorStateChange}
-                />
-                <div className="flex items-center justify-end w-full gap-2 mt-4">
-                  <Button
-                      imageUrl="/images/dot-right-arrow.png"
-                      className="basic-btn flex items-center justify-start">
-                    소스저장하기
-                  </Button>
-                  <Button
-                      imageUrl="/images/dot-right-arrow.png"
-                      className="basic-btn flex items-center justify-start">
-                    닫기
-                  </Button>
-                </div>
+        <>
+          <div className="k-overlay" />
+          <Window
+            className="workspace-window"
+            minimizeButton={() => null}
+            maximizeButton={() => null}
+            restoreButton={() => null}
+            doubleClickStageChange={false}
+            // left={position.left}
+            // top={position.top}
+            width={position.width}
+            height={position.height}
+            onMove={handleMove}
+            onResize={handleResize}
+            onClose={() => {
+              setScriptView(false);
+            }}>
+            <div className="flex w-full flex-col p-4">
+              <div className="mb-4 flex w-full flex-row items-center border-[1px] border-[#dfe1e1]">
+                <label className="flex h-full w-[75px] min-w-[75px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
+                  파일명
+                </label>
+                <input className="my-[2px] ml-[2px] mr-8 w-full rounded-[2px] border-[1px] border-[#999999] py-[2px]" />
               </div>
-            </Window>
-          </>
+              <Editor
+                // 에디터와 툴바 모두에 적용되는 클래스
+                wrapperClassName="wrapper-class h-full"
+                // 에디터 주변에 적용된 클래스
+                editorClassName="editor !h-[500px] bg-[#fff]"
+                // 툴바 주위에 적용된 클래스
+                toolbarClassName="!hidden"
+                // 한국어 설정
+                localization={{
+                  locale: "ko",
+                }}
+                // 초기값 설정
+                editorState={editorState}
+                // 에디터의 값이 변경될 때마다 onEditorStateChange 호출
+                onEditorStateChange={onEditorStateChange}
+              />
+              <div className="mt-4 flex w-full items-center justify-end gap-2">
+                <Button imageUrl="/images/dot-right-arrow.png" className="basic-btn flex items-center justify-start">
+                  소스저장하기
+                </Button>
+                <Button imageUrl="/images/dot-right-arrow.png" className="basic-btn flex items-center justify-start">
+                  닫기
+                </Button>
+              </div>
+            </div>
+          </Window>
+        </>
       )}
 
       {visible && (
@@ -665,183 +660,152 @@ export function MyWorkSpaceManagementTable() {
                   </div>
                 </div>
                 {/*  */}
-                <div className="flex flex-row items-center mb-4">
-                  <div className="flex items-center">※Excel Copy >> Excel복사버튼 클릭하세요</div>
-                  <div className="flex flex-grow shrink-1 flex-row items-center justify-end gap-2">
-                    <Button
-                        size={"small"}
-                        className="cell-inside-btn px-4"
-                        themeColor={"primary"}
-                        onClick={undefined}
-                    >
+                <div className="mb-4 flex flex-row items-center">
+                  <div className="flex items-center">※Excel Copy &gt;&gt; Excel복사버튼 클릭하세요</div>
+                  <div className="shrink-1 flex flex-grow flex-row items-center justify-end gap-2">
+                    <Button size={"small"} className="cell-inside-btn px-4" themeColor={"primary"} onClick={undefined}>
                       Excel복사
                     </Button>
-                    <Button
-                        size={"small"}
-                        className="cell-inside-btn px-4"
-                        themeColor={"primary"}
-                        onClick={undefined}
-                    >
+                    <Button size={"small"} className="cell-inside-btn px-4" themeColor={"primary"} onClick={undefined}>
                       유사전문복사
                     </Button>
-                    <Button
-                        size={"small"}
-                        className="cell-inside-btn px-4"
-                        themeColor={"primary"}
-                        onClick={undefined}
-                    >
+                    <Button size={"small"} className="cell-inside-btn px-4" themeColor={"primary"} onClick={undefined}>
                       테이블
                     </Button>
-                    <Button
-                        size={"small"}
-                        className="cell-inside-btn px-4"
-                        themeColor={"primary"}
-                        onClick={undefined}
-                    >
+                    <Button size={"small"} className="cell-inside-btn px-4" themeColor={"primary"} onClick={undefined}>
                       행 추가
                     </Button>
-                    <Button
-                        size={"small"}
-                        className="cell-inside-btn px-4"
-                        themeColor={"primary"}
-                        onClick={undefined}
-                    >
+                    <Button size={"small"} className="cell-inside-btn px-4" themeColor={"primary"} onClick={undefined}>
                       선택형 삭제
                     </Button>
                   </div>
                 </div>
-              {/*  */}
+                {/*  */}
                 <ExcelExport>
                   <Grid
-                      style={{
-                        height: "500px",
-                      }}
-                      pageable={{
-                        pageSizes: true,
-                      }}
-                      data={dataResult}
-                      sortable={true}
-                      total={resultState.total}
-                      onDataStateChange={dataStateChange}
-                      {...dataState}
-                      onExpandChange={onExpandChange}
-                      expandField="expanded"
-                      dataItemKey={DATA_ITEM_KEY}
-                      selectedField={SELECTED_FIELD}
-                      onHeaderSelectionChange={onHeaderSelectionChange}
-                      onSelectionChange={onSelectionChange}
-                      groupable={false}>
+                    style={{
+                      height: "500px",
+                    }}
+                    pageable={{
+                      pageSizes: true,
+                    }}
+                    data={dataResult}
+                    sortable={true}
+                    total={resultState.total}
+                    onDataStateChange={dataStateChange}
+                    {...dataState}
+                    onExpandChange={onExpandChange}
+                    expandField="expanded"
+                    dataItemKey={DATA_ITEM_KEY}
+                    selectedField={SELECTED_FIELD}
+                    onHeaderSelectionChange={onHeaderSelectionChange}
+                    onSelectionChange={onSelectionChange}
+                    groupable={false}>
                     <Column
-                        filterable={false}
-                        sortable={false}
-                        field={SELECTED_FIELD}
-                        // headerSelectionValue={checkHeaderSelectionValue()}
-                        headerClassName="bg-[#adc6f4] overflow-none"
-                        className="overflow-none"
-                        width={30}
+                      filterable={false}
+                      sortable={false}
+                      field={SELECTED_FIELD}
+                      // headerSelectionValue={checkHeaderSelectionValue()}
+                      headerClassName="bg-[#adc6f4] overflow-none"
+                      className="overflow-none"
+                      width={30}
                     />
                     <Column
-                        field="budget"
-                        title="CRUD"
-                        sortable={false}
-                        headerClassName="justify-center bg-[#adc6f4]"
+                      field="budget"
+                      title="CRUD"
+                      sortable={false}
+                      headerClassName="justify-center bg-[#adc6f4]"
                     />
                     <Column
-                        field="full_name"
-                        title="순번"
-                        sortable={false}
-                        headerClassName="justify-center bg-[#adc6f4]"
+                      field="full_name"
+                      title="순번"
+                      sortable={false}
+                      headerClassName="justify-center bg-[#adc6f4]"
                     />
                     <Column
-                        field="target"
-                        title="전문필드명"
-                        sortable={false}
-                        headerClassName="justify-center bg-[#adc6f4]"
+                      field="target"
+                      title="전문필드명"
+                      sortable={false}
+                      headerClassName="justify-center bg-[#adc6f4]"
                     />
                     <Column
-                        field="budget"
-                        title="data타입"
-                        sortable={false}
-                        headerClassName="justify-center bg-[#adc6f4]"
+                      field="budget"
+                      title="data타입"
+                      sortable={false}
+                      headerClassName="justify-center bg-[#adc6f4]"
                     />
                     <Column
-                        field="budget"
-                        title="data길이"
-                        sortable={false}
-                        headerClassName="justify-center bg-[#adc6f4]"
+                      field="budget"
+                      title="data길이"
+                      sortable={false}
+                      headerClassName="justify-center bg-[#adc6f4]"
                     />
                     <Column
-                        field="budget"
-                        title="정렬기준"
-                        sortable={false}
-                        headerClassName="justify-center bg-[#adc6f4]"
+                      field="budget"
+                      title="정렬기준"
+                      sortable={false}
+                      headerClassName="justify-center bg-[#adc6f4]"
                     />
                     <Column
-                        field="budget"
-                        title="특이사항"
-                        sortable={false}
-                        headerClassName="justify-center bg-[#adc6f4]"
+                      field="budget"
+                      title="특이사항"
+                      sortable={false}
+                      headerClassName="justify-center bg-[#adc6f4]"
                     />
                     <Column
-                        field="budget"
-                        title="필수여부"
-                        sortable={false}
-                        headerClassName="justify-center bg-[#adc6f4]"
-                        width={83}
+                      field="budget"
+                      title="필수여부"
+                      sortable={false}
+                      headerClassName="justify-center bg-[#adc6f4]"
+                      width={83}
                     />
                     <Column
-                        field="budget"
-                        title="스케일"
-                        sortable={false}
-                        headerClassName="justify-center bg-[#adc6f4]"
+                      field="budget"
+                      title="스케일"
+                      sortable={false}
+                      headerClassName="justify-center bg-[#adc6f4]"
                     />
                     <Column
-                        field="budget"
-                        title="삽입문자"
-                        sortable={false}
-                        headerClassName="justify-center bg-[#adc6f4]"
+                      field="budget"
+                      title="삽입문자"
+                      sortable={false}
+                      headerClassName="justify-center bg-[#adc6f4]"
                     />
                     <Column
-                        field="budget"
-                        title="입력구분"
-                        sortable={false}
-                        headerClassName="justify-center bg-[#adc6f4]"
+                      field="budget"
+                      title="입력구분"
+                      sortable={false}
+                      headerClassName="justify-center bg-[#adc6f4]"
                     />
                     <Column
-                        field="budget"
-                        title="코드그룹"
-                        sortable={false}
-                        headerClassName="justify-center bg-[#adc6f4]"
+                      field="budget"
+                      title="코드그룹"
+                      sortable={false}
+                      headerClassName="justify-center bg-[#adc6f4]"
                     />
                     <Column
-                        field="budget"
-                        title="코드맵핑"
-                        sortable={false}
-                        headerClassName="justify-center bg-[#adc6f4]"
+                      field="budget"
+                      title="코드맵핑"
+                      sortable={false}
+                      headerClassName="justify-center bg-[#adc6f4]"
                     />
                     <Column
-                        field="budget"
-                        title="초기값"
-                        sortable={false}
-                        headerClassName="justify-center bg-[#adc6f4]"
+                      field="budget"
+                      title="초기값"
+                      sortable={false}
+                      headerClassName="justify-center bg-[#adc6f4]"
                     />
                   </Grid>
                 </ExcelExport>
-              {/*  */}
-                <div className="shrink-1 flex flex-grow flex-row items-center justify-end gap-2 mt-4">
-                  <Button
-                      imageUrl="/images/dot-right-arrow.png"
-                      className="basic-btn flex items-center justify-start">
+                {/*  */}
+                <div className="shrink-1 mt-4 flex flex-grow flex-row items-center justify-end gap-2">
+                  <Button imageUrl="/images/dot-right-arrow.png" className="basic-btn flex items-center justify-start">
                     삭제
                   </Button>
-                  <Button
-                      imageUrl="/images/dot-right-arrow.png"
-                      className="basic-btn flex items-center justify-start">
+                  <Button imageUrl="/images/dot-right-arrow.png" className="basic-btn flex items-center justify-start">
                     저장
                   </Button>
-                  <Button
-                      imageUrl="/images/dot-right-arrow.png"
-                      className="basic-btn flex items-center justify-start">
+                  <Button imageUrl="/images/dot-right-arrow.png" className="basic-btn flex items-center justify-start">
                     목록
                   </Button>
                 </div>
