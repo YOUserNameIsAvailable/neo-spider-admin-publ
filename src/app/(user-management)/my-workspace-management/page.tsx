@@ -184,7 +184,7 @@ export default function Page() {
     <>
       {/* filters */}
       <>
-        <div className="flex items-center gap-2 py-4" onClick={() => setVisible(true)}>
+        <div className="flex items-center gap-2 py-4">
           <img src={"/images/dot_subtitle.gif"} alt="" style={{}} />
           <span className="font-bold text-[#656565]">Condition</span>
         </div>
@@ -223,6 +223,9 @@ export default function Page() {
           </div>
 
           <div className="flex items-center gap-8">
+            <Button size={"small"} className="cell-inside-btn px-4 font-normal" onClick={() => setVisible(true)}>
+              컴포넌트 정보 임시버튼
+            </Button>
             <Button size={"small"} className="cell-inside-btn px-4 font-normal">
               내가 이양한 작업보기
             </Button>

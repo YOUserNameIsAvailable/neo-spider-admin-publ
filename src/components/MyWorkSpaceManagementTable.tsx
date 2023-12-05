@@ -344,9 +344,7 @@ export function MyWorkSpaceManagementTable() {
                         size={"small"}
                         className="cell-inside-btn px-4"
                         themeColor={"primary"}
-                        onClick={(e) => {
-                          setVisible(true);
-                        }}>
+                        onClick={undefined}>
                         생성
                       </Button>
                     </td>

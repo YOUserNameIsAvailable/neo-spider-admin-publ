@@ -119,7 +119,7 @@ export const Routes = {
   was_group_management: "/was-group-management",
   was_instance_management: "/was-instance-management",
   my_workspace_management: "/my-workspace-management",
-  approval_management: "/approval_management",
+  approval_management: "/approval-management",
 
   // web-app
   client_web_app_management: "/client-web-app-management", // <--------------------------

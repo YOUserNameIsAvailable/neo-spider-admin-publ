@@ -8,7 +8,7 @@ import { PAGES, SPORTS } from "@/constants";
 import { ApprovalManagementTable } from "@/components/ApprovalManagementTable";
 import { Window, WindowMoveEvent } from "@progress/kendo-react-dialogs";
 import { Grid, GridColumn as Column, getSelectedState, GridHeaderCellProps } from "@progress/kendo-react-grid";
-import { TabStrip, TabStripTab } from "@progress/kendo-react-layout";
+import { TabStrip, TabStripTab, TabStripSelectEventArguments } from "@progress/kendo-react-layout";
 
 import { getter } from "@progress/kendo-react-common";
 const SELECTED_FIELD = "selected";
@@ -23,8 +23,8 @@ export default function Page() {
     width: 1100,
     height: 700,
   });
-  const [selected, setSelected] = React.useState(0);
-  const handleSelect = (e) => {
+  const [selected, setSelected] = React.useState<number>(-1);
+  const handleSelect = (e: TabStripSelectEventArguments) => {
     setSelected(e.selected);
   };
 
