@@ -115,10 +115,11 @@ export const Routes = {
   request_value: "/request-value",
   role_management: "/role-management", // <--------------------------
   user_management: "/user-management", // <--------------------------
-
   // was-management
   was_group_management: "/was-group-management",
   was_instance_management: "/was-instance-management",
+  my_workspace_management: "/my-workspace-management",
+  approval_management: "/approval_management",
 
   // web-app
   client_web_app_management: "/client-web-app-management", // <--------------------------
