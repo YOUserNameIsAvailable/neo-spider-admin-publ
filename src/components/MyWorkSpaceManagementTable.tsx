@@ -249,7 +249,7 @@ export function MyWorkSpaceManagementTable() {
     <>
       <div>
         {/*<div onClick={excelExport}>test btn77</div>*/}
-        <ExcelExport ref={_exporter}>
+        <ExcelExport>
           <Grid
             style={{
               height: "500px",
