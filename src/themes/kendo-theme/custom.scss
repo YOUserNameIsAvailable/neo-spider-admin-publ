@@ -535,3 +535,7 @@ input:disabled {
 .workspace-window .k-window-content {
   padding: 0;
 }
+
+.approval-tab .k-tabstrip-content.k-active {
+  display: block;
+}

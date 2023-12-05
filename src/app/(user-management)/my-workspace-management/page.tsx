@@ -24,9 +24,9 @@ export default function Page() {
   const { selectedTab } = useTab();
   const [isExpanded, setIsExpanded] = useState(false);
   const [visible, setVisible] = React.useState(false);
-  const [visible2, setVisible2] = React.useState(false);
   const [showHistory, setShowHistory] = React.useState(false);
   const [groupManage, setGroupManage] = React.useState(false);
+  const [searchUser, setSearchUser] = React.useState(false);
   const [position, setPosition] = React.useState({
     left: 400,
     top: 182,
@@ -184,7 +184,7 @@ export default function Page() {
     <>
       {/* filters */}
       <>
-        <div className="flex items-center gap-2 py-4" onClick={() => setVisible2(true)}>
+        <div className="flex items-center gap-2 py-4" onClick={() => setVisible(true)}>
           <img src={"/images/dot_subtitle.gif"} alt="" style={{}} />
           <span className="font-bold text-[#656565]">Condition</span>
         </div>
@@ -253,14 +253,14 @@ export default function Page() {
         <MyWorkSpaceManagementTable />
       </>
 
-      <div className="flex w-full items-center justify-between gap-2">
+      <div className="mt-4 flex w-full items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <span>사용자명</span>
           <Input className="h-[24px] w-[148px] min-w-[148px] border border-[#999999]" />
-          <Button imageUrl="/images/refresh.png" className="basic-btn">
+          <Button imageUrl="/images/refresh.png" className="basic-btn" onClick={() => setSearchUser(true)}>
             검색
           </Button>
-          <button className="btn_green">선택권한이양</button>
+          <Button className="btn_green">선택권한이양</Button>
         </div>
         <div className="flex items-center gap-2">
           <Button
@@ -282,6 +282,75 @@ export default function Page() {
           </Button>
         </div>
       </div>
+      {searchUser && (
+        <div className="k-overlay">
+          <Window
+            minimizeButton={() => null}
+            maximizeButton={() => null}
+            restoreButton={() => null}
+            doubleClickStageChange={false}
+            // left={position.left}
+            // top={position.top}
+            title={"사용자 검색"}
+            width={hisPosition.width} // 600
+            height={hisPosition.height} // 500
+            onMove={handleMove}
+            onResize={handleResize}
+            onClose={() => {
+              setSearchUser(false);
+            }}>
+            <div className="flex flex-col">
+              <div className="mb-4 flex w-full items-center bg-[#dde6f0] p-[5px]">
+                <div className="shrink-1 flex flex-grow items-center gap-4">
+                  <DropDownList
+                    size={"small"}
+                    data={PAGES}
+                    defaultValue="20"
+                    filterable={false}
+                    style={{ width: "100px" }}
+                  />
+                  <Input className="h-[24px] w-[148px] min-w-[148px] border border-[#999999]" />
+                </div>
+                <Button imageUrl="/images/refresh.png" className="basic-btn">
+                  조회
+                </Button>
+              </div>
+              <div className="flex items-center gap-1 pb-4">
+                <img src="./images/dot_subtitle.gif" className="h-[12px] w-[12px]" />
+                <div className="text-[14px] font-bold text-[#656565]">리스트</div>
+                <div className="shrink-1 flex flex-grow flex-row items-center justify-end gap-2">전체 n 건</div>
+              </div>
+              <Grid
+                style={{ height: "300px" }}
+                data={dataState.map((item) => ({
+                  ...item,
+                  [SELECTED_FIELD]: selectedState[idGetter(item) as keyof typeof selectedState],
+                }))}
+                sortable={true}
+                pageable={true}
+                dataItemKey={DATA_ITEM_KEY}
+                onSelectionChange={onSelectionChange}
+                onHeaderSelectionChange={onHeaderSelectionChange}
+                pageSize={8}>
+                <Column field="modificationDate" title="사용자ID" headerClassName="justify-center bg-[#adc6f4]" />
+                <Column field="modifier" title="사용자명" headerClassName="justify-center bg-[#adc6f4]" />
+                <Column field="version" title="직급" headerClassName="justify-center bg-[#adc6f4]" />
+                <Column field="reasonForChange" title="소속" headerClassName="justify-center bg-[#adc6f4]" />
+              </Grid>
+              <div className="mt-4 flex items-center justify-end gap-4">
+                <Button
+                  imageUrl="/images/dot-right-arrow.png"
+                  className="basic-btn flex items-center justify-start"
+                  onClick={() => {
+                    setSearchUser(false);
+                  }}>
+                  닫기
+                </Button>
+              </div>
+            </div>
+          </Window>
+        </div>
+      )}
       {groupManage && (
         <div className="k-overlay">
           <Window
@@ -618,15 +687,15 @@ export default function Page() {
                         <div className="flex h-[29px] w-full flex-row justify-between rounded-t-[4px] bg-[#d1daec]">
                           <div className="flex h-full items-center p-[4px] text-[12px] text-black">소스보기</div>
                           <div className="flex h-full items-center gap-2 p-[4px] text-[12px] text-black">
-                            <button className="component-info-btn rounded-[4px] border border-[1px] border-[#ccc] px-6">
+                            <Button className="component-info-btn rounded-[4px] border border-[1px] border-[#ccc] px-6">
                               소스불러오기
-                            </button>
-                            <button className="component-info-btn rounded-[4px] border border-[1px] border-[#ccc] px-2">
+                            </Button>
+                            <Button className="component-info-btn rounded-[4px] border border-[1px] border-[#ccc] px-2">
                               크게
-                            </button>
-                            <button className="component-info-btn rounded-[4px] border border-[1px] border-[#ccc] px-2">
+                            </Button>
+                            <Button className="component-info-btn rounded-[4px] border border-[1px] border-[#ccc] px-2">
                               작게
-                            </button>
+                            </Button>
                           </div>
                         </div>
                       </div>
@@ -684,218 +753,6 @@ export default function Page() {
               </div>
             </Window>
           </>
-        </>
-      )}
-
-      {visible2 && (
-        <>
-          <div className="k-overlay" />
-          <Window
-            minimizeButton={() => null}
-            maximizeButton={() => null}
-            restoreButton={() => null}
-            doubleClickStageChange={false}
-            title={"레이아웃 상세조회"}
-            // left={position.left}
-            // top={position.top}
-            width={position.width} // 600
-            height={position.height} // 500
-            onMove={handleMove}
-            onResize={handleResize}
-            onClose={() => {
-              setVisible2(false);
-            }}>
-            <div className="flex flex-col gap-[4px]">
-              <div className="flex w-full flex-row gap-2">
-                <div className="flex w-[50%] flex-col">
-                  <div className="flex items-center gap-1 pb-[4px]">
-                    <img src="./images/dot_subtitle.gif" className="h-[12px] w-[12px]" />
-                    <div className="text-[14px] font-bold text-[#656565]">기본 정보</div>
-                  </div>
-                  {/* */}
-                  <div className="flex w-full flex-col border-[1px] border-[#dfe1e1]">
-                    <div className="flex h-[29px] w-full flex-row border-b-[1px] border-[#dfe1e1]">
-                      <label className="flex h-full w-[75px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
-                        상태
-                      </label>
-                      <div className="my-[2px] ml-[2px] flex w-[150px] items-center py-[2px]">정상</div>
-                    </div>
-                    {/*  */}
-                    <div className="flex h-[29px] w-full flex-row border-b-[1px] border-[#dfe1e1]">
-                      <label className="flex h-full w-[75px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
-                        레이아웃 유형
-                      </label>
-                      <DropDownList
-                        style={{
-                          width: "60%",
-                        }}
-                        className="my-[2px] ml-[2px] font-bold text-[#656565]"
-                        size={"small"}
-                        data={["서브01", "서브02", "서브03", "서브04"]}
-                        defaultValue={"서브02"}
-                      />
-                    </div>
-                    {/*  */}
-                    <div className="flex h-[29px] w-full  flex-row border-b-[1px] border-[#dfe1e1]">
-                      <label className="flex h-full w-[75px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
-                        레이아웃 ID
-                      </label>
-                      <input className="my-[2px] ml-[2px] w-[90px] rounded-[2px] border-[1px] border-[#999999] py-[2px]" />
-                      <span className="shrink-1 required flex-grow justify-end">*</span>
-                    </div>
-                    {/*  */}
-                    <div className="flex h-[29px] w-full flex-row border-b-[1px] border-[#dfe1e1]">
-                      <label className="flex h-full w-[75px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
-                        레이아웃 명
-                      </label>
-                      <input className="my-[2px] ml-[2px] w-[150px] rounded-[2px] border-[1px] border-[#999999] py-[2px]" />
-                      <span className="shrink-1 required flex-grow justify-end">*</span>
-                    </div>
-                    {/*  */}
-                    <div className="w-fullh-[29px] flex flex-row border-b-[1px] border-[#dfe1e1]">
-                      <label className="flex h-full w-[75px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
-                        설명
-                      </label>
-                      <textarea className="my-[2px] ml-[2px] resize-none rounded-[2px] border-[1px] border-[#999999] py-[2px]" />
-                      <span className="shrink-1 required flex-grow justify-end">*</span>
-                    </div>
-                    {/*  */}
-                    <div className="w-fullh-[29px] flex flex-row border-b-[1px] border-[#dfe1e1]">
-                      <label className="flex h-full w-[75px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
-                        변경 사유
-                      </label>
-                      <textarea className="my-[2px] ml-[2px] resize-none rounded-[2px] border-[1px] border-[#999999] py-[2px]" />
-                      <span className="shrink-1 required flex-grow justify-end">*</span>
-                    </div>
-                    {/* */}
-                    <div className="flex h-[29px] w-full flex-row border-b-[1px] border-[#dfe1e1]">
-                      <label className="flex h-full w-[75px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
-                        최중 수정자
-                      </label>
-                      <div className="my-[2px] ml-[2px] flex w-[150px] items-center py-[2px]">spider</div>
-                    </div>
-                    {/* */}
-                    <div className="flex h-[28px] w-full flex-row">
-                      <label className="flex h-full w-[75px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
-                        최중 수정일
-                      </label>
-                      <div className="my-[2px] ml-[2px] flex w-[150px] items-center py-[2px]">20110926</div>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex w-[50%] flex-col">
-                  <div className="flex h-[50%] flex-col">
-                    <div className="flex items-center gap-1 pb-[4px]">
-                      <img src="./images/dot_subtitle.gif" className="h-[12px] w-[12px]" />
-                      <div className="text-[14px] font-bold text-[#656565]">LAYOUT 컴포넌트 정보</div>
-                    </div>
-                    {/*  */}
-                    <div className="flex flex-col border-[1px] border-[#dfe1e1]">
-                      <div className="flex h-[29px] w-full flex-row items-center border-b-[1px] border-[#dfe1e1]">
-                        <label className="flex h-full min-w-[75px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
-                          컴포넌트 ID
-                        </label>
-                        <div className="shrink-1 flex w-[115px] flex-grow">
-                          <input className="my-[2px] ml-[2px] h-full w-[115px] rounded-[2px] border-[1px] border-[#999999] py-[2px]" />
-                        </div>
-                        <div>
-                          <Button
-                            imageUrl="/images/dot-right-arrow.png"
-                            className="basic-btn ml-1 flex items-center justify-start">
-                            정보 보기
-                          </Button>
-                        </div>
-                      </div>
-                      {/* */}
-                      <div className="flex h-[28px] w-full flex-row">
-                        <label className="flex h-full min-w-[75px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
-                          컴포넌트 명
-                        </label>
-                        <input className="my-[2px] ml-[2px] w-full rounded-[2px] border-[1px] border-[#999999] py-[2px]" />
-                      </div>
-                    </div>
-                    <div className="mt-2">
-                      <Button
-                        imageUrl="/images/dot-right-arrow.png"
-                        className="basic-btn ml-1 flex items-center justify-start">
-                        정보 보기
-                      </Button>
-                    </div>
-                  </div>
-                  <div className="flex h-[50%] flex-col">
-                    <div className="flex items-center gap-1 pb-[4px]">
-                      <img src="./images/dot_subtitle.gif" className="h-[12px] w-[12px]" />
-                      <div className="text-[14px] font-bold text-[#656565]">CSS 컴포넌트 정보</div>
-                    </div>
-                    {/*  */}
-
-                    <div className="flex flex-col border-[1px] border-[#dfe1e1]">
-                      <div className="flex h-[29px] w-full flex-row items-center border-b-[1px] border-[#dfe1e1]">
-                        <label className="flex h-full min-w-[75px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
-                          컴포넌트 ID
-                        </label>
-                        <div className="shrink-1 flex w-[115px] flex-grow">
-                          <input className="my-[2px] ml-[2px] w-[115px] rounded-[2px] border-[1px] border-[#999999] py-[2px]" />
-                        </div>
-                        <div>
-                          <Button
-                            imageUrl="/images/dot-right-arrow.png"
-                            className="basic-btn ml-1 flex items-center justify-start">
-                            정보 보기
-                          </Button>
-                        </div>
-                      </div>
-                      {/* */}
-                      <div className="flex h-[28px] w-full flex-row">
-                        <label className="flex h-full min-w-[75px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
-                          컴포넌트 명
-                        </label>
-                        <input className="my-[2px] ml-[2px] w-full rounded-[2px] border-[1px] border-[#999999] py-[2px]" />
-                      </div>
-                    </div>
-                    <div className="mt-2">
-                      <Button
-                        imageUrl="/images/dot-right-arrow.png"
-                        className="basic-btn ml-1 flex items-center justify-start">
-                        CSS 변경
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="mt-6 flex w-full justify-between">
-                <div className="flex gap-2">
-                  <Button
-                    imageUrl="/images/dot-right-arrow.png"
-                    className="basic-btn ml-1 flex items-center justify-start">
-                    미리보기
-                  </Button>
-                  <Button
-                    imageUrl="/images/dot-right-arrow.png"
-                    className="basic-btn ml-1 flex items-center justify-start">
-                    삭제
-                  </Button>
-                </div>
-                <Button
-                  imageUrl="/images/dot-right-arrow.png"
-                  className="basic-btn ml-1 flex items-center justify-start">
-                  복사
-                </Button>
-                <div className="flex gap-2">
-                  <Button
-                    imageUrl="/images/dot-right-arrow.png"
-                    className="basic-btn ml-1 flex items-center justify-start">
-                    저장
-                  </Button>
-                  <Button
-                    imageUrl="/images/dot-right-arrow.png"
-                    className="basic-btn ml-1 flex items-center justify-start">
-                    닫기
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </Window>
         </>
       )}
     </>

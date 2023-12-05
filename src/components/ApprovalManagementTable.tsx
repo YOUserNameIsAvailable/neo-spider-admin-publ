@@ -10,7 +10,6 @@ import { ColumnMenu } from "./ColumnMenu";
 import { Button } from "@progress/kendo-react-buttons";
 import { Window, WindowMoveEvent } from "@progress/kendo-react-dialogs";
 import { DropDownList } from "@progress/kendo-react-dropdowns";
-import { Splitter, SplitterOnChangeEvent } from "@progress/kendo-react-layout";
 import dynamic from "next/dynamic";
 const Editor = dynamic(() => import("react-draft-wysiwyg").then((mod) => mod.Editor), { ssr: false });
 import { EditorState } from "draft-js";
@@ -39,7 +38,7 @@ interface PositionInterface {
   height: number;
 }
 
-export function MyWorkSpaceManagementTable() {
+export function ApprovalManagementTable() {
   const [editorState, setEditorState] = React.useState(EditorState.createEmpty());
   const onEditorStateChange = (editorState: any) => {
     // editorState에 값 설정
@@ -278,113 +277,56 @@ export function MyWorkSpaceManagementTable() {
             groupable={false}>
             <Column
               field="budget"
-              title="항목"
+              title="결제요청번호"
               sortable={false}
               columnMenu={ColumnMenu}
               headerClassName="justify-center bg-[#adc6f4]"
             />
             <Column
               field="full_name"
-              title="식별자"
+              title="제목"
               sortable={false}
               columnMenu={ColumnMenu}
-              headerClassName="justify-center bg-[#adc6f4]"
+              headerClassName="justify-center bg-[#adc6f4] w-[45%]"
+              className="w-[45%]"
             />
             <Column
               field="target"
-              title="작업내용"
+              title="최종결제자"
               sortable={false}
               columnMenu={ColumnMenu}
               headerClassName="justify-center bg-[#adc6f4]"
             />
             <Column
               field="budget"
-              title="결제일련번호"
+              title="결제일"
               sortable={false}
+              columnMenu={ColumnMenu}
+              headerClassName="justify-center bg-[#adc6f4] w-[10%]"
+              className="w-[10%]"
+            />
+            <Column
+              field="budget"
+              title="요청일"
+              sortable={false}
+              columnMenu={ColumnMenu}
+              headerClassName="justify-center bg-[#adc6f4] w-[10%]"
+              className="w-[10%]"
+            />
+            <Column
+              field="budget"
+              title="작업구분"
+              sortable={false}
+              columnMenu={ColumnMenu}
               headerClassName="justify-center bg-[#adc6f4]"
             />
             <Column
               field="budget"
-              title="운영반영여부"
+              title="승인상태"
               sortable={false}
-              headerClassName="justify-center bg-[#adc6f4]"
-              cells={{
-                data: ({ dataItem, ...props }) => {
-                  return (
-                    <td {...props.tdProps} style={{ textAlign: "center" }}>
-                      X
-                    </td>
-                  );
-                },
-              }}
-            />
-            <Column
-              field="budget"
-              title="최종수정자ID"
-              sortable={false}
+              columnMenu={ColumnMenu}
               headerClassName="justify-center bg-[#adc6f4]"
             />
-            <Column
-              field="budget"
-              title="최종수정일시"
-              sortable={false}
-              headerClassName="justify-center bg-[#adc6f4]"
-            />
-            <Column
-              field="budget"
-              title="이행스크립트생성"
-              sortable={false}
-              headerClassName="justify-center bg-[#adc6f4]"
-              width={83}
-              cells={{
-                data: ({ dataItem, ...props }) => {
-                  return (
-                    <td {...props.tdProps} style={{ textAlign: "center" }}>
-                      <Button
-                        size={"small"}
-                        className="cell-inside-btn px-4"
-                        themeColor={"primary"}
-                        onClick={(e) => {
-                          setVisible(true);
-                        }}>
-                        생성
-                      </Button>
-                    </td>
-                  );
-                },
-              }}
-            />
-            <Column
-              field="budget"
-              title="이행스크립트 View"
-              sortable={false}
-              headerClassName="justify-center bg-[#adc6f4]"
-              cells={{
-                data: ({ dataItem, ...props }) => {
-                  return (
-                    <td {...props.tdProps} style={{ textAlign: "center" }}>
-                      <Button
-                        size={"small"}
-                        className="cell-inside-btn px-4"
-                        themeColor={"primary"}
-                        onClick={() => setScriptView(true)}>
-                        View
-                      </Button>
-                    </td>
-                  );
-                },
-              }}
-            />
-            <Column
-              filterable={false}
-              sortable={false}
-              field={SELECTED_FIELD}
-              // headerSelectionValue={checkHeaderSelectionValue()}
-              headerClassName="bg-[#adc6f4] overflow-none"
-              className="overflow-none"
-              width={30}
-            />
-            <Column field="budget" title="식별자" sortable={false} headerClassName="justify-center bg-[#adc6f4]" />
           </Grid>
         </ExcelExport>
         <GridPDFExport margin="1cm">
