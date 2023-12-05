@@ -13,6 +13,7 @@ import { DropDownList } from "@progress/kendo-react-dropdowns";
 import dynamic from "next/dynamic";
 const Editor = dynamic(() => import("react-draft-wysiwyg").then((mod) => mod.Editor), { ssr: false });
 import { EditorState } from "draft-js";
+import { Input } from "@progress/kendo-react-inputs";
 
 const DATA_ITEM_KEY = "id";
 const SELECTED_FIELD = "selected";
@@ -410,13 +411,13 @@ export function ApprovalManagementTable() {
         <>
           <div className="k-overlay" />
           <Window
-            className="workspace-window"
             minimizeButton={() => null}
             maximizeButton={() => null}
             restoreButton={() => null}
             doubleClickStageChange={false}
             // left={position.left}
             // top={position.top}
+            title={"요청된 결제 상세 페이지"}
             width={position.width}
             height={position.height}
             onMove={handleMove}
@@ -424,333 +425,139 @@ export function ApprovalManagementTable() {
             onClose={() => {
               setVisible(false);
             }}>
-            <div className="flex w-full flex-col">
-              <div className="flex flex-row items-center justify-between bg-[#cdd5eb] p-4">
-                <div className=" text-[17px] font-bold text-[#656565]">전문 수정</div>
-                <div className="actions">
-                  <Button imageUrl="/images/btn_excel_off.gif" className="excel-btn" />
-                  <Button imageUrl="/images/btn_print_off.gif" className="ml-px-10 print-btn" />
+            <div className="flex flex-col">
+              <div className="flex items-center gap-1 pb-4">
+                <img src="./images/dot_subtitle.gif" className="h-[12px] w-[12px]" />
+                <div className="text-[14px] font-bold text-[#656565]">결제 승인 페이지</div>
+              </div>
+              <div className="flex flex-col border-[1px] border-[#dfe1e1]">
+                <div className="flex h-[29px] flex-row justify-between border-b-[1px] border-[#dfe1e1]">
+                  <div className="flex w-[80%] flex-row items-center gap-4">
+                    <label className="flex h-full w-[75px] min-w-[75px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
+                      결재요청번호
+                    </label>
+                    <input className="my-[2px] ml-[2px] w-[50px] rounded-[2px] border-[1px] border-[#999999] py-[2px]" />
+                    <div>결재요청일</div>
+                    <input className="my-[2px] ml-[2px] w-[100px] rounded-[2px] border-[1px] border-[#999999] py-[2px]" />
+                  </div>
+                  <div className="flex w-[20%] flex-row">
+                    <label className="flex h-full w-[75px] min-w-[75px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
+                      제출자
+                    </label>
+                    <input className="my-[2px] ml-[2px] w-[100px] rounded-[2px] border-[1px] border-[#999999] py-[2px]" />
+                  </div>
+                </div>
+                <div className="flex h-[29px] flex-row justify-between border-b-[1px] border-[#dfe1e1]">
+                  <div className="flex w-[80%] flex-row items-center gap-4">
+                    <label className="flex h-full w-[75px] min-w-[75px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
+                      제목
+                    </label>
+                    <input className="my-[2px] ml-[2px] w-[90%] rounded-[2px] border-[1px] border-[#999999] py-[2px]" />
+                    <span className="required">*</span>
+                  </div>
+                  <div className="flex w-[20%] flex-row">
+                    <label className="flex h-full w-[75px] min-w-[75px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
+                      제출자
+                    </label>
+                    <DropDownList
+                      style={{ width: 100, marginRight: "2px", fontSize: "12px", marginLeft: "2px" }}
+                      size={"small"}
+                      data={["선택 안 함", "안전", "주의", "경계"]}
+                      defaultValue={"선택 안 함"}
+                      className="my-[2px]"
+                    />
+                    <span className="required">*</span>
+                  </div>
+                </div>
+                <div className="flex h-[29px] flex-row justify-between border-b-[1px] border-[#dfe1e1]">
+                  <div className="flex w-full flex-row items-center">
+                    <label className="flex h-full w-[75px] min-w-[75px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
+                      배포예약
+                    </label>
+                    <div className="flex items-center gap-4">
+                      <Input className="ml-[2px] w-48 border border-[#999999]" type="date" />
+                      <input className="my-[2px] ml-[2px] w-[70px] rounded-[2px] border-[1px] border-[#999999] py-[2px]" />
+                      <div>시</div>
+                      <input className="my-[2px] ml-[2px] w-[70px] rounded-[2px] border-[1px] border-[#999999] py-[2px]" />
+                      <div>분</div>
+                      <Button size={"small"} className="cell-inside-btn px-4 font-normal">
+                        즉시반영
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex h-[59px] w-full flex-row justify-between border-b-[1px] border-[#dfe1e1]">
+                  <div className="flex h-full w-full flex-row items-center">
+                    <label className="flex h-full w-[75px] min-w-[75px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
+                      설명
+                    </label>
+                    <div className="flex h-full w-full items-center py-[2px] pr-8">
+                      <textarea className="ml-[2px] h-full w-[100%] resize-none rounded-[2px] border-[1px] border-[#999999] py-[2px]" />
+                      <span className="required">*</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex h-[200px] w-full flex-row justify-between border-b-[1px] border-[#dfe1e1]">
+                  <div className="flex h-full w-full flex-row items-center">
+                    <label className="flex h-full w-[75px] min-w-[75px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
+                      첨부파일
+                    </label>
+                    <div className="flex h-full w-[600px] items-center py-[2px] pl-[2px]">
+                      <Grid
+                        style={{ height: "195px", width: "550px" }}
+                        data={dataResult}
+                        sortable={true}
+                        pageable={true}
+                        dataItemKey={DATA_ITEM_KEY}
+                        selectedField={SELECTED_FIELD}
+                        onSelectionChange={onSelectionChange}
+                        onHeaderSelectionChange={onHeaderSelectionChange}
+                        pageSize={8}>
+                        <Column
+                          field="modificationDate"
+                          title="파일이름"
+                          headerClassName="justify-center bg-[#adc6f4]"
+                        />
+                      </Grid>
+                    </div>
+                    <div className="shrink-1 flex flex-grow gap-4">
+                      <Button size={"small"} className="cell-inside-btn px-4 font-normal">
+                        등록
+                      </Button>
+                      <Button size={"small"} className="cell-inside-btn px-4 font-normal">
+                        취소
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex h-[28px] flex-row justify-between">
+                  <div className="flex w-[70%] flex-row">
+                    <label className="flex h-full w-[75px] min-w-[75px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
+                      최종결제자
+                    </label>
+                    <DropDownList
+                      style={{ width: 100, marginRight: "2px", fontSize: "12px", marginLeft: "2px" }}
+                      size={"small"}
+                      data={["선택 안 함", "안전", "주의", "경계"]}
+                      defaultValue={"선택 안 함"}
+                      className="my-[2px]"
+                    />
+                  </div>
                 </div>
               </div>
-              <div className="flex flex-col p-4">
-                <div className="flex items-center gap-1 pb-[4px]">
-                  <img src="./images/dot_subtitle.gif" className="h-[12px] w-[12px]" />
-                  <div className="text-[14px] font-bold text-[#656565]">전문 정보</div>
-                  <Button className="ml-4 bg-neutral-50 p-2" onClick={undefined}>
-                    Expand / Colapse
-                  </Button>
-                </div>
-                {/*  */}
-                <div className="mt-4 flex flex-col border-[1px] border-[#dfe1e1]">
-                  <div className="flex h-[29px] flex-row justify-between border-b-[1px] border-[#dfe1e1]">
-                    <div className="flex w-[40%] flex-row items-center">
-                      <label className="flex h-full w-[75px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
-                        기관명
-                      </label>
-                      <DropDownList
-                        style={{ width: 110, marginRight: "2px", fontSize: "12px", marginLeft: "2px" }}
-                        size={"small"}
-                        data={["선택 안 함", "안전", "주의", "경계"]}
-                        defaultValue={"선택 안 함"}
-                        className="my-[2px]"
-                        disabled={true}
-                      />
-                      <span className="required">*</span>
-                    </div>
-                    <div className="flex w-[60%] flex-row items-center">
-                      <label className="flex h-full w-[140px] min-w-[140px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
-                        상위전문ID
-                      </label>
-                      <DropDownList
-                        style={{ width: 250, marginRight: "2px", fontSize: "12px", marginLeft: "2px" }}
-                        size={"small"}
-                        data={["선택 안 함", "안전", "주의", "경계"]}
-                        defaultValue={"선택 안 함"}
-                        className="my-[2px]"
-                      />
-                    </div>
-                  </div>
-                  {/*  */}
-                  <div className="flex h-[29px] flex-row justify-between border-b-[1px] border-[#dfe1e1]">
-                    <div className="flex w-[40%] flex-row items-center">
-                      <label className="flex h-full w-[75px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
-                        전문ID
-                      </label>
-                      <input className="my-[2px] ml-[2px] w-[150px] rounded-[2px] border-[1px] border-[#999999] py-[2px]" />
-                      <span className="required">*</span>
-                    </div>
-                    <div className="flex w-[60%] flex-row items-center">
-                      <label className="flex h-full w-[140px] min-w-[140px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
-                        전문명
-                      </label>
-                      <input className="my-[2px] ml-[2px] w-[190px] rounded-[2px] border-[1px] border-[#999999] py-[2px]" />
-                      <span className="required">*</span>
-                    </div>
-                  </div>
-                  {/*  */}
-                  <div className="flex h-[29px] flex-row justify-between border-b-[1px] border-[#dfe1e1]">
-                    <div className="flex w-[40%] flex-row items-center">
-                      <label className="flex h-full w-[75px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
-                        전문설명
-                      </label>
-                      <input className="my-[2px] ml-[2px] w-[150px] rounded-[2px] border-[1px] border-[#999999] py-[2px]" />
-                    </div>
-                    <div className="flex w-[60%] flex-row items-center">
-                      <label className="flex h-full w-[140px] min-w-[140px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
-                        로그레벨
-                      </label>
-                      <DropDownList
-                        style={{ width: 110, marginRight: "2px", fontSize: "12px", marginLeft: "2px" }}
-                        size={"small"}
-                        data={["선택 안 함", "안전", "주의", "경계"]}
-                        defaultValue={"선택 안 함"}
-                        className="my-[2px]"
-                      />
-                    </div>
-                  </div>
-                  {/*  */}
-                  <div className="flex h-[29px] flex-row justify-between border-b-[1px] border-[#dfe1e1]">
-                    <div className="flex w-[40%] flex-row items-center">
-                      <label className="flex h-full w-[75px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
-                        헤더전문여부
-                      </label>
-                      <DropDownList
-                        style={{ width: 110, marginRight: "2px", fontSize: "12px", marginLeft: "2px" }}
-                        size={"small"}
-                        data={["선택 안 함", "안전", "주의", "경계"]}
-                        defaultValue={"선택 안 함"}
-                        className="my-[2px]"
-                      />
-                    </div>
-                    <div className="flex w-[60%] flex-row items-center">
-                      <label className="flex h-full w-[140px] min-w-[140px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
-                        전문유형/요청응답구분
-                      </label>
-                      <DropDownList
-                        style={{ width: 110, marginRight: "2px", fontSize: "12px", marginLeft: "2px" }}
-                        size={"small"}
-                        data={["선택 안 함", "안전", "주의", "경계"]}
-                        defaultValue={"선택 안 함"}
-                        className="my-[2px]"
-                      />
-                      <span className="required">*</span>
-                      /
-                      <DropDownList
-                        style={{ width: 80, marginRight: "2px", fontSize: "12px" }}
-                        size={"small"}
-                        data={["선택 안 함", "안전", "주의", "경계"]}
-                        defaultValue={"선택 안 함"}
-                        className="my-[2px] ml-[8px]"
-                      />
-                    </div>
-                  </div>
-                  {/*  */}
-                  <div className="flex h-[28px] flex-row justify-between">
-                    <div className="flex w-[40%] flex-row items-center">
-                      <label className="flex h-full w-[75px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
-                        사전로딩여부
-                      </label>
-                      <DropDownList
-                        style={{ width: 110, marginRight: "2px", fontSize: "12px", marginLeft: "2px" }}
-                        size={"small"}
-                        data={["선택 안 함", "안전", "주의", "경계"]}
-                        defaultValue={"선택 안 함"}
-                        className="my-[2px]"
-                      />
-                    </div>
-                    <div className="flex w-[60%] flex-row items-center">
-                      <label className="flex h-full w-[140px] min-w-[140px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
-                        업무분류
-                      </label>
-                      <DropDownList
-                        style={{ width: "100%", marginRight: "2px", fontSize: "12px", marginLeft: "2px" }}
-                        size={"small"}
-                        data={["선택 안 함", "안전", "주의", "경계"]}
-                        defaultValue={"선택 안 함"}
-                        className="my-[2px]"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="mt-4 flex items-center gap-1 pb-[4px]">
-                  <img src="./images/dot_subtitle.gif" className="h-[12px] w-[12px]" />
-                  <div className="text-[14px] font-bold text-[#656565]">전문 상세정보</div>
-                  <Button className="ml-4 bg-neutral-50 p-2" onClick={undefined}>
-                    Expand / Colapse
-                  </Button>
-                  <div className="shrink-1 flex flex-grow flex-row items-center justify-end gap-2">
-                    <Button
-                      imageUrl="/images/dot-right-arrow.png"
-                      className="basic-btn flex items-center justify-start">
-                      엑셀저장
-                    </Button>
-                    <Button
-                      imageUrl="/images/dot-right-arrow.png"
-                      className="basic-btn flex items-center justify-start">
-                      헤더전문포함조회
-                    </Button>
-                    <Button
-                      imageUrl="/images/dot-right-arrow.png"
-                      className="basic-btn flex items-center justify-start">
-                      필드풀 검증
-                    </Button>
-                    <Button
-                      imageUrl="/images/dot-right-arrow.png"
-                      className="basic-btn flex items-center justify-start">
-                      다국어 검증
-                    </Button>
-                  </div>
-                </div>
-                {/*  */}
-                <div className="mb-4 flex flex-row items-center">
-                  <div className="flex items-center">※Excel Copy &gt;&gt; Excel복사버튼 클릭하세요</div>
-                  <div className="shrink-1 flex flex-grow flex-row items-center justify-end gap-2">
-                    <Button size={"small"} className="cell-inside-btn px-4" themeColor={"primary"} onClick={undefined}>
-                      Excel복사
-                    </Button>
-                    <Button size={"small"} className="cell-inside-btn px-4" themeColor={"primary"} onClick={undefined}>
-                      유사전문복사
-                    </Button>
-                    <Button size={"small"} className="cell-inside-btn px-4" themeColor={"primary"} onClick={undefined}>
-                      테이블
-                    </Button>
-                    <Button size={"small"} className="cell-inside-btn px-4" themeColor={"primary"} onClick={undefined}>
-                      행 추가
-                    </Button>
-                    <Button size={"small"} className="cell-inside-btn px-4" themeColor={"primary"} onClick={undefined}>
-                      선택형 삭제
-                    </Button>
-                  </div>
-                </div>
-                {/*  */}
-                <ExcelExport>
-                  <Grid
-                    style={{
-                      height: "500px",
-                    }}
-                    pageable={{
-                      pageSizes: true,
-                    }}
-                    data={dataResult}
-                    sortable={true}
-                    total={resultState.total}
-                    onDataStateChange={dataStateChange}
-                    {...dataState}
-                    onExpandChange={onExpandChange}
-                    expandField="expanded"
-                    dataItemKey={DATA_ITEM_KEY}
-                    selectedField={SELECTED_FIELD}
-                    onHeaderSelectionChange={onHeaderSelectionChange}
-                    onSelectionChange={onSelectionChange}
-                    groupable={false}>
-                    <Column
-                      filterable={false}
-                      sortable={false}
-                      field={SELECTED_FIELD}
-                      // headerSelectionValue={checkHeaderSelectionValue()}
-                      headerClassName="bg-[#adc6f4] overflow-none"
-                      className="overflow-none"
-                      width={30}
-                    />
-                    <Column
-                      field="budget"
-                      title="CRUD"
-                      sortable={false}
-                      headerClassName="justify-center bg-[#adc6f4]"
-                    />
-                    <Column
-                      field="full_name"
-                      title="순번"
-                      sortable={false}
-                      headerClassName="justify-center bg-[#adc6f4]"
-                    />
-                    <Column
-                      field="target"
-                      title="전문필드명"
-                      sortable={false}
-                      headerClassName="justify-center bg-[#adc6f4]"
-                    />
-                    <Column
-                      field="budget"
-                      title="data타입"
-                      sortable={false}
-                      headerClassName="justify-center bg-[#adc6f4]"
-                    />
-                    <Column
-                      field="budget"
-                      title="data길이"
-                      sortable={false}
-                      headerClassName="justify-center bg-[#adc6f4]"
-                    />
-                    <Column
-                      field="budget"
-                      title="정렬기준"
-                      sortable={false}
-                      headerClassName="justify-center bg-[#adc6f4]"
-                    />
-                    <Column
-                      field="budget"
-                      title="특이사항"
-                      sortable={false}
-                      headerClassName="justify-center bg-[#adc6f4]"
-                    />
-                    <Column
-                      field="budget"
-                      title="필수여부"
-                      sortable={false}
-                      headerClassName="justify-center bg-[#adc6f4]"
-                      width={83}
-                    />
-                    <Column
-                      field="budget"
-                      title="스케일"
-                      sortable={false}
-                      headerClassName="justify-center bg-[#adc6f4]"
-                    />
-                    <Column
-                      field="budget"
-                      title="삽입문자"
-                      sortable={false}
-                      headerClassName="justify-center bg-[#adc6f4]"
-                    />
-                    <Column
-                      field="budget"
-                      title="입력구분"
-                      sortable={false}
-                      headerClassName="justify-center bg-[#adc6f4]"
-                    />
-                    <Column
-                      field="budget"
-                      title="코드그룹"
-                      sortable={false}
-                      headerClassName="justify-center bg-[#adc6f4]"
-                    />
-                    <Column
-                      field="budget"
-                      title="코드맵핑"
-                      sortable={false}
-                      headerClassName="justify-center bg-[#adc6f4]"
-                    />
-                    <Column
-                      field="budget"
-                      title="초기값"
-                      sortable={false}
-                      headerClassName="justify-center bg-[#adc6f4]"
-                    />
-                  </Grid>
-                </ExcelExport>
-                {/*  */}
-                <div className="shrink-1 mt-4 flex flex-grow flex-row items-center justify-end gap-2">
-                  <Button imageUrl="/images/dot-right-arrow.png" className="basic-btn flex items-center justify-start">
-                    삭제
-                  </Button>
-                  <Button imageUrl="/images/dot-right-arrow.png" className="basic-btn flex items-center justify-start">
-                    저장
-                  </Button>
-                  <Button imageUrl="/images/dot-right-arrow.png" className="basic-btn flex items-center justify-start">
-                    목록
-                  </Button>
-                </div>
+              <div className="mt-4 flex items-center justify-end gap-4">
+                <Button imageUrl="/images/dot-right-arrow.png" className="basic-btn flex items-center justify-start">
+                  승인
+                </Button>
+                <Button imageUrl="/images/dot-right-arrow.png" className="basic-btn flex items-center justify-start">
+                  반려
+                </Button>
+                <Button
+                  imageUrl="/images/dot-right-arrow.png"
+                  className="basic-btn flex items-center justify-start"
+                  onClick={undefined}>
+                  닫기
+                </Button>
               </div>
             </div>
           </Window>

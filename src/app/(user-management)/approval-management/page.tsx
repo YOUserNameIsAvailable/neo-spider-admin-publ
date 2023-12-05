@@ -11,6 +11,7 @@ import { Grid, GridColumn as Column, getSelectedState, GridHeaderCellProps } fro
 import { TabStrip, TabStripTab, TabStripSelectEventArguments } from "@progress/kendo-react-layout";
 
 import { getter } from "@progress/kendo-react-common";
+import { ColumnMenu } from "@/components/ColumnMenu";
 const SELECTED_FIELD = "selected";
 const DATA_ITEM_KEY = "id";
 const idGetter = getter(DATA_ITEM_KEY);
@@ -28,7 +29,7 @@ export default function Page() {
     left: 400,
     top: 182,
     width: 1500,
-    height: 700,
+    height: 800,
   });
   const [selected, setSelected] = React.useState<number>(0);
   const handleSelect = (e: TabStripSelectEventArguments) => {
@@ -546,6 +547,91 @@ export default function Page() {
                 <span className="font-bold text-[#656565]">리스트</span>
               </div>
               {/**/}
+              <Grid
+                style={{
+                  height: "500px",
+                }}
+                pageable={{
+                  pageSizes: true,
+                }}
+                onRowClick={undefined}
+                data={dataState.map((item) => ({
+                  ...item,
+                  [SELECTED_FIELD]: selectedState[idGetter(item) as keyof typeof selectedState],
+                }))}
+                sortable={true}
+                {...dataState}
+                expandField="expanded"
+                dataItemKey={DATA_ITEM_KEY}
+                selectedField={SELECTED_FIELD}
+                onHeaderSelectionChange={onHeaderSelectionChange}
+                onSelectionChange={onSelectionChange}
+                groupable={false}>
+                <Column
+                  field="modificationDate"
+                  title="항목"
+                  sortable={false}
+                  columnMenu={ColumnMenu}
+                  headerClassName="justify-center bg-[#adc6f4]"
+                />
+                <Column
+                  field="modificationDate"
+                  title="식별자"
+                  sortable={false}
+                  columnMenu={ColumnMenu}
+                  headerClassName="justify-center bg-[#adc6f4]"
+                />
+                <Column
+                  field="modificationDate"
+                  title="작업내용"
+                  sortable={false}
+                  columnMenu={ColumnMenu}
+                  headerClassName="justify-center bg-[#adc6f4]"
+                />
+                <Column
+                  field="modificationDate"
+                  title="결제일련번호"
+                  sortable={false}
+                  headerClassName="justify-center bg-[#adc6f4]"
+                />
+                <Column
+                  field="modificationDate"
+                  title="운영반영여부"
+                  sortable={false}
+                  headerClassName="justify-center bg-[#adc6f4]"
+                  cells={{
+                    data: ({ dataItem, ...props }) => {
+                      return (
+                        <td {...props.tdProps} style={{ textAlign: "center" }}>
+                          X
+                        </td>
+                      );
+                    },
+                  }}
+                />
+                <Column
+                  field="modificationDate"
+                  title="최종수정자ID"
+                  sortable={false}
+                  headerClassName="justify-center bg-[#adc6f4]"
+                />
+                <Column
+                  field="modificationDate"
+                  title="최종수정일시"
+                  sortable={false}
+                  headerClassName="justify-center bg-[#adc6f4]"
+                />
+                <Column
+                  filterable={false}
+                  sortable={false}
+                  field={SELECTED_FIELD}
+                  // headerSelectionValue={checkHeaderSelectionValue()}
+                  headerClassName="bg-[#adc6f4] overflow-none"
+                  className="overflow-none"
+                  width={30}
+                />
+                <Column field="budget" title="식별자" sortable={false} headerClassName="justify-center bg-[#adc6f4]" />
+              </Grid>
               {/**/}
               <div className="mt-4 flex items-center justify-end gap-4">
                 <Button imageUrl="/images/dot-right-arrow.png" className="basic-btn flex items-center justify-start">
