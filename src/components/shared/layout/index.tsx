@@ -115,6 +115,7 @@ export const Layout: FC<LayoutProps> = ({ children, isLoaded, isLoginPage, isLog
       <TopBar />
 
       <Splitter
+        className="custom-splitter"
         style={{
           height: "calc(100dvh - 91px)",
           border: "none",
@@ -125,7 +126,7 @@ export const Layout: FC<LayoutProps> = ({ children, isLoaded, isLoginPage, isLog
         panes={panes}
         onChange={onChangeTab}>
         {/* left side panel */}
-        <div className="transition: all 0.3s h-full overflow-x-hidden">
+        <div className="h-full overflow-x-hidden">
           <LeftSideBar clickCollapseBtn={clickCollapseBtn} />
         </div>
 

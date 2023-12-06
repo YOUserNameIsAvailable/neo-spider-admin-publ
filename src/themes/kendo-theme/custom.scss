@@ -544,3 +544,7 @@ input:disabled {
   display: block;
   padding: 0;
 }
+
+.custom-splitter > div.k-pane.k-pane-static.k-scrollable {
+  z-index: 0;
+}

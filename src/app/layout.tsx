@@ -8,6 +8,7 @@ import { TabProvider } from "@/providers/TabProvider";
 import { Layout } from "@/components/shared/layout";
 import { Loader, LoaderType } from "@progress/kendo-react-indicators";
 import ThemeProvider from "@/providers/ThemeProvider";
+import Loading from "./loading";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -47,7 +48,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body className={inter.className}>
         <TabProvider>
           <ThemeProvider>
-            <Suspense fallback={<Loader />}>
+            <Suspense fallback={<Loading />}>
               <Layout isLoaded={isLoaded} isLoginPage={isLoginPage} isLogin={isLogin}>
                 {children}
               </Layout>
