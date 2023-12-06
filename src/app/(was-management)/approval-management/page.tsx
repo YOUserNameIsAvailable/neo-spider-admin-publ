@@ -7,7 +7,7 @@ import { DropDownList } from "@progress/kendo-react-dropdowns";
 import { PAGES, SPORTS } from "@/constants";
 import { ApprovalManagementTable } from "@/components/ApprovalManagementTable";
 import { Window, WindowMoveEvent } from "@progress/kendo-react-dialogs";
-import { Grid, GridColumn as Column, getSelectedState, GridHeaderCellProps } from "@progress/kendo-react-grid";
+import { Grid, GridColumn as Column, getSelectedState } from "@progress/kendo-react-grid";
 import { TabStrip, TabStripTab, TabStripSelectEventArguments } from "@progress/kendo-react-layout";
 
 import { getter } from "@progress/kendo-react-common";
@@ -17,7 +17,7 @@ const DATA_ITEM_KEY = "id";
 const idGetter = getter(DATA_ITEM_KEY);
 
 export default function Page() {
-  const [showApprovalRequest, setShowApprovalRequest] = React.useState(false);
+  const [showAddApprovalRequest, setShowAddApprovalRequest] = React.useState(false);
   const [showApprovalAddItem, setShowApprovalAddItem] = React.useState(false);
   const [requestPosition, setRequestPosition] = React.useState({
     left: 400,
@@ -209,12 +209,12 @@ export default function Page() {
           <Button
             imageUrl="/images/dot-right-arrow.png"
             className="basic-btn flex items-center justify-start"
-            onClick={() => setShowApprovalRequest(true)}>
+            onClick={() => setShowAddApprovalRequest(true)}>
             등록
           </Button>
         </div>
       </div>
-      {showApprovalRequest && (
+      {showAddApprovalRequest && (
         <div className="k-overlay">
           <Window
             minimizeButton={() => null}
@@ -229,7 +229,7 @@ export default function Page() {
             onMove={(e) => handleWindowChange("request", e)}
             onResize={(e) => handleWindowChange("request", e)}
             onClose={() => {
-              setShowApprovalRequest(false);
+              setShowAddApprovalRequest(false);
             }}>
             <div className="flex flex-col">
               <div className="flex items-center gap-1 pb-4">
@@ -359,7 +359,7 @@ export default function Page() {
                     <Button
                       imageUrl="/images/dot-right-arrow.png"
                       className="basic-btn flex items-center justify-start"
-                      onClick={() => setShowApprovalRequest(false)}>
+                      onClick={() => setShowAddApprovalRequest(false)}>
                       닫기
                     </Button>
                   </div>
@@ -480,7 +480,7 @@ export default function Page() {
                       <Button
                         imageUrl="/images/dot-right-arrow.png"
                         className="basic-btn flex items-center justify-start"
-                        onClick={() => setShowApprovalRequest(false)}>
+                        onClick={() => setShowAddApprovalRequest(false)}>
                         닫기
                       </Button>
                     </div>
@@ -546,7 +546,6 @@ export default function Page() {
                 <img src={"/images/dot_subtitle.gif"} alt="" style={{}} />
                 <span className="font-bold text-[#656565]">리스트</span>
               </div>
-              {/**/}
               <Grid
                 style={{
                   height: "500px",
@@ -560,7 +559,6 @@ export default function Page() {
                   [SELECTED_FIELD]: selectedState[idGetter(item) as keyof typeof selectedState],
                 }))}
                 sortable={true}
-                {...dataState}
                 expandField="expanded"
                 dataItemKey={DATA_ITEM_KEY}
                 selectedField={SELECTED_FIELD}
@@ -622,7 +620,6 @@ export default function Page() {
                   headerClassName="justify-center bg-[#adc6f4]"
                 />
                 <Column
-                  filterable={false}
                   sortable={false}
                   field={SELECTED_FIELD}
                   // headerSelectionValue={checkHeaderSelectionValue()}
