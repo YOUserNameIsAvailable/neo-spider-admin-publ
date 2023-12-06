@@ -8,18 +8,22 @@ import {
 import { ITab } from "@/types";
 import { useTab } from "@/providers/TabProvider";
 import { TopBar } from "./TopBar";
-import { FC, ReactNode, useState } from "react";
+import { FC, ReactNode, Suspense, useState } from "react";
 import { LeftSideBar } from "../LeftSidePanel";
 import { BottomBar } from "./BottomBar";
 import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@progress/kendo-react-buttons";
 import { TabTitle } from "./TapTitle";
+import { Loader } from "@progress/kendo-react-indicators";
 
 interface LayoutProps {
   children?: ReactNode;
+  isLoaded?: boolean;
+  isLoginPage?: boolean;
+  isLogin?: boolean;
 }
 
-export const Layout: FC<LayoutProps> = ({ children }) => {
+export const Layout: FC<LayoutProps> = ({ children, isLoaded, isLoginPage, isLogin }) => {
   const pathname = usePathname();
   const [panes, setPanes] = useState<SplitterPaneProps[]>([
     {
@@ -51,6 +55,9 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
     console.log("selectedTabIndex: ", selectedTabIndex);
 
     if (selectedTab.url === tab.url) {
+      const prevTab = newTabs[newTabs.length - 1];
+      setSelectedTab(prevTab);
+      router.push(prevTab.url as string);
       // setSelectedTab(null); // TODO
     }
 
@@ -102,7 +109,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
     }
   };
 
-  return (
+  return !isLoginPage && isLogin ? (
     <>
       {/* top bar */}
       <TopBar />
@@ -151,12 +158,23 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
           </div>
 
           {/* content */}
-          <div className="h-[100vh] w-full bg-[#fff] px-4">{children}</div>
+          <div className="h-[100vh] w-full bg-[#fff] px-4">
+            {children}
+            {/* {isLoaded ? (
+                <div className="flex h-[100vh] w-full items-center justify-center">
+                  <Loader />
+                </div>
+              ) : (
+                children
+              )} */}
+          </div>
         </div>
       </Splitter>
 
       {/* bottom bar */}
       <BottomBar />
     </>
+  ) : (
+    <>{children}</>
   );
 };

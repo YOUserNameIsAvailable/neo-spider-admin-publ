@@ -2,7 +2,7 @@
 
 import { Inter } from "next/font/google";
 import "./globals.scss";
-import { useEffect, useState, ReactNode } from "react";
+import { useEffect, useState, ReactNode, Suspense } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { TabProvider } from "@/providers/TabProvider";
 import { Layout } from "@/components/shared/layout";
@@ -47,15 +47,18 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body className={inter.className}>
         <TabProvider>
           <ThemeProvider>
-            {!isLoaded && !isLoginPage && isLogin ? (
-              <Layout>{children}</Layout>
-            ) : !isLoaded ? (
-              children
+            <Suspense fallback={<Loader />}>
+              <Layout isLoaded={isLoaded} isLoginPage={isLoginPage} isLogin={isLogin}>
+                {children}
+              </Layout>
+            </Suspense>
+            {/* {!isLoginPage && isLogin ? (
+              <Suspense fallback={<Loader />}>
+                <Layout isLoaded={isLoaded}>{children}</Layout>
+              </Suspense>
             ) : (
-              <div className="flex h-full items-center justify-center">
-                <Loader type={"converging-spinner"} />
-              </div>
-            )}
+              children
+            )} */}
           </ThemeProvider>
         </TabProvider>
       </body>

@@ -1,20 +1,17 @@
 "use client";
 
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "@progress/kendo-react-inputs";
 import { Button } from "@progress/kendo-react-buttons";
 import { DropDownList } from "@progress/kendo-react-dropdowns";
 import { PAGES, SPORTS, USERS } from "@/constants";
 import { UserManagementTable } from "@/components/UserManagementTable";
-import { useTheme } from "@/providers/ThemeProvider";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function Page() {
   const router = useRouter();
-  const { selTheme } = useTheme();
   const [result, setResult] = useState<any[]>([]);
-
-  console.log(123123, selTheme);
 
   const getUsers = async () => {
     try {
@@ -47,39 +44,18 @@ export default function Page() {
     getUsers();
   }, []);
 
-  useEffect(() => {
-    if (selTheme && selTheme?.conditionPreview) {
-      const id = Object.keys(selTheme)[0] || null;
-
-      if (id) {
-        const element = document.getElementById(id);
-        if (!element) return;
-
-        console.log(123123, selTheme?.conditionPreview?.style?.color, selTheme?.condition?.text, element.nodeName);
-
-        if (selTheme?.conditionPreview?.style) {
-          element.style.color = selTheme?.conditionPreview?.style.color || "";
-          element.style.fontWeight = selTheme?.conditionPreview?.style.fontWeight || "";
-          element.style.fontSize = selTheme?.conditionPreview?.style.textSize || "";
-        }
-
-        if (element.nodeName === "SPAN") {
-          element.innerHTML = selTheme?.conditionPreview?.text || selTheme?.condition?.text;
-          element.style.textDecorationLine = "underline";
-        }
-      }
-    }
-  }, [selTheme]);
-
   return (
     <>
       {/* filters */}
       <>
         <div className="flex items-center gap-2 py-4">
-          <img src={"/images/dot_subtitle.gif"} alt="" style={{}} />
+          {/* JSON 파일 스타일 변경 테스트 */}
+          <img  id="user_img" src={"/images/dot_subtitle.gif"} alt="" style={{}} />
+          <Image id="user_img_upper" src={""} alt="" />
           <span id="condition" className="font-bold text-[#656565]">
             Condition
           </span>
+          <a href="#list" id="user_link" className="flex items-center gap-2">Test</a>
         </div>
         <div className="flex flex-wrap justify-between gap-4 overflow-x-scroll bg-[#dde6f0] p-[5px]">
           <div className="flex items-center gap-4">
@@ -150,7 +126,9 @@ export default function Page() {
       <>
         <div className="flex items-center gap-2 py-4">
           <img src={"/images/dot_subtitle.gif"} alt="" style={{}} />
-          <span className="font-bold text-[#656565]">List</span>
+          <span id="list" className="font-bold text-[#656565]">
+            List
+          </span>
         </div>
         <UserManagementTable getUsers={getUsers} result={result} />
       </>

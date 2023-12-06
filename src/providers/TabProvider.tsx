@@ -2,7 +2,7 @@
 
 import { MENUS } from "@/constants";
 import { ITab } from "@/types";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   createContext,
   useContext,
@@ -42,11 +42,33 @@ export const TabProvider: FC<TabProviderProps> = ({ children }) => {
   const [selectedTab, setSelectedTab] = useState<ITab>(tabs[0]);
 
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
-    selectedTab && router.push(selectedTab.url as string);
+    if (tabs && selectedTab) {
+      sessionStorage.setItem("tabs", JSON.stringify(tabs));
+      sessionStorage.setItem("selectedTab", JSON.stringify(selectedTab));
+    }
+
+    if (pathname !== selectedTab?.url && pathname.indexOf("login") == -1) {
+      selectedTab && router.push(selectedTab.url as string);
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTab]);
+
+  useEffect(() => {
+    const sessionTabs = sessionStorage.getItem("tabs");
+    const sessionSelectedTab = sessionStorage.getItem("selectedTab");
+
+    console.log("sessionTabs: ", sessionTabs);
+    console.log("sessionSelectedTab: ", sessionSelectedTab);
+
+    if (sessionTabs && sessionSelectedTab && sessionTabs !== "undefined" && sessionSelectedTab !== "undefined") {
+      setTabs(JSON.parse(sessionTabs));
+      setSelectedTab(JSON.parse(sessionSelectedTab));
+    }
+  }, []);
 
   const selectedTabIndex = useMemo(() => tabs.findIndex((x) => x.url === selectedTab.url), [tabs, selectedTab]);
 
