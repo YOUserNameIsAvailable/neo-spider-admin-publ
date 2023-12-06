@@ -539,3 +539,8 @@ input:disabled {
 .approval-tab .k-tabstrip-content.k-active {
   display: block;
 }
+
+.layout-tabstrip .k-tabstrip-content.k-active {
+  display: block;
+  padding: 0;
+}

@@ -131,7 +131,7 @@ export const Layout: FC<LayoutProps> = ({ children, isLoaded, isLoginPage, isLog
 
         <div className="pane-content h-full">
           {/* tabs */}
-          <TabStrip selected={selectedTabIndex} scrollable={true}>
+          <TabStrip selected={selectedTabIndex} scrollable={true} className="layout-tabstrip">
             {tabs.map((tab, index) => (
               <TabStripTab
                 key={tab.url}
@@ -142,32 +142,31 @@ export const Layout: FC<LayoutProps> = ({ children, isLoaded, isLoginPage, isLog
                     onRemoveTab={(e) => onRemoveTab(e, index)}
                     hideClose={index === 0}
                   />
-                }
-              />
-            ))}
-          </TabStrip>
+                }>
+                {/* title bar */}
+                <div className="title-bar">
+                  <div className="title text-[15px] font-bold text-[#656565]">{selectedTab?.text}</div>
+                  <div className="actions">
+                    <Button imageUrl="/images/btn_excel_off.gif" className="excel-btn" />
+                    <Button imageUrl="/images/btn_print_off.gif" className="ml-px-10 print-btn" />
+                    <Button imageUrl="/images/refresh.png" className="search-btn ml-[5px]" />
+                  </div>
+                </div>
 
-          {/* title bar */}
-          <div className="title-bar">
-            <div className="title text-[15px] font-bold text-[#656565]">{selectedTab?.text}</div>
-            <div className="actions">
-              <Button imageUrl="/images/btn_excel_off.gif" className="excel-btn" />
-              <Button imageUrl="/images/btn_print_off.gif" className="ml-px-10 print-btn" />
-              <Button imageUrl="/images/refresh.png" className="search-btn ml-[5px]" />
-            </div>
-          </div>
-
-          {/* content */}
-          <div className="h-[100vh] w-full bg-[#fff] px-4">
-            {children}
-            {/* {isLoaded ? (
+                {/* content */}
+                <div className="h-[100vh] w-full bg-[#fff] px-4">
+                  {children}
+                  {/* {isLoaded ? (
                 <div className="flex h-[100vh] w-full items-center justify-center">
                   <Loader />
                 </div>
               ) : (
                 children
               )} */}
-          </div>
+                </div>
+              </TabStripTab>
+            ))}
+          </TabStrip>
         </div>
       </Splitter>
 
