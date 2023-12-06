@@ -2,13 +2,12 @@ import { Input } from "@progress/kendo-react-inputs";
 import { Button } from "@progress/kendo-react-buttons";
 
 import { DropDownList } from "@progress/kendo-react-dropdowns";
-import React, { useState } from "react";
+import React, { FC, useState } from "react";
 import { ClientWebTable } from "@/components/ClientWebTable";
 import { PAGES, SPORTS } from "@/constants";
-import { ClientWebProps } from "@/types";
 import { ClientWebAppManagementModal } from "@/components/modal/ClientWebAppManagementModal";
 
-export const ClientWebAppMain: React.FC<ClientWebProps> = ({ onRowClick }) => {
+export const ClientWebAppMain: FC<{ onRowClick?: (event: any) => void; result: any[] }> = ({ onRowClick, result }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const [showModal, setShowModal] = useState(false); // <5-3> Client WebApp Manage - stop selection
@@ -211,14 +210,13 @@ export const ClientWebAppMain: React.FC<ClientWebProps> = ({ onRowClick }) => {
           </Button>
         </div>
       </div>
-      <ClientWebTable onRowClick={onRowClick} />
+      <ClientWebTable onRowClick={onRowClick} result={result} />
       <div className="flex justify-end">
         <Button imageUrl="/images/dot-right-arrow.png" className="basic-btn mt-2 flex h-7 items-center justify-start">
           ADD
         </Button>
       </div>
-            {showModal && <ClientWebAppManagementModal setShowModal={setShowModal} />}
-     
+      {showModal && <ClientWebAppManagementModal setShowModal={setShowModal} />}
     </>
   );
 };

@@ -13,25 +13,25 @@ export default function Page() {
   const router = useRouter();
   const [result, setResult] = useState<any[]>([]);
 
-  const getUsers = async () => {
+  const getHandler = async () => {
     try {
-      const usersJson = await fetch("/api/spider/userMng/list", {
+      const dataJson = await fetch("/api/spider/userMng/list", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
       });
 
-      const users = await usersJson.json();
-      console.log("users: ", users);
+      const data = await dataJson.json();
+      console.log("data: ", data);
 
-      if (users?.result?.error?.code === "FRU00001") {
+      if (data?.result?.error?.code === "FRU00001") {
         sessionStorage.removeItem("isLogin");
         router.push("/login");
         return;
       }
 
-      setResult(users?.body?.list);
+      setResult(data?.body?.list);
     } catch (err) {
       console.error(err);
 
@@ -41,7 +41,7 @@ export default function Page() {
   };
 
   useEffect(() => {
-    getUsers();
+    getHandler();
   }, []);
 
   return (
@@ -130,7 +130,7 @@ export default function Page() {
             List
           </span>
         </div>
-        <UserManagementTable getUsers={getUsers} result={result} />
+        <UserManagementTable getHandler={getHandler} result={result} />
       </>
 
       <div className="flex justify-end">

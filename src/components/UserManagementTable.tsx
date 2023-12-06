@@ -28,7 +28,7 @@ const processWithGroups = (data: any, dataState: any) => {
   return newDataState;
 };
 
-export const UserManagementTable: FC<{ getUsers: () => void; result: any[] }> = ({ getUsers, result }) => {
+export const UserManagementTable: FC<{ getHandler: () => void; result: any[] }> = ({ getHandler, result }) => {
   const idGetter = getter("id");
   const [filterValue, setFilterValue] = useState();
   const [filteredData, setFilteredData] = useState<any[]>([]);
@@ -392,7 +392,7 @@ export const UserManagementTable: FC<{ getUsers: () => void; result: any[] }> = 
         </GridPDFExport>
       </div>
       {showDetailModal && (
-        <UserManagementDetailModal getUsers={getUsers} setShowDetailModal={setShowDetailModal} userId={userId} />
+        <UserManagementDetailModal getHandler={getHandler} setShowDetailModal={setShowDetailModal} userId={userId} />
       )}
 
       {/* <2-3> User management - Menu authority */}

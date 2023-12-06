@@ -5,7 +5,7 @@ import { ExcelExport } from "@progress/kendo-react-excel-export";
 import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
 import { setGroupIds, setExpandedState } from "@progress/kendo-react-data-tools";
 import { EMPLOYEES } from "@/constants";
-import { useCallback, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import { ColumnMenu } from "./ColumnMenu";
 import { Button } from "@progress/kendo-react-buttons";
 import { ErrorCodeManagementDetailModal } from "./modal/ErrorCodeManagementDetailModal";
@@ -27,18 +27,18 @@ const processWithGroups = (data: any, dataState: any) => {
   return newDataState;
 };
 
-
-export function ErrorCodeTable() {
+export const ErrorCodeTable: FC<{ getHandler: () => void; result: any[] }> = ({ getHandler, result }) => {
   const idGetter = getter("id");
   const [filterValue, setFilterValue] = useState();
-  const [filteredData, setFilteredData] = useState(EMPLOYEES);
+  const [filteredData, setFilteredData] = useState<any[]>([]);
   const [currentSelectedState, setCurrentSelectedState] = useState<any>({});
   const [dataState, setDataState] = useState(initialDataState);
-  const [dataResult, setDataResult] = useState(process(filteredData, dataState));
-  const [data, setData] = useState(filteredData);
+  const [dataResult, setDataResult] = useState<any>({ data: [] });
+  const [data, setData] = useState<any[]>([]);
 
   const [showModal, setShowModal] = useState(false); // <8-2> Error code management - Modify error code
   const [showHandlerModal, setShowHandlerModal] = useState(false); // <8-3> Error code management - Handler per error
+  const [errorCode, setErrorCode] = useState("");
 
   const onFilterChange = (ev: any) => {
     let value = ev.value;
@@ -201,103 +201,113 @@ export function ErrorCodeTable() {
     </td>
   );
 
+  useEffect(() => {
+    if (result?.length > 0) {
+      setFilteredData(result);
+      setDataResult(process(result, dataState));
+      setData(result);
+    }
+  }, [result]);
+
   return (
     <>
-    <div>
-      <ExcelExport>
-        <Grid
-          style={{
-            height: "500px",
-          }}
-          pageable={{
-            pageSizes: true,
-          }}
-          data={dataResult}
-          sortable={false}
-          total={resultState.total}
-          onDataStateChange={dataStateChange}
-          {...dataState}
-          onExpandChange={onExpandChange}
-          expandField="expanded"
-          dataItemKey={DATA_ITEM_KEY}
-          selectedField={SELECTED_FIELD}
-          onHeaderSelectionChange={onHeaderSelectionChange}
-          onSelectionChange={onSelectionChange}
-          groupable={false}
-          onRowClick={()=>{
-            setShowModal(true)
-          }}
-          >
-          <Column
-            field="budget"
-            title="Error Code"
-            columnMenu={ColumnMenu}
-            headerClassName="justify-center bg-[#adc6f4] col-width10per"
-            className="col-width10per"
-          />
-          <Column
-            field="full_name"
-            title="Error Title"
-            columnMenu={ColumnMenu}
-            headerClassName="justify-center bg-[#adc6f4] col-width35per"
-            className="col-width35per"
-          />
-          <Column
-            field="target"
-            title="Cause of error"
-            columnMenu={ColumnMenu}
-            headerClassName="justify-center bg-[#adc6f4] col-width35per"
-            className="col-width35per"
-          />
-          <Column
-            field="budget"
-            title="Handler count"
-            columnMenu={ColumnMenu}
-            headerClassName="justify-center bg-[#adc6f4] col-width10per"
-            className="col-width10per"
-          />
-          <Column
-            field="budget"
-            width="150px"
-            title="Handler per error"
-            headerClassName="justify-center bg-[#adc6f4]"
-            cell={(props) => (
-              <td style={{ textAlign: "center" }}>
-                <Button size={"small"} className="cell-inside-btn px-4" themeColor={"primary"} onClick={()=>{
-                  setShowHandlerModal(true)
-                }}>
-                  Handler
-                </Button>
-              </td>
-            )}
-          />
-        </Grid>
-      </ExcelExport>
-      <GridPDFExport margin="1cm">
-        <Grid
-          style={{
-            height: "500px",
-          }}
-          pageable={{
-            pageSizes: true,
-          }}
-          data={dataResult}
-          sortable={false}
-          total={resultState.total}
-          onDataStateChange={dataStateChange}
-          {...dataState}
-          onExpandChange={onExpandChange}
-          expandField="expanded"
-          dataItemKey={DATA_ITEM_KEY}
-          selectedField={SELECTED_FIELD}
-          onHeaderSelectionChange={onHeaderSelectionChange}
-          onSelectionChange={onSelectionChange}
-          groupable={true}></Grid>
-      </GridPDFExport>
-    </div>
-    {showModal && <ErrorCodeManagementDetailModal setShowModal={setShowModal} />}
-       {showHandlerModal && ( <ErrorCodeManagementHandlerModal setHandlerModal={setShowHandlerModal} />
-      )}
+      <div>
+        <ExcelExport>
+          <Grid
+            style={{
+              height: "500px",
+            }}
+            pageable={{
+              pageSizes: true,
+            }}
+            data={dataResult}
+            sortable={false}
+            total={resultState.total}
+            onDataStateChange={dataStateChange}
+            {...dataState}
+            onExpandChange={onExpandChange}
+            expandField="expanded"
+            dataItemKey={DATA_ITEM_KEY}
+            selectedField={SELECTED_FIELD}
+            onHeaderSelectionChange={onHeaderSelectionChange}
+            onSelectionChange={onSelectionChange}
+            groupable={false}
+            onRowClick={(e) => {
+              setErrorCode(e.dataItem.errorCode);
+              setShowModal(true);
+            }}>
+            <Column
+              field="errorCode"
+              title="Error Code"
+              columnMenu={ColumnMenu}
+              headerClassName="justify-center bg-[#adc6f4] col-width10per"
+              className="col-width10per"
+            />
+            <Column
+              field="errorTitle"
+              title="Error Title"
+              columnMenu={ColumnMenu}
+              headerClassName="justify-center bg-[#adc6f4] col-width35per"
+              className="col-width35per"
+            />
+            <Column
+              field="errorCauseDesc"
+              title="Cause of error"
+              columnMenu={ColumnMenu}
+              headerClassName="justify-center bg-[#adc6f4] col-width35per"
+              className="col-width35per"
+            />
+            <Column
+              field="handlerCount"
+              title="Handler count"
+              columnMenu={ColumnMenu}
+              headerClassName="justify-center bg-[#adc6f4] col-width10per"
+              className="col-width10per"
+            />
+            <Column
+              width="150px"
+              title="Handler per error"
+              headerClassName="justify-center bg-[#adc6f4]"
+              cell={(props) => (
+                <td style={{ textAlign: "center" }}>
+                  <Button
+                    size={"small"}
+                    className="cell-inside-btn px-4"
+                    themeColor={"primary"}
+                    onClick={() => {
+                      setShowHandlerModal(true);
+                    }}>
+                    Handler
+                  </Button>
+                </td>
+              )}
+            />
+          </Grid>
+        </ExcelExport>
+        <GridPDFExport margin="1cm">
+          <Grid
+            style={{
+              height: "500px",
+            }}
+            pageable={{
+              pageSizes: true,
+            }}
+            data={dataResult}
+            sortable={false}
+            total={resultState.total}
+            onDataStateChange={dataStateChange}
+            {...dataState}
+            onExpandChange={onExpandChange}
+            expandField="expanded"
+            dataItemKey={DATA_ITEM_KEY}
+            selectedField={SELECTED_FIELD}
+            onHeaderSelectionChange={onHeaderSelectionChange}
+            onSelectionChange={onSelectionChange}
+            groupable={true}></Grid>
+        </GridPDFExport>
+      </div>
+      {showModal && <ErrorCodeManagementDetailModal setShowModal={setShowModal} errorCode={errorCode} />}
+      {showHandlerModal && <ErrorCodeManagementHandlerModal setHandlerModal={setShowHandlerModal} />}
     </>
   );
-}
+};

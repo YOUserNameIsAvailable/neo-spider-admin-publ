@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "@progress/kendo-react-inputs";
 import { Button } from "@progress/kendo-react-buttons";
 import { DropDownList } from "@progress/kendo-react-dropdowns";
@@ -8,15 +8,46 @@ import { searchIcon, arrowRightIcon } from "@progress/kendo-svg-icons";
 import { SPORTS, PAGES } from "@/constants";
 import { ErrorCodeTable } from "@/components/ErrorCodeTable";
 import { ErrorCodeManagementAddModal } from "@/components/modal/ErrorCodeManagementAddModal";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
+  const router = useRouter();
   const [isExpanded, setIsExpanded] = useState(false);
   const [showModal, setShowModal] = useState(false);
-
+  const [result, setResult] = useState<any[]>([]);
 
   const toggleExpansion = () => {
     setIsExpanded(!isExpanded);
   };
+
+  const getHandler = async () => {
+    try {
+      const dataJson = await fetch("/api/spider/errCodeMng/list", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await dataJson.json();
+      console.log("data: ", data);
+
+      if (data?.result?.error?.code === "FRU00001") {
+        sessionStorage.removeItem("isLogin");
+        router.push("/login");
+        return;
+      }
+
+      setResult(data?.body?.list);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    getHandler();
+  }, []);
+
   return (
     <>
       {/* filters */}
@@ -89,7 +120,7 @@ export default function Page() {
         <img src={"/images/dot_subtitle.gif"} alt="" style={{}} />
         <span className="font-bold text-[#656565]">List</span>
       </div>
-      <ErrorCodeTable />
+      <ErrorCodeTable getHandler={getHandler} result={result} />
       <div className="flex justify-end">
         <Button
           imageUrl="/images/dot-right-arrow.png"
@@ -100,7 +131,7 @@ export default function Page() {
           ADD
         </Button>
       </div>
-   {showModal && <ErrorCodeManagementAddModal setShowModal={setShowModal} />}
+      {showModal && <ErrorCodeManagementAddModal setShowModal={setShowModal} />}
     </>
   );
 }

@@ -1,13 +1,10 @@
-import React from "react";
+import React, { FC, useEffect, useState } from "react";
 import { getter } from "@progress/kendo-react-common";
 import { process } from "@progress/kendo-data-query";
 import { GridPDFExport } from "@progress/kendo-react-pdf";
 import { ExcelExport } from "@progress/kendo-react-excel-export";
 import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
-import {
-  setGroupIds,
-  setExpandedState,
-} from "@progress/kendo-react-data-tools";
+import { setGroupIds, setExpandedState } from "@progress/kendo-react-data-tools";
 import { EMPLOYEES } from "@/constants";
 import { ColumnMenu } from "./ColumnMenu";
 import { ClientWebProps } from "@/types";
@@ -31,18 +28,14 @@ const processWithGroups = (data: any, dataState: any) => {
   return newDataState;
 };
 
-export const ClientWebTable: React.FC<ClientWebProps> = ({ onRowClick }) => {
+export const ClientWebTable: FC<{ onRowClick?: (e: any) => void; result: any[] }> = ({ onRowClick, result }) => {
   const idGetter = getter("id");
-  const [filterValue, setFilterValue] = React.useState();
-  const [filteredData, setFilteredData] = React.useState(EMPLOYEES);
-  const [currentSelectedState, setCurrentSelectedState] = React.useState<any>(
-    {}
-  );
-  const [dataState, setDataState] = React.useState(initialDataState);
-  const [dataResult, setDataResult] = React.useState(
-    process(filteredData, dataState)
-  );
-  const [data, setData] = React.useState(filteredData);
+  const [filterValue, setFilterValue] = useState();
+  const [filteredData, setFilteredData] = useState<any[]>([]);
+  const [currentSelectedState, setCurrentSelectedState] = useState<any>({});
+  const [dataState, setDataState] = useState(initialDataState);
+  const [dataResult, setDataResult] = useState<any>({ data: [] });
+  const [data, setData] = useState<any[]>([]);
 
   const onFilterChange = (ev: any) => {
     let value = ev.value;
@@ -50,18 +43,10 @@ export const ClientWebTable: React.FC<ClientWebProps> = ({ onRowClick }) => {
     let newData = EMPLOYEES.filter((item: any) => {
       let match = false;
       for (const property in item) {
-        if (
-          item[property]
-            .toString()
-            .toLocaleLowerCase()
-            .indexOf(value.toLocaleLowerCase()) >= 0
-        ) {
+        if (item[property].toString().toLocaleLowerCase().indexOf(value.toLocaleLowerCase()) >= 0) {
           match = true;
         }
-        if (
-          item[property].toLocaleDateString &&
-          item[property].toLocaleDateString().indexOf(value) >= 0
-        ) {
+        if (item[property].toLocaleDateString && item[property].toLocaleDateString().indexOf(value) >= 0) {
           match = true;
         }
       }
@@ -85,8 +70,8 @@ export const ClientWebTable: React.FC<ClientWebProps> = ({ onRowClick }) => {
         ...item,
         selected: currentSelectedState[idGetter(item)],
       })),
-      initialDataState
-    )
+      initialDataState,
+    ),
   );
 
   const dataStateChange = (event: any) => {
@@ -115,7 +100,7 @@ export const ClientWebTable: React.FC<ClientWebProps> = ({ onRowClick }) => {
         });
       }
     },
-    [dataResult]
+    [dataResult],
   );
 
   const setSelectedValue = (data: any) => {
@@ -156,7 +141,7 @@ export const ClientWebTable: React.FC<ClientWebProps> = ({ onRowClick }) => {
       const newDataResult = processWithGroups(newData, dataState);
       setDataResult(newDataResult);
     },
-    [data, dataState, idGetter]
+    [data, dataState, idGetter],
   );
 
   const onSelectionChange = (event: any) => {
@@ -207,6 +192,14 @@ export const ClientWebTable: React.FC<ClientWebProps> = ({ onRowClick }) => {
     return newData.length > 0 && selectedItems === getNumberOfItems(newData);
   };
 
+  useEffect(() => {
+    if (result?.length > 0) {
+      setFilteredData(result);
+      setDataResult(process(result, dataState));
+      setData(result);
+    }
+  }, [result]);
+
   return (
     <div>
       <ExcelExport>
@@ -230,8 +223,7 @@ export const ClientWebTable: React.FC<ClientWebProps> = ({ onRowClick }) => {
           onHeaderSelectionChange={onHeaderSelectionChange}
           onSelectionChange={onSelectionChange}
           onRowClick={onRowClick}
-          groupable={false}
-        >
+          groupable={false}>
           <Column
             filterable={false}
             field={SELECTED_FIELD}
@@ -240,21 +232,21 @@ export const ClientWebTable: React.FC<ClientWebProps> = ({ onRowClick }) => {
             headerClassName="bg-[#adc6f4]"
           />
           <Column
-            field="budget"
+            field="menuUrl"
             width="140px"
             headerClassName="justify-center bg-[#adc6f4]"
             title="Menu URL"
             columnMenu={ColumnMenu}
           />
           <Column
-            field="full_name"
+            field="menuName"
             width="130px"
             headerClassName="justify-center bg-[#adc6f4]"
             title="Menu name"
             columnMenu={ColumnMenu}
           />
           <Column
-            field="target"
+            field="menuId"
             width="130px"
             headerClassName="justify-center bg-[#adc6f4]"
             title="화면번호"
@@ -263,14 +255,14 @@ export const ClientWebTable: React.FC<ClientWebProps> = ({ onRowClick }) => {
               data: ({ dataItem, ...props }) => {
                 return (
                   <td {...props.tdProps} style={{ textAlign: "center" }}>
-                    {dataItem.target}
+                    {dataItem?.menuId}
                   </td>
                 );
               },
             }}
           />
           <Column
-            field="budget"
+            field="bizDomain"
             width="120px"
             headerClassName="justify-center bg-[#adc6f4]"
             title="Site Type"
@@ -279,7 +271,7 @@ export const ClientWebTable: React.FC<ClientWebProps> = ({ onRowClick }) => {
               data: ({ dataItem, ...props }) => {
                 return (
                   <td {...props.tdProps} style={{ textAlign: "center" }}>
-                    {dataItem.budget}
+                    {dataItem?.bizDomain}
                   </td>
                 );
               },
@@ -287,7 +279,7 @@ export const ClientWebTable: React.FC<ClientWebProps> = ({ onRowClick }) => {
           />
           <Column
             columnMenu={ColumnMenu}
-            field="budget"
+            field="secureSignYn"
             width="350px"
             headerClassName="justify-center bg-[#adc6f4]"
             title="Whether electronic signature is required"
@@ -295,14 +287,14 @@ export const ClientWebTable: React.FC<ClientWebProps> = ({ onRowClick }) => {
               data: ({ dataItem, ...props }) => {
                 return (
                   <td {...props.tdProps} style={{ textAlign: "center" }}>
-                    {dataItem.budget}
+                    {dataItem?.secureSignYn}
                   </td>
                 );
               },
             }}
           />
           <Column
-            field="budget"
+            field="bankStatusCheckYn"
             width="250px"
             headerClassName="justify-center bg-[#adc6f4]"
             title="Check status of other banks"
@@ -311,14 +303,14 @@ export const ClientWebTable: React.FC<ClientWebProps> = ({ onRowClick }) => {
               data: ({ dataItem, ...props }) => {
                 return (
                   <td {...props.tdProps} style={{ textAlign: "center" }}>
-                    {dataItem.budget}
+                    {dataItem?.bankStatusCheckYn}
                   </td>
                 );
               },
             }}
           />
           <Column
-            field="budget"
+            field="inputType"
             width="150px"
             headerClassName="justify-center bg-[#adc6f4]"
             title="Input Type"
@@ -327,14 +319,14 @@ export const ClientWebTable: React.FC<ClientWebProps> = ({ onRowClick }) => {
               data: ({ dataItem, ...props }) => {
                 return (
                   <td {...props.tdProps} style={{ textAlign: "center" }}>
-                    {dataItem.budget}
+                    {dataItem?.inputType}
                   </td>
                 );
               },
             }}
           />
           <Column
-            field="budget"
+            field="EChannelCode"
             width="280px"
             headerClassName="justify-center bg-[#adc6f4]"
             title="e-channel log classification code"
@@ -343,7 +335,7 @@ export const ClientWebTable: React.FC<ClientWebProps> = ({ onRowClick }) => {
               data: ({ dataItem, ...props }) => {
                 return (
                   <td {...props.tdProps} style={{ textAlign: "center" }}>
-                    {dataItem.budget}
+                    {dataItem?.EChannelCode}
                   </td>
                 );
               },
@@ -351,7 +343,7 @@ export const ClientWebTable: React.FC<ClientWebProps> = ({ onRowClick }) => {
           />
 
           <Column
-            field="budget"
+            field="useYn"
             width="150px"
             headerClassName="justify-center bg-[#adc6f4]"
             title="Service state"
@@ -360,7 +352,7 @@ export const ClientWebTable: React.FC<ClientWebProps> = ({ onRowClick }) => {
               data: ({ dataItem, ...props }) => {
                 return (
                   <td {...props.tdProps} style={{ textAlign: "center" }}>
-                    {dataItem.budget}
+                    {dataItem?.useYn}
                   </td>
                 );
               },
@@ -388,8 +380,7 @@ export const ClientWebTable: React.FC<ClientWebProps> = ({ onRowClick }) => {
           onHeaderSelectionChange={onHeaderSelectionChange}
           onSelectionChange={onSelectionChange}
           groupable={true}
-          size={"small"}
-        ></Grid>
+          size={"small"}></Grid>
       </GridPDFExport>
     </div>
   );

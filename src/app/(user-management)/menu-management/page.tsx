@@ -33,9 +33,6 @@ export default function Page() {
       setResult(data?.body?.list);
     } catch (err) {
       console.error(err);
-
-      // TODO: remove this after testing
-      // setResult(USERS);
     }
   };
 

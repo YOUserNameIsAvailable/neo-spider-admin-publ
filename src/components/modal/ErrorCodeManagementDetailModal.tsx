@@ -2,6 +2,7 @@ import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { Window, WindowMoveEvent } from "@progress/kendo-react-dialogs";
 import { Button } from "@progress/kendo-react-buttons";
 import { DropDownList } from "@progress/kendo-react-dropdowns";
+import { get } from "jquery";
 
 interface PositionInterface {
   left: number;
@@ -12,16 +13,20 @@ interface PositionInterface {
 
 export const ErrorCodeManagementDetailModal: FC<{
   setShowModal: Dispatch<SetStateAction<boolean>>;
-}> = ({ setShowModal }) => {
+  errorCode?: string;
+}> = ({ setShowModal, errorCode }) => {
   const [position, setPosition] = useState<PositionInterface>({
     left: 250,
     top: 20,
     width: 924,
     height: 680,
   });
+  const [form, setForm] = useState<any>({});
+
   const handleMove = (event: WindowMoveEvent) => {
     setPosition({ ...position, left: event.left, top: event.top });
   };
+
   const handleResize = (event: WindowMoveEvent) => {
     setPosition({
       left: event.left,
@@ -30,6 +35,44 @@ export const ErrorCodeManagementDetailModal: FC<{
       height: event.height,
     });
   };
+
+  const getDetail = async () => {
+    try {
+      const resultJson = await fetch("/api/spider/errCodeMng/detail", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          errorCode: errorCode,
+        }),
+      });
+
+      const result = await resultJson.json();
+      const errordesc = result?.body?.detail?.errordesc;
+      const errorrecord = result?.body?.detail?.errorrecord[0];
+      console.log("detail: ", errordesc);
+      setForm({
+        trxId: "",
+        errorTitle: errorrecord.errortitle,
+        orgId: "",
+        orgErrorCode: errorrecord.orgErrorode,
+        errorLevel: errorrecord.errorLevel,
+        errorCode: errorrecord.errorCode,
+        errordesc: errordesc,
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    console.log("errorCode: ", errorCode);
+    if (errorCode !== "") {
+      getDetail();
+    }
+  }, [errorCode]);
+
   return (
     <>
       <div className="k-overlay" />
