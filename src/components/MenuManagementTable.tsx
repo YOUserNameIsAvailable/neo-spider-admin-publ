@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC, useEffect, useState } from "react";
 import { getter } from "@progress/kendo-react-common";
 import { process } from "@progress/kendo-data-query";
 import { GridPDFExport } from "@progress/kendo-react-pdf";
@@ -27,17 +27,16 @@ const processWithGroups = (data: any, dataState: any) => {
   return newDataState;
 };
 
-
-export function MenuManagementTable() {
+export const MenuManagementTable: FC<{ getHandler: () => void; result: any[] }> = ({ getHandler, result }) => {
   const idGetter = getter("id");
-  const [filterValue, setFilterValue] = React.useState();
-  const [filteredData, setFilteredData] = React.useState(EMPLOYEES);
-  const [currentSelectedState, setCurrentSelectedState] = React.useState<any>({});
-  const [dataState, setDataState] = React.useState(initialDataState);
-  const [dataResult, setDataResult] = React.useState(process(filteredData, dataState));
-  const [data, setData] = React.useState(filteredData);
+  const [filterValue, setFilterValue] = useState();
+  const [filteredData, setFilteredData] = useState<any[]>([]);
+  const [currentSelectedState, setCurrentSelectedState] = useState<any>({});
+  const [dataState, setDataState] = useState(initialDataState);
+  const [dataResult, setDataResult] = useState<any>({ data: [] });
+  const [data, setData] = useState<any[]>([]);
 
-  const [showModal,setShowModal] = React.useState(false);  // <3-2> Menu management - detail
+  const [showModal, setShowModal] = useState(false); // <3-2> Menu management - detail
 
   const onFilterChange = (ev: any) => {
     let value = ev.value;
@@ -200,131 +199,138 @@ export function MenuManagementTable() {
     </td>
   );
 
+  useEffect(() => {
+    if (result?.length > 0) {
+      setFilteredData(result);
+      setDataResult(process(result, dataState));
+      setData(result);
+    }
+  }, [result]);
+
   return (
     <>
-    <div>
-      <ExcelExport>
-        <Grid
-          style={{
-            height: "500px",
-          }}
-          pageable={{
-            pageSizes: true,
-          }}
-          data={dataResult}
-          sortable={false}
-          total={resultState.total}
-          onDataStateChange={dataStateChange}
-          {...dataState}
-          onExpandChange={onExpandChange}
-          expandField="expanded"
-          dataItemKey={DATA_ITEM_KEY}
-          selectedField={SELECTED_FIELD}
-          onHeaderSelectionChange={onHeaderSelectionChange}
-          onSelectionChange={onSelectionChange}
-          groupable={false}
-          onRowClick={()=>{
-            setShowModal(true);
-          }}
-          >
-          <Column
-            field="budget"
-            title="Menu ID"
-            columnMenu={ColumnMenu}
-            headerClassName="justify-center col-width20per"
-            className="col-width20per"
-          />
-          <Column
-            field="full_name"
-            title="Menu Name"
-            columnMenu={ColumnMenu}
-            headerClassName="justify-center col-width30per"
-            className="col-width30per"
-          />
-          <Column
-            field="target"
-            title="메뉴 URL"
-            columnMenu={ColumnMenu}
-            headerClassName="justify-center col-width40per"
-            className="col-width40per"
-          />
-          <Column
-            field="budget"
-            title="Display"
-            cells={{
-              data: ({ dataItem, ...props }) => {
-                return (
-                  <td {...props.tdProps}>
-                    <span className="flex w-full justify-center">
-                      <img src="/images/radio-on-button-green.png" className="h-5 w-5" />
-                    </span>
-                  </td>
-                );
-              },
+      <div>
+        <ExcelExport>
+          <Grid
+            style={{
+              height: "500px",
             }}
-            headerClassName="justify-center col-width10per"
-            className="col-width10per"
-          />
-          <Column
-            field="budget"
-            title="Use"
-            cells={{
-              data: ({ dataItem, ...props }) => {
-                return (
-                  <td {...props.tdProps}>
-                    <span className="flex w-full justify-center">
-                      <img src="/images/radio-on-button-green.png" className="h-5 w-5" />
-                    </span>
-                  </td>
-                );
-              },
+            pageable={{
+              pageSizes: true,
             }}
-            headerClassName="justify-center col-width10per"
-            className="col-width10per"
-          />
-          <Column
-            field="budget"
-            title="Sub Menu"
-            cells={{
-              data: ({ dataItem, ...props }) => {
-                return (
-                  <td {...props.tdProps} style={{ textAlign: "center" }}>
-                    <Button size={"small"} className="cell-inside-btn px-4" themeColor={"primary"}>
-                      Find
-                    </Button>
-                  </td>
-                );
-              },
+            data={dataResult}
+            sortable={false}
+            total={resultState.total}
+            onDataStateChange={dataStateChange}
+            {...dataState}
+            onExpandChange={onExpandChange}
+            expandField="expanded"
+            dataItemKey={DATA_ITEM_KEY}
+            selectedField={SELECTED_FIELD}
+            onHeaderSelectionChange={onHeaderSelectionChange}
+            onSelectionChange={onSelectionChange}
+            groupable={false}
+            onRowClick={() => {
+              setShowModal(true);
+            }}>
+            <Column
+              field="budget"
+              title="Menu ID"
+              columnMenu={ColumnMenu}
+              headerClassName="justify-center col-width20per"
+              className="col-width20per"
+            />
+            <Column
+              field="full_name"
+              title="Menu Name"
+              columnMenu={ColumnMenu}
+              headerClassName="justify-center col-width30per"
+              className="col-width30per"
+            />
+            <Column
+              field="target"
+              title="메뉴 URL"
+              columnMenu={ColumnMenu}
+              headerClassName="justify-center col-width40per"
+              className="col-width40per"
+            />
+            <Column
+              field="budget"
+              title="Display"
+              cells={{
+                data: ({ dataItem, ...props }) => {
+                  return (
+                    <td {...props.tdProps}>
+                      <span className="flex w-full justify-center">
+                        <img src="/images/radio-on-button-green.png" className="h-5 w-5" />
+                      </span>
+                    </td>
+                  );
+                },
+              }}
+              headerClassName="justify-center col-width10per"
+              className="col-width10per"
+            />
+            <Column
+              field="budget"
+              title="Use"
+              cells={{
+                data: ({ dataItem, ...props }) => {
+                  return (
+                    <td {...props.tdProps}>
+                      <span className="flex w-full justify-center">
+                        <img src="/images/radio-on-button-green.png" className="h-5 w-5" />
+                      </span>
+                    </td>
+                  );
+                },
+              }}
+              headerClassName="justify-center col-width10per"
+              className="col-width10per"
+            />
+            <Column
+              field="budget"
+              title="Sub Menu"
+              cells={{
+                data: ({ dataItem, ...props }) => {
+                  return (
+                    <td {...props.tdProps} style={{ textAlign: "center" }}>
+                      <Button size={"small"} className="cell-inside-btn px-4" themeColor={"primary"}>
+                        Find
+                      </Button>
+                    </td>
+                  );
+                },
+              }}
+              headerClassName="justify-center"
+              width={100}
+            />
+          </Grid>
+        </ExcelExport>
+        <GridPDFExport margin="1cm">
+          <Grid
+            style={{
+              height: "500px",
             }}
-            headerClassName="justify-center"
-            width={100}
-          />
-        </Grid>
-      </ExcelExport>
-      <GridPDFExport margin="1cm">
-        <Grid
-          style={{
-            height: "500px",
-          }}
-          pageable={{
-            pageSizes: true,
-          }}
-          data={dataResult}
-          sortable={false}
-          total={resultState.total}
-          onDataStateChange={dataStateChange}
-          {...dataState}
-          onExpandChange={onExpandChange}
-          expandField="expanded"
-          dataItemKey={DATA_ITEM_KEY}
-          selectedField={SELECTED_FIELD}
-          onHeaderSelectionChange={onHeaderSelectionChange}
-          onSelectionChange={onSelectionChange}
-          groupable={true}></Grid>
-      </GridPDFExport>
-    </div>
+            pageable={{
+              pageSizes: true,
+            }}
+            data={dataResult}
+            sortable={false}
+            total={resultState.total}
+            onDataStateChange={dataStateChange}
+            {...dataState}
+            onExpandChange={onExpandChange}
+            expandField="expanded"
+            dataItemKey={DATA_ITEM_KEY}
+            selectedField={SELECTED_FIELD}
+            onHeaderSelectionChange={onHeaderSelectionChange}
+            onSelectionChange={onSelectionChange}
+            groupable={true}></Grid>
+        </GridPDFExport>
+      </div>
 
-    {showModal && <MenuManagementModal setShowModal={setShowModal}  />}
+      {showModal && <MenuManagementModal setShowModal={setShowModal} />}
     </>
   );
-}
+};

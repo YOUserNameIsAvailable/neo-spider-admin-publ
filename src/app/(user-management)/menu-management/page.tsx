@@ -5,9 +5,44 @@ import { PAGES, SPORTS } from "@/constants";
 import { Input } from "@progress/kendo-react-inputs";
 import { Button } from "@progress/kendo-react-buttons";
 import { MenuManagementTable } from "@/components/MenuManagementTable";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
+  const router = useRouter();
+  const [result, setResult] = useState<any[]>([]);
+
+  const getHandler = async () => {
+    try {
+      const dataJson = await fetch("/api/spider/userMng/menuList", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await dataJson.json();
+      console.log("results: ", data);
+
+      if (data?.result?.error?.code === "FRU00001") {
+        sessionStorage.removeItem("isLogin");
+        router.push("/login");
+        return;
+      }
+
+      setResult(data?.body?.list);
+    } catch (err) {
+      console.error(err);
+
+      // TODO: remove this after testing
+      // setResult(USERS);
+    }
+  };
+
+  useEffect(() => {
+    getHandler();
+  }, []);
+
   return (
     <>
       <>
@@ -61,7 +96,7 @@ export default function Page() {
           <img src={"/images/dot_subtitle.gif"} alt="" style={{}} />
           <span className="font-bold text-[#656565]">List</span>
         </div>
-        <MenuManagementTable />
+        <MenuManagementTable getHandler={getHandler} result={result} />
       </div>
 
       <div className="flex justify-end">

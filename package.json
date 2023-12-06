@@ -59,6 +59,7 @@
     "@progress/kendo-theme-fluent": "^7.0.2",
     "@progress/kendo-theme-material": "^7.0.2",
     "@types/axios": "^0.14.0",
+    "@types/kendo-ui": "^2023.2.4",
     "axios": "^1.6.2",
     "draft-js": "^0.11.7",
     "next": "14.0.3",

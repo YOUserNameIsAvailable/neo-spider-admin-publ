@@ -3,7 +3,7 @@ import { Window, WindowMoveEvent } from "@progress/kendo-react-dialogs";
 import { Button } from "@progress/kendo-react-buttons";
 import { DropDownList } from "@progress/kendo-react-dropdowns";
 import { Splitter, SplitterOnChangeEvent } from "@progress/kendo-react-layout";
-import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
+import { Grid, GridColumn as Column, GridRowProps } from "@progress/kendo-react-grid";
 
 interface PositionInterface {
   left: number;
@@ -12,14 +12,14 @@ interface PositionInterface {
   height: number;
 }
 
-const RowRender = (properties) => {
-  const { row, props, onDrop, onDragStart } = { ...properties };
+const RowRender = (properties: any) => {
+  const { row, props, onDrop, onDragStart } = properties;
   const additionalProps = {
-    onDragStart: (e) => onDragStart(e, props.dataItem),
-    onDragOver: (e) => {
+    onDragStart: (e: any) => onDragStart(e, props.dataItem),
+    onDragOver: (e: any) => {
       e.preventDefault();
     },
-    onDrop: (e) => onDrop(e),
+    onDrop: (e: any) => onDrop(e),
     draggable: true,
   };
   return React.cloneElement(row, { ...row.props, ...additionalProps }, row.props.children);
@@ -177,23 +177,23 @@ export const RoleManagementModal: FC<{
   const [gridData, setGridData] = useState(products);
   const [gridDataTwo, setGridDataTwo] = useState([{}]);
   const [dragFrom, setDragFrom] = useState("");
-  const [dragDataItem, setDragDataItem] = useState(null);
+  const [dragDataItem, setDragDataItem] = useState<any>(null);
 
-  const handleOnDropOne = (e) => {
+  const handleOnDropOne = (e: any) => {
     if (dragFrom === "second") {
-      let newDataSecond = gridDataTwo.filter((item) => item.ProductID !== dragDataItem.ProductID);
+      let newDataSecond = gridDataTwo.filter((item: any) => item.ProductID !== dragDataItem?.ProductID);
       let newDataFirst = [dragDataItem, ...gridData];
       setGridData(newDataFirst);
       setGridDataTwo(newDataSecond);
     }
   };
 
-  const handleDragStartOne = (e, dataItem) => {
+  const handleDragStartOne = (e: any, dataItem: any) => {
     setDragFrom("first");
     setDragDataItem(dataItem);
   };
 
-  const handleOnDropTwo = (e) => {
+  const handleOnDropTwo = (e: any) => {
     if (dragFrom === "first") {
       let newDataFirst = gridData.filter((item) => item.ProductID !== dragDataItem.ProductID);
       let newDataSecond = [dragDataItem, ...gridDataTwo];
@@ -202,16 +202,16 @@ export const RoleManagementModal: FC<{
     }
   };
 
-  const handleDragStartTwo = (e, dataItem) => {
+  const handleDragStartTwo = (e: any, dataItem: any) => {
     setDragFrom("second");
     setDragDataItem(dataItem);
   };
 
-  const rowForGridOne = (row, props) => {
+  const rowForGridOne = (row: React.ReactElement<HTMLTableRowElement>, props: GridRowProps) => {
     return <RowRender props={props} row={row} onDrop={handleOnDropOne} onDragStart={handleDragStartOne} />;
   };
 
-  const rowForGridTwo = (row, props) => {
+  const rowForGridTwo = (row: React.ReactElement<HTMLTableRowElement>, props: GridRowProps) => {
     return <RowRender props={props} row={row} onDrop={handleOnDropTwo} onDragStart={handleDragStartTwo} />;
   };
 
