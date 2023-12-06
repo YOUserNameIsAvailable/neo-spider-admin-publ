@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
+import React, { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { Window, WindowMoveEvent } from "@progress/kendo-react-dialogs";
 import { Button } from "@progress/kendo-react-buttons";
 import { DropDownList } from "@progress/kendo-react-dropdowns";
@@ -12,6 +12,140 @@ interface PositionInterface {
   height: number;
 }
 
+const RowRender = (properties) => {
+  const { row, props, onDrop, onDragStart } = { ...properties };
+  const additionalProps = {
+    onDragStart: (e) => onDragStart(e, props.dataItem),
+    onDragOver: (e) => {
+      e.preventDefault();
+    },
+    onDrop: (e) => onDrop(e),
+    draggable: true,
+  };
+  return React.cloneElement(row, { ...row.props, ...additionalProps }, row.props.children);
+};
+
+const products = [
+  {
+    ProductID: 1,
+    ProductName: "Chai",
+    SupplierID: 1,
+    CategoryID: 1,
+    QuantityPerUnit: "10 boxes x 20 bags",
+    UnitPrice: 18.0,
+    UnitsInStock: 39,
+    UnitsOnOrder: 0,
+    ReorderLevel: 10,
+    Discontinued: false,
+    Category: {
+      CategoryID: 1,
+      CategoryName: "Beverages",
+      Description: "Soft drinks, coffees, teas, beers, and ales",
+    },
+  },
+  {
+    ProductID: 2,
+    ProductName: "Chang",
+    SupplierID: 1,
+    CategoryID: 1,
+    QuantityPerUnit: "24 - 12 oz bottles",
+    UnitPrice: 19.0,
+    UnitsInStock: 17,
+    UnitsOnOrder: 40,
+    ReorderLevel: 25,
+    Discontinued: false,
+    Category: {
+      CategoryID: 1,
+      CategoryName: "Beverages",
+      Description: "Soft drinks, coffees, teas, beers, and ales",
+    },
+  },
+  {
+    ProductID: 3,
+    ProductName: "Aniseed Syrup",
+    SupplierID: 1,
+    CategoryID: 2,
+    QuantityPerUnit: "12 - 550 ml bottles",
+    UnitPrice: 10.0,
+    UnitsInStock: 13,
+    UnitsOnOrder: 70,
+    ReorderLevel: 25,
+    Discontinued: false,
+    Category: {
+      CategoryID: 2,
+      CategoryName: "Condiments",
+      Description: "Sweet and savory sauces, relishes, spreads, and seasonings",
+    },
+  },
+  {
+    ProductID: 4,
+    ProductName: "Chef Anton's Cajun Seasoning",
+    SupplierID: 2,
+    CategoryID: 2,
+    QuantityPerUnit: "48 - 6 oz jars",
+    UnitPrice: 22.0,
+    UnitsInStock: 53,
+    UnitsOnOrder: 0,
+    ReorderLevel: 0,
+    Discontinued: false,
+    Category: {
+      CategoryID: 2,
+      CategoryName: "Condiments",
+      Description: "Sweet and savory sauces, relishes, spreads, and seasonings",
+    },
+  },
+  {
+    ProductID: 5,
+    ProductName: "Chef Anton's Gumbo Mix",
+    SupplierID: 2,
+    CategoryID: 2,
+    QuantityPerUnit: "36 boxes",
+    UnitPrice: 21.35,
+    UnitsInStock: 0,
+    UnitsOnOrder: 0,
+    ReorderLevel: 0,
+    Discontinued: true,
+    Category: {
+      CategoryID: 2,
+      CategoryName: "Condiments",
+      Description: "Sweet and savory sauces, relishes, spreads, and seasonings",
+    },
+  },
+  {
+    ProductID: 6,
+    ProductName: "Grandma's Boysenberry Spread",
+    SupplierID: 3,
+    CategoryID: 2,
+    QuantityPerUnit: "12 - 8 oz jars",
+    UnitPrice: 25.0,
+    UnitsInStock: 120,
+    UnitsOnOrder: 0,
+    ReorderLevel: 25,
+    Discontinued: false,
+    Category: {
+      CategoryID: 2,
+      CategoryName: "Condiments",
+      Description: "Sweet and savory sauces, relishes, spreads, and seasonings",
+    },
+  },
+  {
+    ProductID: 7,
+    ProductName: "Uncle Bob's Organic Dried Pears",
+    SupplierID: 3,
+    CategoryID: 7,
+    QuantityPerUnit: "12 - 1 lb pkgs.",
+    UnitPrice: 30.0,
+    UnitsInStock: 15,
+    UnitsOnOrder: 0,
+    ReorderLevel: 10,
+    Discontinued: false,
+    Category: {
+      CategoryID: 7,
+      CategoryName: "Produce",
+      Description: "Dried fruit and bean curd",
+    },
+  },
+];
 export const RoleManagementModal: FC<{
   setShowModal: Dispatch<SetStateAction<boolean>>;
 }> = ({ setShowModal }) => {
@@ -40,6 +174,47 @@ export const RoleManagementModal: FC<{
     });
   };
 
+  const [gridData, setGridData] = useState(products);
+  const [gridDataTwo, setGridDataTwo] = useState([{}]);
+  const [dragFrom, setDragFrom] = useState("");
+  const [dragDataItem, setDragDataItem] = useState(null);
+
+  const handleOnDropOne = (e) => {
+    if (dragFrom === "second") {
+      let newDataSecond = gridDataTwo.filter((item) => item.ProductID !== dragDataItem.ProductID);
+      let newDataFirst = [dragDataItem, ...gridData];
+      setGridData(newDataFirst);
+      setGridDataTwo(newDataSecond);
+    }
+  };
+
+  const handleDragStartOne = (e, dataItem) => {
+    setDragFrom("first");
+    setDragDataItem(dataItem);
+  };
+
+  const handleOnDropTwo = (e) => {
+    if (dragFrom === "first") {
+      let newDataFirst = gridData.filter((item) => item.ProductID !== dragDataItem.ProductID);
+      let newDataSecond = [dragDataItem, ...gridDataTwo];
+      setGridData(newDataFirst);
+      setGridDataTwo(newDataSecond);
+    }
+  };
+
+  const handleDragStartTwo = (e, dataItem) => {
+    setDragFrom("second");
+    setDragDataItem(dataItem);
+  };
+
+  const rowForGridOne = (row, props) => {
+    return <RowRender props={props} row={row} onDrop={handleOnDropOne} onDragStart={handleDragStartOne} />;
+  };
+
+  const rowForGridTwo = (row, props) => {
+    return <RowRender props={props} row={row} onDrop={handleOnDropTwo} onDragStart={handleDragStartTwo} />;
+  };
+
   return (
     <>
       <div className="k-overlay" />
@@ -49,8 +224,6 @@ export const RoleManagementModal: FC<{
         restoreButton={() => null}
         doubleClickStageChange={false}
         title={"Role메뉴 권한 관리"}
-        left={position.left}
-        top={position.top}
         width={position.width}
         height={position.height}
         onMove={handleMove}
@@ -84,44 +257,24 @@ export const RoleManagementModal: FC<{
                         color: "#656565",
                       }}
                       size={"small"}
-                      data={["메뉴명", "안전", "주의", "경계"]}
-                      defaultValue={"메뉴명"}
+                      data={["menuName", "안전", "주의", "경계"]}
+                      defaultValue={"menuName"}
                     />
                     <input className="ml-[2px] w-[30%] rounded-[2px] border-[1px] border-[#999999] py-[6px]" />
                   </div>
-                  <Grid
-                    className="h-[88%]"
-                    rowHeight={29}
-                    fixedScroll={true}
-                    data={[
-                      { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
-                      { 메뉴ID: "nsb_msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > M_거래관리" },
-                      { 메뉴ID: "message_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 전문 관리" },
-                      { 메뉴ID: "neb_msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > N_전문등록조회" },
-                      { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
-                      { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
-                      { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
-                      { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
-                      { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
-                      { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
-                      { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
-                      { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
-                      { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
-                      { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
-                      { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
-                      { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
-                      { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
-                      { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
-                      { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
-                      { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
-                      { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
-                      { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
-                      { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
-                      { 메뉴ID: "msg_trx_manage", 메뉴명: "Framework 관리메뉴 > 거래전문 관리 > 거래관리" },
-                    ]}>
-                    {["메뉴ID", "메뉴명"].map((v) => {
-                      return <Column key={v} field={v} title={v} width={setPercentage(v === "메뉴ID" ? 50 : 120)} />;
-                    })}
+                  <Grid className="h-[88%]" rowHeight={29} fixedScroll={true} data={gridData} rowRender={rowForGridOne}>
+                    <Column
+                      field="ProductID"
+                      title="Menu ID"
+                      headerClassName="justify-center bg-[#adc6f4] w-[25%]"
+                      className="w-[25%]"
+                    />
+                    <Column
+                      field="ProductName"
+                      title="Menu name"
+                      headerClassName="justify-center bg-[#adc6f4] w-[75%]"
+                      className="w-[75%]"
+                    />
                   </Grid>
                 </div>
               </div>
@@ -131,15 +284,36 @@ export const RoleManagementModal: FC<{
                   <div className="text-[14px] font-bold text-[#656565]">권한ID 메뉴 목록</div>
                 </div>
                 <div className="flex flex-col">
-                  <Grid className="h-[88%]" rowHeight={29} fixedScroll={true}>
-                    {[
-                      { id: "메뉴ID", w: 30 },
-                      { id: "메뉴명", w: 80 },
-                      { id: "Read", w: 20 },
-                      { id: "R/Write", w: 25 },
-                    ].map((v) => {
-                      return <Column key={v.id} field={v.id} title={v.id} width={setPercentage(v.w)} />;
-                    })}
+                  <Grid
+                    className="h-[88%]"
+                    rowHeight={29}
+                    fixedScroll={true}
+                    data={gridDataTwo}
+                    rowRender={rowForGridTwo}>
+                    <Column
+                      field="ProductID"
+                      title="Menu ID"
+                      headerClassName="justify-center bg-[#adc6f4] w-[15%]"
+                      className="w-[15%]"
+                    />
+                    <Column
+                      field="ProductName"
+                      title="Menu name"
+                      headerClassName="justify-center bg-[#adc6f4] w-[65%]"
+                      className="w-[65%]"
+                    />
+                    <Column
+                      field="Category.CategoryName"
+                      title="Read"
+                      headerClassName="justify-center bg-[#adc6f4] w-[10%]"
+                      className="w-[10%]"
+                    />
+                    <Column
+                      field="UnitPrice"
+                      title="R/Write"
+                      headerClassName="justify-center bg-[#adc6f4] w-[10%]"
+                      className="w-[10%]"
+                    />
                   </Grid>
                 </div>
               </div>
