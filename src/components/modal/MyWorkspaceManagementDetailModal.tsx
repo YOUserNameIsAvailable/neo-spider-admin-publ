@@ -55,7 +55,7 @@ export const MyWorkspaceManagementDetailModal: FC<{
     ),
   );
 
-  const rowClick = (event) => {
+  const rowClick = (event: any) => {
     const newData = dataResult.data.map((item) => {
       console.log("event:", event.dataItem.id, item.id === event.dataItem.id);
       if (item.id === event.dataItem.id) {
@@ -69,7 +69,7 @@ export const MyWorkspaceManagementDetailModal: FC<{
     });
   };
 
-  const itemChange = (event) => {
+  const itemChange = (event: any) => {
     console.log("itemChangeitemChange: ", itemChange);
     const inEditID = event.dataItem.id;
     const field = event.field || "";
@@ -81,7 +81,7 @@ export const MyWorkspaceManagementDetailModal: FC<{
           }
         : item,
     );
-    setDataResult(newData);
+    setDataResult((prev) => ({ ...prev, data: newData }));
   };
 
   const [position, setPosition] = useState<PositionInterface>({

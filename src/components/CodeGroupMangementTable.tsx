@@ -217,7 +217,6 @@ export function CodeGroupManagementTable() {
             info: true,
             type: "numeric",
             pageSizes: [5, 10, 15],
-            refresh: true,
             previousNext: true,
           }}
           onRowClick={(event: GridRowClickEvent) => {

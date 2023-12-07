@@ -70,7 +70,7 @@ export const UserManagementTable: FC<{ getHandler: () => void; result: any[] }> 
 
   const [resultState, setResultState] = useState(
     processWithGroups(
-      EMPLOYEES.map((item: any) => ({
+      result.map((item: any) => ({
         ...item,
         ["selected"]: currentSelectedState[idGetter(item)],
       })),
@@ -207,6 +207,7 @@ export const UserManagementTable: FC<{ getHandler: () => void; result: any[] }> 
       setFilteredData(result);
       setDataResult(process(result, dataState));
       setData(result);
+      console.log("UserManagementTable resultState: ", resultState);
     }
   }, [result]);
 
