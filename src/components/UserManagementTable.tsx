@@ -3,9 +3,8 @@ import { getter } from "@progress/kendo-react-common";
 import { process } from "@progress/kendo-data-query";
 import { GridPDFExport } from "@progress/kendo-react-pdf";
 import { ExcelExport } from "@progress/kendo-react-excel-export";
-import { Grid, GridColumn as Column, GridPageChangeEvent } from "@progress/kendo-react-grid";
+import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
 import { setGroupIds } from "@progress/kendo-react-data-tools";
-import { ColumnMenu } from "./ColumnMenu";
 import { Button } from "@progress/kendo-react-buttons";
 import { UserManagementDetailModal } from "./modal/UserManagementDetailModal";
 import { UserManagementRoleModal } from "./modal/UserManagementRoleModal";
@@ -54,6 +53,7 @@ export const UserManagementTable: FC<{
 
   const onExpandChange = useCallback(
     (event: any) => {
+      console.log("onExpandChange: ", event);
       const newData = [...dataResult.data];
       const item = event.dataItem;
       if (item.groupId) {
@@ -78,6 +78,7 @@ export const UserManagementTable: FC<{
 
   const onHeaderSelectionChange = useCallback(
     (event: any) => {
+      console.log("onHeaderSelectionChange: ", event);
       const checkboxElement = event.syntheticEvent.target;
       const checked = checkboxElement.checked;
       const newSelectedState: any = {};
@@ -96,6 +97,7 @@ export const UserManagementTable: FC<{
   );
 
   const onSelectionChange = (event: any) => {
+    console.log("onSelectionChange: ", event);
     const selectedProductId = event.dataItem.id;
 
     const newData = data.map((item: any) => {
@@ -193,71 +195,56 @@ export const UserManagementTable: FC<{
               setUserId(e.dataItem.userId);
             }}
             data={dataResult}
-            sortable={false}
             total={count || 0}
             onDataStateChange={dataStateChange}
-            onExpandChange={onExpandChange}
-            expandField="expanded"
-            dataItemKey={DATA_ITEM_KEY}
-            selectedField={SELECTED_FIELD}
-            onHeaderSelectionChange={onHeaderSelectionChange}
-            onSelectionChange={onSelectionChange}
-            groupable={false}>
+            expandField="expanded">
             <Column
               field="userId"
               title="User ID"
               headerClassName="justify-center bg-[#adc6f4] col-width15per"
               className="col-width15per"
-              columnMenu={ColumnMenu}
             />
             <Column
               field="userName"
               title="User Name"
               headerClassName="justify-center bg-[#adc6f4] col-width15per"
               className="col-width15per"
-              columnMenu={ColumnMenu}
             />
             <Column
               field="className"
               title="Rank"
               headerClassName="justify-center bg-[#adc6f4] col-width10per"
               className="col-width10per"
-              columnMenu={ColumnMenu}
             />
             <Column
               field="userSsn"
               title="Emp no"
               headerClassName="justify-center bg-[#adc6f4] col-width10per"
               className="col-width10per"
-              columnMenu={ColumnMenu}
             />
             <Column
               field="roleName"
               title="Role name"
               headerClassName="justify-center bg-[#adc6f4] col-width15per"
               className="col-width15per"
-              columnMenu={ColumnMenu}
             />
             <Column
               field="positionName"
               title="Belong"
               headerClassName="justify-center bg-[#adc6f4] col-width10per"
               className="col-width10per"
-              columnMenu={ColumnMenu}
             />
             <Column
               field="userStateCodeNm"
               title="User status"
               headerClassName="justify-center bg-[#adc6f4] col-width11per"
               className="col-width11per"
-              columnMenu={ColumnMenu}
             />
             <Column
               field="lastUpdateDtime"
               title="Modified  date"
               headerClassName="justify-center bg-[#adc6f4] col-width15per"
               className="col-width15per"
-              columnMenu={ColumnMenu}
             />
             <Column
               field="Menu init"
@@ -286,7 +273,7 @@ export const UserManagementTable: FC<{
             <Column
               field="Status(Error count)"
               title="Status(Error count)"
-              width="100px"
+              width="120px"
               headerClassName="justify-center"
               cells={{
                 data: ({ dataItem, ...props }) => {
