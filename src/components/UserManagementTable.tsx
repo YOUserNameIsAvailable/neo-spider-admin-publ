@@ -46,33 +46,6 @@ export const UserManagementTable: FC<{
   const [showDetailModal, setShowDetailModal] = useState<boolean>(false); // <2-2> User management - User detail
   const [showRoleModal, setShowRoleModal] = useState<boolean>(false); // <2-3> User management - Menu authority
 
-  const onFilterChange = (ev: any) => {
-    let value = ev.value;
-    setFilterValue(ev.value);
-    let newData = EMPLOYEES.filter((item: any) => {
-      let match = false;
-      for (const property in item) {
-        if (item[property].toString().toLocaleLowerCase().indexOf(value.toLocaleLowerCase()) >= 0) {
-          match = true;
-        }
-        if (item[property].toLocaleDateString && item[property].toLocaleDateString().indexOf(value) >= 0) {
-          match = true;
-        }
-      }
-      return match;
-    });
-    setFilteredData(newData);
-    let clearedPagerDataState = {
-      ...dataState,
-      take: 8,
-      skip: 0,
-    };
-    let processedData = process(newData, clearedPagerDataState);
-    setDataResult(processedData);
-    setDataState(clearedPagerDataState);
-    setData(newData);
-  };
-
   const dataStateChange = (event: any) => {
     setDataResult(process(filteredData, event.dataState));
     setDataState(event.dataState);
@@ -101,23 +74,6 @@ export const UserManagementTable: FC<{
     },
     [dataResult],
   );
-
-  const setSelectedValue = (data: any) => {
-    let newData = data.map((item: any) => {
-      if (item.items) {
-        return {
-          ...item,
-          items: setSelectedValue(item.items),
-        };
-      } else {
-        return {
-          ...item,
-          ["selected"]: currentSelectedState[idGetter(item)],
-        };
-      }
-    });
-    return newData;
-  };
 
   const onHeaderSelectionChange = useCallback(
     (event: any) => {
@@ -186,9 +142,11 @@ export const UserManagementTable: FC<{
     console.log(`Button clicked for user: ${row.full_name}`);
   };
 
-  const renderButtonCell = (props: any) => (
-    <td>
-      <button onClick={() => handleButtonClick(props.dataItem)}>Click me</button>
+  const renderButtonCell = (dataItem: any, props: any, text: string, event?: () => void) => (
+    <td {...props.tdProps} style={{ textAlign: "center" }}>
+      <Button size={"small"} className="cell-inside-btn px-4 font-normal" themeColor={"primary"} onClick={event}>
+        {text}
+      </Button>
     </td>
   );
 
@@ -198,13 +156,14 @@ export const UserManagementTable: FC<{
 
     setDataState({
       ...dataState,
-      skip: event.page.skip,
-      take: take,
+      skip: 0,
+      take: displayCount,
     });
 
-    getHandler(event.page.skip / take + 1, take);
+    const page = Math.floor(event.page.skip / event.page.take) + 1;
+    getHandler(page, displayCount);
 
-    console.log("pageChange: ", targetEvent.value, event.page.skip, take, event.target);
+    console.log("pageChange: ", page);
   };
 
   useEffect(() => {
@@ -321,13 +280,7 @@ export const UserManagementTable: FC<{
               headerClassName="justify-center"
               cells={{
                 data: ({ dataItem, ...props }) => {
-                  return (
-                    <td {...props.tdProps} style={{ textAlign: "center" }}>
-                      <Button size={"small"} className="cell-inside-btn px-4 font-normal" themeColor={"primary"}>
-                        Reset
-                      </Button>
-                    </td>
-                  );
+                  return renderButtonCell(dataItem, props, "Rest");
                 },
               }}
             />
