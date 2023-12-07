@@ -1,9 +1,9 @@
-import React, { Dispatch, FC, SetStateAction, useState } from "react";
+import React, { Dispatch, FC, SetStateAction, useState, useEffect } from "react";
 import { Window, WindowMoveEvent } from "@progress/kendo-react-dialogs";
 import { Button } from "@progress/kendo-react-buttons";
 import { ExcelExport } from "@progress/kendo-react-excel-export";
 import { DropDownList } from "@progress/kendo-react-dropdowns";
-import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
+import { Grid, GridColumn as Column, GridItemChangeEvent, GridRowClickEvent } from "@progress/kendo-react-grid";
 import { EMPLOYEES } from "@/constants";
 import { getter } from "@progress/kendo-react-common";
 import { process } from "@progress/kendo-data-query";
@@ -33,11 +33,13 @@ const processWithGroups = (data: any, dataState: any) => {
   return newDataState;
 };
 
+const initialDataWithEditField = EMPLOYEES.map((item) => ({ ...item, inEdit: false }));
+
 export const MyWorkspaceManagementDetailModal: FC<{
   setShowDetailModal: Dispatch<SetStateAction<boolean>>;
 }> = ({ setShowDetailModal }) => {
   const idGetter = getter("id");
-  const [filteredData, setFilteredData] = React.useState(EMPLOYEES);
+  const [filteredData, setFilteredData] = React.useState(initialDataWithEditField);
   const [data, setData] = React.useState(filteredData);
   const [currentSelectedState, setCurrentSelectedState] = React.useState<any>({});
   const [dataState, setDataState] = React.useState(initialDataState);
@@ -47,10 +49,40 @@ export const MyWorkspaceManagementDetailModal: FC<{
       EMPLOYEES.map((item: any) => ({
         ...item,
         selected: currentSelectedState[idGetter(item)],
+        // inEdit: item.id === editID,
       })),
       initialDataState,
     ),
   );
+
+  const rowClick = (event) => {
+    const newData = dataResult.data.map((item) => {
+      console.log("event:", event.dataItem.id, item.id === event.dataItem.id);
+      if (item.id === event.dataItem.id) {
+        return { ...item, inEdit: true };
+      }
+      return item;
+    });
+    setDataResult({
+      data: newData,
+      total: dataResult.total,
+    });
+  };
+
+  const itemChange = (event) => {
+    console.log("itemChangeitemChange: ", itemChange);
+    const inEditID = event.dataItem.id;
+    const field = event.field || "";
+    const newData = data.map((item) =>
+      item.id === inEditID
+        ? {
+            ...item,
+            [field]: event.value,
+          }
+        : item,
+    );
+    setDataResult(newData);
+  };
 
   const [position, setPosition] = useState<PositionInterface>({
     left: 341,
@@ -97,6 +129,7 @@ export const MyWorkspaceManagementDetailModal: FC<{
   };
 
   const onSelectionChange = (event: any) => {
+    console.log("onSelectionChangeonSelectionChange: ", event.dataItem.id);
     const selectedProductId = event.dataItem.id;
 
     const newData = data.map((item: any) => {
@@ -114,6 +147,10 @@ export const MyWorkspaceManagementDetailModal: FC<{
     const newDataResult = processWithGroups(newData, dataState);
     setDataResult(newDataResult);
   };
+
+  useEffect(() => {
+    console.log("dataResult: ", dataResult);
+  }, [dataResult]);
 
   return (
     <>
@@ -340,7 +377,10 @@ export const MyWorkspaceManagementDetailModal: FC<{
                 selectedField={SELECTED_FIELD}
                 onHeaderSelectionChange={onHeaderSelectionChange}
                 onSelectionChange={onSelectionChange}
-                groupable={false}>
+                groupable={false}
+                editField="inEdit"
+                onRowClick={rowClick}
+                onItemChange={itemChange}>
                 <Column
                   filterable={false}
                   sortable={false}
@@ -350,71 +390,105 @@ export const MyWorkspaceManagementDetailModal: FC<{
                   className="overflow-none"
                   width={30}
                 />
-                <Column field="budget" title="CRUD" sortable={false} headerClassName="justify-center bg-[#adc6f4]" />
-                <Column field="full_name" title="순번" sortable={false} headerClassName="justify-center bg-[#adc6f4]" />
+                <Column
+                  field="budget"
+                  title="CRUD"
+                  sortable={false}
+                  headerClassName="justify-center bg-[#adc6f4]"
+                  editor="text"
+                />
+                <Column
+                  field="full_name"
+                  title="순번"
+                  sortable={false}
+                  headerClassName="justify-center bg-[#adc6f4]"
+                  editor="text"
+                />
                 <Column
                   field="target"
                   title="전문필드명"
                   sortable={false}
                   headerClassName="justify-center bg-[#adc6f4]"
+                  editor="text"
                 />
                 <Column
                   field="budget"
                   title="data타입"
                   sortable={false}
                   headerClassName="justify-center bg-[#adc6f4]"
+                  editor="text"
                 />
                 <Column
                   field="budget"
                   title="data길이"
                   sortable={false}
                   headerClassName="justify-center bg-[#adc6f4]"
+                  editor="text"
                 />
                 <Column
                   field="budget"
                   title="정렬기준"
                   sortable={false}
                   headerClassName="justify-center bg-[#adc6f4]"
+                  editor="text"
                 />
                 <Column
                   field="budget"
                   title="특이사항"
                   sortable={false}
                   headerClassName="justify-center bg-[#adc6f4]"
+                  editor="text"
                 />
                 <Column
                   field="budget"
                   title="필수여부"
                   sortable={false}
                   headerClassName="justify-center bg-[#adc6f4]"
+                  editor="text"
                   width={83}
                 />
-                <Column field="budget" title="스케일" sortable={false} headerClassName="justify-center bg-[#adc6f4]" />
+                <Column
+                  field="budget"
+                  title="스케일"
+                  sortable={false}
+                  headerClassName="justify-center bg-[#adc6f4]"
+                  editor="text"
+                />
                 <Column
                   field="budget"
                   title="삽입문자"
                   sortable={false}
                   headerClassName="justify-center bg-[#adc6f4]"
+                  editor="text"
                 />
                 <Column
                   field="budget"
                   title="입력구분"
                   sortable={false}
                   headerClassName="justify-center bg-[#adc6f4]"
+                  editor="text"
                 />
                 <Column
                   field="budget"
                   title="코드그룹"
                   sortable={false}
                   headerClassName="justify-center bg-[#adc6f4]"
+                  editor="text"
                 />
                 <Column
                   field="budget"
                   title="코드맵핑"
                   sortable={false}
                   headerClassName="justify-center bg-[#adc6f4]"
+                  editor="text"
                 />
-                <Column field="budget" title="초기값" sortable={false} headerClassName="justify-center bg-[#adc6f4]" />
+                <Column
+                  field="budget"
+                  title="초기값"
+                  sortable={false}
+                  headerClassName="justify-center bg-[#adc6f4]"
+                  editor="text"
+                />
               </Grid>
             </ExcelExport>
             {/*  */}
