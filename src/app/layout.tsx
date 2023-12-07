@@ -15,7 +15,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const [isLoaded, setIsLoaded] = useState(true);
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
   const [isLoginPage, setIsLoginPage] = useState(false);
 
   useEffect(() => {

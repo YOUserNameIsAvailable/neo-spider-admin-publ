@@ -12,14 +12,20 @@ import Image from "next/image";
 export default function Page() {
   const router = useRouter();
   const [result, setResult] = useState<any[]>([]);
+  const [count, setCount] = useState<number>(0);
+  const [displayCount, setDisplayCount] = useState<number>(20);
 
-  const getHandler = async () => {
+  const getHandler = async (page?: number, displayCount?: number) => {
     try {
       const dataJson = await fetch("/api/spider/userMng/list", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify({
+          page: page || 1,
+          displayCount: displayCount || 20,
+        }),
       });
 
       const data = await dataJson.json();
@@ -32,6 +38,7 @@ export default function Page() {
       }
 
       setResult(data?.body?.list);
+      setCount(data?.body?.count);
     } catch (err) {
       console.error(err);
 
@@ -50,12 +57,14 @@ export default function Page() {
       <>
         <div className="flex items-center gap-2 py-4">
           {/* JSON 파일 스타일 변경 테스트 */}
-          <img  id="user_img" src={"/images/dot_subtitle.gif"} alt="" style={{}} />
+          <img id="user_img" src={"/images/dot_subtitle.gif"} alt="" style={{}} />
           <Image id="user_img_upper" src={""} alt="" />
           <span id="condition" className="font-bold text-[#656565]">
             Condition
           </span>
-          <a href="#list" id="user_link" className="flex items-center gap-2">Test</a>
+          <a href="#list" id="user_link" className="flex items-center gap-2">
+            Test
+          </a>
         </div>
         <div className="flex flex-wrap justify-between gap-4 overflow-x-scroll bg-[#dde6f0] p-[5px]">
           <div className="flex items-center gap-4">
@@ -108,9 +117,12 @@ export default function Page() {
               <DropDownList
                 size={"small"}
                 data={PAGES}
-                defaultValue="20"
+                defaultValue={displayCount}
                 filterable={false}
                 style={{ width: "80px" }}
+                onChange={(e) => {
+                  setDisplayCount(e.target.value);
+                }}
               />
               <span className="font-bold text-[#333333]">Items</span>
             </div>
@@ -130,7 +142,7 @@ export default function Page() {
             List
           </span>
         </div>
-        <UserManagementTable getHandler={getHandler} result={result} />
+        <UserManagementTable getHandler={getHandler} result={result} count={count} displayCount={displayCount} />
       </>
 
       <div className="flex justify-end">

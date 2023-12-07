@@ -3,8 +3,8 @@ import { getter } from "@progress/kendo-react-common";
 import { process } from "@progress/kendo-data-query";
 import { GridPDFExport } from "@progress/kendo-react-pdf";
 import { ExcelExport } from "@progress/kendo-react-excel-export";
-import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
-import { setGroupIds, setExpandedState } from "@progress/kendo-react-data-tools";
+import { Grid, GridColumn as Column, GridPageChangeEvent } from "@progress/kendo-react-grid";
+import { setGroupIds, setExpandedState, PagerTargetEvent } from "@progress/kendo-react-data-tools";
 import { EMPLOYEES } from "@/constants";
 import { ColumnMenu } from "./ColumnMenu";
 import { Button } from "@progress/kendo-react-buttons";
@@ -14,7 +14,7 @@ import { UserManagementRoleModal } from "./modal/UserManagementRoleModal";
 const DATA_ITEM_KEY = "id";
 const SELECTED_FIELD = "selected";
 const initialDataState = {
-  take: 10,
+  take: 20,
   skip: 0,
   group: [],
 };
@@ -28,7 +28,12 @@ const processWithGroups = (data: any, dataState: any) => {
   return newDataState;
 };
 
-export const UserManagementTable: FC<{ getHandler: () => void; result: any[] }> = ({ getHandler, result }) => {
+export const UserManagementTable: FC<{
+  getHandler: (page?: number, displayCount?: number) => void;
+  result: any[];
+  count: number;
+  displayCount: number;
+}> = ({ getHandler, result, count, displayCount }) => {
   const idGetter = getter("id");
   const [filterValue, setFilterValue] = useState();
   const [filteredData, setFilteredData] = useState<any[]>([]);
@@ -67,16 +72,6 @@ export const UserManagementTable: FC<{ getHandler: () => void; result: any[] }> 
     setDataState(clearedPagerDataState);
     setData(newData);
   };
-
-  const [resultState, setResultState] = useState(
-    processWithGroups(
-      result.map((item: any) => ({
-        ...item,
-        ["selected"]: currentSelectedState[idGetter(item)],
-      })),
-      initialDataState,
-    ),
-  );
 
   const dataStateChange = (event: any) => {
     setDataResult(process(filteredData, event.dataState));
@@ -123,11 +118,6 @@ export const UserManagementTable: FC<{ getHandler: () => void; result: any[] }> 
     });
     return newData;
   };
-
-  const newData = setExpandedState({
-    data: setSelectedValue(resultState.data),
-    collapsedIds: [],
-  });
 
   const onHeaderSelectionChange = useCallback(
     (event: any) => {
@@ -202,14 +192,43 @@ export const UserManagementTable: FC<{ getHandler: () => void; result: any[] }> 
     </td>
   );
 
+  const pageChange = (event: GridPageChangeEvent) => {
+    const targetEvent = event.targetEvent as PagerTargetEvent;
+    const take = targetEvent.value === "All" ? count : event.page.take;
+
+    setDataState({
+      ...dataState,
+      skip: event.page.skip,
+      take: take,
+    });
+
+    getHandler(event.page.skip / take + 1, take);
+
+    console.log("pageChange: ", targetEvent.value, event.page.skip, take, event.target);
+  };
+
   useEffect(() => {
     if (result?.length > 0) {
       setFilteredData(result);
       setDataResult(process(result, dataState));
       setData(result);
-      console.log("UserManagementTable resultState: ", resultState);
+
+      console.log("result: ", result);
+      console.log("dataResult: ", dataResult);
+      console.log("data: ", data);
+      console.log("dataState: ", dataState);
+      console.log("filteredData: ", filteredData);
+      console.log("currentSelectedState: ", currentSelectedState);
+      console.log("filterValue: ", filterValue);
+      console.log("initialDataState: ", initialDataState);
     }
   }, [result]);
+
+  useEffect(() => {
+    if (displayCount) {
+      setDataState((prev) => ({ ...prev, take: displayCount }));
+    }
+  }, [displayCount]);
 
   return (
     <>
@@ -220,7 +239,8 @@ export const UserManagementTable: FC<{ getHandler: () => void; result: any[] }> 
               height: "500px",
             }}
             pageable={{
-              pageSizes: true,
+              pageSizes: false,
+              buttonCount: 5,
             }}
             onRowClick={(e) => {
               setShowDetailModal(true);
@@ -228,15 +248,15 @@ export const UserManagementTable: FC<{ getHandler: () => void; result: any[] }> 
             }}
             data={dataResult}
             sortable={false}
-            total={resultState?.total || 0}
+            total={count || 0}
             onDataStateChange={dataStateChange}
-            {...dataState}
             onExpandChange={onExpandChange}
             expandField="expanded"
             dataItemKey={DATA_ITEM_KEY}
             selectedField={SELECTED_FIELD}
             onHeaderSelectionChange={onHeaderSelectionChange}
             onSelectionChange={onSelectionChange}
+            onPageChange={pageChange}
             groupable={false}>
             <Column
               field="userId"
@@ -380,7 +400,7 @@ export const UserManagementTable: FC<{ getHandler: () => void; result: any[] }> 
             }}
             data={dataResult}
             sortable={false}
-            total={resultState.total}
+            total={count}
             onDataStateChange={dataStateChange}
             {...dataState}
             onExpandChange={onExpandChange}
