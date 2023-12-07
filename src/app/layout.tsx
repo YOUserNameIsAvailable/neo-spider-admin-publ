@@ -2,13 +2,12 @@
 
 import { Inter } from "next/font/google";
 import "./globals.scss";
-import { useEffect, useState, ReactNode, Suspense } from "react";
+import React, { useEffect, useState, ReactNode, Suspense } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { TabProvider } from "@/providers/TabProvider";
 import { Layout } from "@/components/shared/layout";
-import { Loader, LoaderType } from "@progress/kendo-react-indicators";
 import ThemeProvider from "@/providers/ThemeProvider";
-import Loading from "./loading";
+import Loading from "../components/loading";
 
 const inter = Inter({ subsets: ["latin"] });
 

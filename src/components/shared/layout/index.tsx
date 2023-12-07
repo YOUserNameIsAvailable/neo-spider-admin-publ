@@ -156,7 +156,14 @@ export const Layout: FC<LayoutProps> = ({ children, isLoaded, isLoginPage, isLog
 
                 {/* content */}
                 <div className="h-[100vh] w-full bg-[#fff] px-4">
-                  {children}
+                  <Suspense
+                    fallback={
+                      <div className="flex h-[100vh] w-full items-center justify-center">
+                        <Loader type="infinite-spinner" />
+                      </div>
+                    }>
+                    {children}
+                  </Suspense>
                   {/* {isLoaded ? (
                 <div className="flex h-[100vh] w-full items-center justify-center">
                   <Loader />
