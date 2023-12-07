@@ -173,7 +173,10 @@ export const UserManagementTable: FC<{
   useEffect(() => {
     if (displayCount) {
       console.log("useEffect displayCount: ", displayCount);
-      setDataState((prev) => ({ ...prev, take: displayCount }));
+      const page = Math.floor(dataState.skip / dataState.take) + 1;
+      const skip = (page - 1) * displayCount;
+
+      setDataState((prev) => ({ ...prev, skip: skip, take: displayCount }));
     }
   }, [displayCount]);
 

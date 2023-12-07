@@ -13,6 +13,7 @@ export default function Page() {
   const router = useRouter();
   const [result, setResult] = useState<any[]>([]);
   const [count, setCount] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const [displayCount, setDisplayCount] = useState<number>(20);
 
   const getHandler = async (page?: number, displayCount?: number) => {
@@ -39,6 +40,7 @@ export default function Page() {
 
       setResult(data?.body?.list);
       setCount(data?.body?.count);
+      setCurrentPage(page || 1);
     } catch (err) {
       console.error(err);
 
@@ -122,6 +124,7 @@ export default function Page() {
                 style={{ width: "80px" }}
                 onChange={(e) => {
                   setDisplayCount(e.target.value);
+                  getHandler(currentPage, e.target.value);
                 }}
               />
               <span className="font-bold text-[#333333]">Items</span>
