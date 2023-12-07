@@ -4,8 +4,7 @@ import { process } from "@progress/kendo-data-query";
 import { GridPDFExport } from "@progress/kendo-react-pdf";
 import { ExcelExport } from "@progress/kendo-react-excel-export";
 import { Grid, GridColumn as Column, GridPageChangeEvent } from "@progress/kendo-react-grid";
-import { setGroupIds, setExpandedState, PagerTargetEvent } from "@progress/kendo-react-data-tools";
-import { EMPLOYEES } from "@/constants";
+import { setGroupIds } from "@progress/kendo-react-data-tools";
 import { ColumnMenu } from "./ColumnMenu";
 import { Button } from "@progress/kendo-react-buttons";
 import { UserManagementDetailModal } from "./modal/UserManagementDetailModal";
@@ -47,8 +46,10 @@ export const UserManagementTable: FC<{
   const [showRoleModal, setShowRoleModal] = useState<boolean>(false); // <2-3> User management - Menu authority
 
   const dataStateChange = (event: any) => {
-    setDataResult(process(filteredData, event.dataState));
+    console.log("dataStateChange: ", event);
     setDataState(event.dataState);
+    const page = Math.floor(event.dataState.skip / event.dataState.take) + 1;
+    getHandler(page, displayCount);
   };
 
   const onExpandChange = useCallback(
@@ -150,26 +151,10 @@ export const UserManagementTable: FC<{
     </td>
   );
 
-  const pageChange = (event: GridPageChangeEvent) => {
-    const targetEvent = event.targetEvent as PagerTargetEvent;
-    const take = targetEvent.value === "All" ? count : event.page.take;
-
-    setDataState({
-      ...dataState,
-      skip: 0,
-      take: displayCount,
-    });
-
-    const page = Math.floor(event.page.skip / event.page.take) + 1;
-    getHandler(page, displayCount);
-
-    console.log("pageChange: ", page);
-  };
-
   useEffect(() => {
     if (result?.length > 0) {
       setFilteredData(result);
-      setDataResult(process(result, dataState));
+      setDataResult({ data: result, total: count });
       setData(result);
 
       console.log("result: ", result);
@@ -185,6 +170,7 @@ export const UserManagementTable: FC<{
 
   useEffect(() => {
     if (displayCount) {
+      console.log("useEffect displayCount: ", displayCount);
       setDataState((prev) => ({ ...prev, take: displayCount }));
     }
   }, [displayCount]);
@@ -201,6 +187,7 @@ export const UserManagementTable: FC<{
               pageSizes: false,
               buttonCount: 5,
             }}
+            {...dataState}
             onRowClick={(e) => {
               setShowDetailModal(true);
               setUserId(e.dataItem.userId);
@@ -215,7 +202,6 @@ export const UserManagementTable: FC<{
             selectedField={SELECTED_FIELD}
             onHeaderSelectionChange={onHeaderSelectionChange}
             onSelectionChange={onSelectionChange}
-            onPageChange={pageChange}
             groupable={false}>
             <Column
               field="userId"
