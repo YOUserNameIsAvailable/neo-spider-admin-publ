@@ -137,14 +137,25 @@ export const CodeGroupManagementAddModal: FC<{
           </div>
           <div className="flex flex-col border-[1px] border-[#dfe1e1]">
             <div className="flex h-[29px] flex-row border-b-[1px] border-[#dfe1e1]">
-              <div className="flex flex-row">
+              <div className="flex flex-row items-center">
                 <label className="flex h-full w-[150px] min-w-[150px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
                   코드그룹ID
                 </label>
-                <input
-                  className="my-[2px] ml-[2px] w-[175px] rounded-[2px] border-[1px] border-[#999999] py-[2px]"
-                  disabled={true}
-                />
+                <input className="my-[2px] ml-[2px] w-[175px] rounded-[2px] border-[1px] border-[#999999] py-[2px]" />
+                <Button
+                  className="k-button ml-4"
+                  style={{
+                    height: "23px",
+                    backgroundColor: "#F6F6F6",
+                    borderColor: "#656565",
+                    borderRadius: "2px",
+                    paddingRight: "4px",
+                    paddingLeft: "4px",
+                    paddingTop: "2px",
+                    paddingBottom: "2px",
+                  }}>
+                  중복확인
+                </Button>
               </div>
             </div>
             {/*  */}
