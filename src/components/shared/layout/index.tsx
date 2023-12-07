@@ -18,12 +18,9 @@ import { Loader } from "@progress/kendo-react-indicators";
 
 interface LayoutProps {
   children?: ReactNode;
-  isLoaded?: boolean;
-  isLoginPage?: boolean;
-  isLogin?: boolean;
 }
 
-export const Layout: FC<LayoutProps> = ({ children, isLoaded, isLoginPage, isLogin }) => {
+export const Layout: FC<LayoutProps> = ({ children }) => {
   const pathname = usePathname();
   const [panes, setPanes] = useState<SplitterPaneProps[]>([
     {
@@ -109,7 +106,7 @@ export const Layout: FC<LayoutProps> = ({ children, isLoaded, isLoginPage, isLog
     }
   };
 
-  return !isLoginPage && isLogin ? (
+  return (
     <>
       {/* top bar */}
       <TopBar />
@@ -181,7 +178,5 @@ export const Layout: FC<LayoutProps> = ({ children, isLoaded, isLoginPage, isLog
       {/* bottom bar */}
       <BottomBar />
     </>
-  ) : (
-    <>{children}</>
   );
 };

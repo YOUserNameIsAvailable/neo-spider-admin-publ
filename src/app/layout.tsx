@@ -8,6 +8,7 @@ import { TabProvider } from "@/providers/TabProvider";
 import { Layout } from "@/components/shared/layout";
 import ThemeProvider from "@/providers/ThemeProvider";
 import Loading from "../components/loading";
+import { is } from "immutable";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -37,6 +38,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       setIsLoginPage(false);
     }
 
+    console.log("Rootlayout: ", !isLoginPage && isLogin, isLoaded, isLoginPage, isLogin, isHomePage);
+
     setTimeout(() => {
       setIsLoaded(false);
     }, 600);
@@ -47,18 +50,20 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body className={inter.className}>
         <TabProvider>
           <ThemeProvider>
-            <Suspense fallback={<Loading />}>
+            {/* <Suspense fallback={<Loading />}>
               <Layout isLoaded={isLoaded} isLoginPage={isLoginPage} isLogin={isLogin}>
                 {children}
               </Layout>
-            </Suspense>
-            {/* {!isLoginPage && isLogin ? (
-              <Suspense fallback={<Loader />}>
-                <Layout isLoaded={isLoaded}>{children}</Layout>
+            </Suspense> */}
+            {!isLoginPage && isLogin ? (
+              <Suspense fallback={<Loading />}>
+                <Layout>{children}</Layout>
               </Suspense>
-            ) : (
+            ) : !isLoaded ? (
               children
-            )} */}
+            ) : (
+              <Loading />
+            )}
           </ThemeProvider>
         </TabProvider>
       </body>

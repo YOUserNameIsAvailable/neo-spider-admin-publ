@@ -291,19 +291,9 @@ export const UserManagementTable: FC<{
               headerClassName="justify-center"
               cells={{
                 data: ({ dataItem, ...props }) => {
-                  return (
-                    <td {...props.tdProps} style={{ textAlign: "center" }}>
-                      <Button
-                        size={"small"}
-                        className="cell-inside-btn px-4 font-normal"
-                        themeColor={"primary"}
-                        onClick={() => {
-                          setShowRoleModal(true);
-                        }}>
-                        Menu
-                      </Button>
-                    </td>
-                  );
+                  return renderButtonCell(dataItem, props, "Menu", () => {
+                    setShowRoleModal(true);
+                  });
                 },
               }}
             />
@@ -314,13 +304,7 @@ export const UserManagementTable: FC<{
               headerClassName="justify-center"
               cells={{
                 data: ({ dataItem, ...props }) => {
-                  return (
-                    <td {...props.tdProps} style={{ textAlign: "center" }}>
-                      <Button size={"small"} className="cell-inside-btn px-4 font-normal" themeColor={"primary"}>
-                        Unloack(0)
-                      </Button>
-                    </td>
-                  );
+                  return renderButtonCell(dataItem, props, "Unloack(0)");
                 },
               }}
             />
@@ -331,13 +315,7 @@ export const UserManagementTable: FC<{
               headerClassName="justify-center"
               cells={{
                 data: ({ dataItem, ...props }) => {
-                  return (
-                    <td {...props.tdProps} style={{ textAlign: "center" }}>
-                      <Button size={"small"} className="cell-inside-btn px-4 font-normal" themeColor={"primary"}>
-                        Login
-                      </Button>
-                    </td>
-                  );
+                  return renderButtonCell(dataItem, props, "Login");
                 },
               }}
             />
