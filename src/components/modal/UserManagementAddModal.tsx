@@ -11,11 +11,11 @@ interface PositionInterface {
   height: number;
 }
 
-export const UserManagementDetailModal: FC<{
+export const UserManagementAddModal: FC<{
   getHandler: () => void;
-  setShowDetailModal: Dispatch<SetStateAction<boolean>>;
+  setShowAddModal: Dispatch<SetStateAction<boolean>>;
   userId: string;
-}> = ({ getHandler, setShowDetailModal, userId }) => {
+}> = ({ getHandler, setShowAddModal, userId }) => {
   const router = useRouter();
   const [position, setPosition] = useState<PositionInterface>({
     left: 341,
@@ -140,13 +140,13 @@ export const UserManagementDetailModal: FC<{
         maximizeButton={() => null}
         restoreButton={() => null}
         doubleClickStageChange={false}
-        title={"사용자 상세"}
+        title={"사용자 등록"}
         width={position.width}
         height={position.height}
         onMove={handleMove}
         onResize={handleResize}
         onClose={() => {
-          setShowDetailModal(false);
+          setShowAddModal(false);
         }}>
         <form className="k-form" onSubmit={updateUserDetail}>
           <fieldset>
@@ -406,7 +406,7 @@ export const UserManagementDetailModal: FC<{
                   imageUrl="/images/dot-right-arrow.png"
                   className="basic-btn  flex h-7 items-center justify-start"
                   onClick={() => {
-                    setShowDetailModal(false);
+                    setShowAddModal(false);
                   }}>
                   닫기
                 </Button>

@@ -8,6 +8,7 @@ import { PAGES, SPORTS, USERS } from "@/constants";
 import { UserManagementTable } from "@/components/UserManagementTable";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { UserManagementAddModal } from "@/components/modal/UserManagementAddModal";
 
 export default function Page() {
   const router = useRouter();
@@ -15,6 +16,7 @@ export default function Page() {
   const [count, setCount] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [displayCount, setDisplayCount] = useState<number>(20);
+  const [showAddModal, setShowAddModal] = useState<boolean>(false);
 
   const getHandler = async (page?: number, displayCount?: number) => {
     try {
@@ -73,8 +75,8 @@ export default function Page() {
             <DropDownList
               className="h-[30px] w-[100px] min-w-[100px] border bg-[#f6f6f6f6] text-[#656565]"
               size={"small"}
-              data={SPORTS}
-              defaultValue="Option 1"
+              data={["사용자명", "사용자ID"]}
+              defaultValue="사용자명"
               filterable={false}
             />
 
@@ -85,8 +87,8 @@ export default function Page() {
               <DropDownList
                 className="h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
                 size={"small"}
-                data={SPORTS}
-                defaultValue="Option 1"
+                data={["전체", "정상", "삭제", "정지"]}
+                defaultValue="전체"
                 filterable={false}
               />
             </div>
@@ -149,8 +151,11 @@ export default function Page() {
       </>
 
       <div className="flex justify-end">
-        <Button className="basic-btn mt-2 flex h-7 items-center justify-start">+ ADD</Button>
+        <Button className="basic-btn mt-2 flex h-7 items-center justify-start" onClick={() => setShowAddModal(true)}>
+          + ADD
+        </Button>
       </div>
+      {showAddModal && <UserManagementAddModal setShowAddModal={setShowAddModal} />}
     </>
   );
 }
