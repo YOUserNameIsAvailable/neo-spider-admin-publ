@@ -33,6 +33,8 @@ export default function Page() {
       console.log("data: ", data);
 
       if (data?.result?.error?.code === "FRU00001") {
+        console.error(data?.result?.error);
+        alert("로그인이 만료되었습니다.");
         sessionStorage.removeItem("isLogin");
         router.push("/login");
         return;

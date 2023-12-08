@@ -31,20 +31,15 @@ export default function Page() {
       const login = await loginJson.json();
 
       console.log("handleLogin: ", login);
-      if (login.result.status === "success") {
-        sessionStorage.setItem("isLogin", "true");
-        router.push("/front/");
-      } else {
+      if (login.result.status !== "success") {
         alert("권한이 없거나 ID나 비밀번호가 틀립니다. 관리자에게 문의하세요");
-        sessionStorage.setItem("isLogin", "false");
+        sessionStorage.removeItem("isLogin");
       }
+
+      sessionStorage.setItem("isLogin", "true");
+      router.push("/front/");
     } catch (err) {
       console.error(err);
-
-      // TODO: remove this after testing
-      console.log("handleLogin TEST: ");
-      sessionStorage.setItem("isLogin", "true");
-      router.push("/");
     }
   };
 
@@ -83,8 +78,8 @@ export default function Page() {
             style={{ fontFamily: "tahoma" }}>
             Authorization
           </div>
-          <div className="h-[190px] w-full p-5"></div>
-          <div className="flex h-[128px] w-full flex-col p-1">
+          <div className="h-[174px] w-full p-5"></div>
+          <div className="flex h-[140px] w-full flex-col p-1">
             <div className="my-[0.5em] h-[1px] w-full bg-[#5076c9]"></div>
             <div className="flex w-full flex-row">
               <div

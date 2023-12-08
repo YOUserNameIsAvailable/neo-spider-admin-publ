@@ -58,15 +58,27 @@ export const TabProvider: FC<TabProviderProps> = ({ children }) => {
   }, [selectedTab]);
 
   useEffect(() => {
-    const sessionTabs = sessionStorage.getItem("tabs");
-    const sessionSelectedTab = sessionStorage.getItem("selectedTab");
+    const sessionTabsJson = sessionStorage.getItem("tabs") || "undefined";
+    const sessionSelectedTabJson = sessionStorage.getItem("selectedTab") || "undefined";
+    if (
+      sessionTabsJson &&
+      sessionSelectedTabJson &&
+      sessionTabsJson !== "undefined" &&
+      sessionSelectedTabJson !== "undefined"
+    ) {
+      const sessionTabs = JSON.parse(sessionTabsJson);
+      const sessionSelectedTab = JSON.parse(sessionSelectedTabJson);
+      const isLoginPage = pathname.indexOf("login") > -1;
 
-    console.log("sessionTabs: ", sessionTabs);
-    console.log("sessionSelectedTab: ", sessionSelectedTab);
+      console.log("sessionTabs: ", sessionTabs);
+      console.log("sessionSelectedTab: ", sessionSelectedTab);
 
-    if (sessionTabs && sessionSelectedTab && sessionTabs !== "undefined" && sessionSelectedTab !== "undefined") {
-      setTabs(JSON.parse(sessionTabs));
-      setSelectedTab(JSON.parse(sessionSelectedTab));
+      setTabs(sessionTabs);
+      setSelectedTab(sessionSelectedTab);
+
+      if (!isLoginPage && pathname !== sessionSelectedTab.url) {
+        router.push(sessionSelectedTab.url as string);
+      }
     }
   }, []);
 

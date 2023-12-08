@@ -12,6 +12,14 @@ import { UserManagementAddModal } from "@/components/modal/UserManagementAddModa
 
 export default function Page() {
   const router = useRouter();
+  const [searchTypes, setSearchTypes] = useState<any>({
+    _search_userType: "_search_userName",
+    _search_userId: null,
+    _search_userName: null,
+    _search_state: null,
+    _search_roleId: null,
+    _search_class: null,
+  });
   const [result, setResult] = useState<any[]>([]);
   const [count, setCount] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -28,6 +36,7 @@ export default function Page() {
         body: JSON.stringify({
           page: page || 1,
           displayCount: displayCount || 20,
+          // ...searchTypes,
         }),
       });
 
@@ -35,6 +44,8 @@ export default function Page() {
       console.log("data: ", data);
 
       if (data?.result?.error?.code === "FRU00001") {
+        console.error(data?.result?.error);
+        alert("로그인이 만료되었습니다.");
         sessionStorage.removeItem("isLogin");
         router.push("/login");
         return;
@@ -45,9 +56,6 @@ export default function Page() {
       setCurrentPage(page || 1);
     } catch (err) {
       console.error(err);
-
-      // TODO: remove this after testing
-      setResult(USERS);
     }
   };
 
@@ -74,22 +82,55 @@ export default function Page() {
           <div className="flex items-center gap-4">
             <DropDownList
               className="h-[30px] w-[100px] min-w-[100px] border bg-[#f6f6f6f6] text-[#656565]"
+              textField="NAME"
+              dataItemKey="VALUE"
+              data={[
+                { VALUE: "_search_userName", NAME: "사용자명" },
+                { VALUE: "_search_userId", NAME: "사용자ID" },
+              ]}
+              defaultItem={{ VALUE: "_search_userName", NAME: "사용자명" }}
               size={"small"}
-              data={["사용자명", "사용자ID"]}
-              defaultValue="사용자명"
-              filterable={false}
+              onChange={(e) => setSearchTypes((prev: any) => ({ ...prev, _search_userType: e.target.value }))}
             />
 
-            <Input className="h-[24px] w-[148px] min-w-[148px] border border-[#999999]" />
+            <Input
+              className="h-[24px] w-[148px] min-w-[148px] border border-[#999999]"
+              onChange={(e) =>
+                setSearchTypes((prev: any) =>
+                  searchTypes._search_userType === "_search_userId"
+                    ? { ...prev, _search_userId: e.target.value }
+                    : { ...prev, _search_userName: e.target.value },
+                )
+              }
+            />
 
             <div className="flex items-center gap-2">
               <span className="whitespace-nowrap font-bold text-[#6f7071]">User status:</span>
               <DropDownList
                 className="h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
+                textField="NAME"
+                dataItemKey="VALUE"
+                data={[
+                  {
+                    VALUE: null,
+                    NAME: "전체",
+                  },
+                  {
+                    VALUE: "1",
+                    NAME: "정상",
+                  },
+                  {
+                    VALUE: "2",
+                    NAME: "삭제",
+                  },
+                  {
+                    VALUE: "3",
+                    NAME: "정지",
+                  },
+                ]}
+                defaultItem={{ VALUE: null, NAME: "전체" }}
                 size={"small"}
-                data={["전체", "정상", "삭제", "정지"]}
-                defaultValue="전체"
-                filterable={false}
+                onChange={(e) => setSearchTypes((prev: any) => ({ ...prev, _search_state: e.target.value }))}
               />
             </div>
 
@@ -101,6 +142,7 @@ export default function Page() {
                 data={SPORTS}
                 defaultValue="Option 1"
                 filterable={true}
+                onChange={(e) => setSearchTypes((prev: any) => ({ ...prev, _search_roleId: e.target.value }))}
               />
             </div>
 
@@ -109,9 +151,10 @@ export default function Page() {
               <DropDownList
                 className="h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
                 size={"small"}
-                data={SPORTS}
-                defaultValue="Option 1"
+                data={["사장", "전무", "부장", "차장", "과장"]}
+                defaultValue="전체"
                 filterable={true}
+                onChange={(e) => setSearchTypes((prev: any) => ({ ...prev, _search_class: e.target.value }))}
               />
             </div>
           </div>
@@ -122,7 +165,6 @@ export default function Page() {
                 size={"small"}
                 data={PAGES}
                 defaultValue={displayCount}
-                filterable={false}
                 style={{ width: "80px" }}
                 onChange={(e) => {
                   setDisplayCount(e.target.value);

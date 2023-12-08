@@ -8,13 +8,14 @@ import {
 import { ITab } from "@/types";
 import { useTab } from "@/providers/TabProvider";
 import { TopBar } from "./TopBar";
-import { FC, ReactNode, Suspense, useState } from "react";
+import { FC, ReactNode, Suspense, useEffect, useState } from "react";
 import { LeftSideBar } from "../LeftSidePanel";
 import { BottomBar } from "./BottomBar";
 import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@progress/kendo-react-buttons";
 import { TabTitle } from "./TapTitle";
 import { Loader } from "@progress/kendo-react-indicators";
+import Loading from "@/components/loading";
 
 interface LayoutProps {
   children?: ReactNode;
@@ -106,6 +107,35 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
     }
   };
 
+  const tabHandler = () => {
+    const sessionTabsJson = sessionStorage.getItem("tabs") || "undefined";
+    const sessionSelectedTabJson = sessionStorage.getItem("selectedTab") || "undefined";
+    if (
+      sessionTabsJson &&
+      sessionSelectedTabJson &&
+      sessionTabsJson !== "undefined" &&
+      sessionSelectedTabJson !== "undefined"
+    ) {
+      const sessionTabs = JSON.parse(sessionTabsJson);
+      const sessionSelectedTab = JSON.parse(sessionSelectedTabJson);
+      const isLoginPage = pathname.indexOf("login") > -1;
+
+      console.log("sessionTabs: ", sessionTabs);
+      console.log("sessionSelectedTab: ", sessionSelectedTab);
+
+      setTabs(sessionTabs);
+      setSelectedTab(sessionSelectedTab);
+
+      if (!isLoginPage && pathname !== sessionSelectedTab.url) {
+        router.push(sessionSelectedTab.url as string);
+      }
+    }
+  };
+
+  useEffect(() => {
+    tabHandler();
+  }, []);
+
   return (
     <>
       {/* top bar */}
@@ -153,21 +183,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
 
                 {/* content */}
                 <div className="h-[100vh] w-full bg-[#fff] px-4">
-                  <Suspense
-                    fallback={
-                      <div className="flex h-[100vh] w-full items-center justify-center">
-                        <Loader type="infinite-spinner" />
-                      </div>
-                    }>
-                    {children}
-                  </Suspense>
-                  {/* {isLoaded ? (
-                <div className="flex h-[100vh] w-full items-center justify-center">
-                  <Loader />
-                </div>
-              ) : (
-                children
-              )} */}
+                  <Suspense fallback={<Loading />}>{children}</Suspense>
                 </div>
               </TabStripTab>
             ))}
