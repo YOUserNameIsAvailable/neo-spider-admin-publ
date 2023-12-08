@@ -39,14 +39,14 @@ export const UserManagementDetailModal: FC<{
     });
   };
 
-  const getUserDetail = async () => {
+  const getDetail = async () => {
     const userJson = await fetch("/api/spider/userMng/detail", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        userId: userId,
+        userId,
       }),
     });
 
@@ -69,7 +69,7 @@ export const UserManagementDetailModal: FC<{
     });
   };
 
-  const updateUserDetail = async (e: any) => {
+  const updateDetail = async (e: any) => {
     e.preventDefault();
     if (Object.keys(form).length === 0) {
       alert("수정할 내용이 없습니다.");
@@ -83,29 +83,16 @@ export const UserManagementDetailModal: FC<{
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
+        ...form,
         org_userId: userId,
         userId: userId,
-        roleId: form?.roleId,
-        positionName: form?.positionName,
         address: null,
-        classNm: form?.classNm,
-        userName: form?.userName,
-        userSsn: form?.userSsn,
-        phone: form?.phone,
-        email: form?.email,
-        accessIp: form?.accessIp,
-        userStateCode: form?.userStateCode,
       }),
     });
 
     const updated = await userJson.json();
     console.log("user updated: ", updated);
     if (updated?.body !== "SUCCESS" && updated?.result?.status) {
-      alert("사용자 정보 수정에 실패하였습니다.");
-      sessionStorage.setItem("isLogin", "false");
-
-      // TODO: 로그인 팝업으로 변경
-      router.push("/login");
     } else {
       getHandler();
     }
@@ -128,7 +115,7 @@ export const UserManagementDetailModal: FC<{
 
   useEffect(() => {
     if (userId !== "") {
-      getUserDetail();
+      getDetail();
     }
   }, [userId]);
 
@@ -148,7 +135,7 @@ export const UserManagementDetailModal: FC<{
         onClose={() => {
           setShowDetailModal(false);
         }}>
-        <form className="k-form" onSubmit={updateUserDetail}>
+        <form className="k-form" onSubmit={updateDetail}>
           <fieldset>
             <div className="flex flex-col gap-[15px]">
               <div className="flex flex-col gap-[12px]">

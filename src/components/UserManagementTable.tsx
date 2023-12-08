@@ -280,6 +280,7 @@ export const UserManagementTable: FC<{
               cells={{
                 data: ({ dataItem, ...props }) => {
                   return renderButtonCell(dataItem, props, "Menu", () => {
+                    setUserId(dataItem.userId);
                     setShowRoleModal(true);
                   });
                 },
@@ -334,7 +335,7 @@ export const UserManagementTable: FC<{
       )}
 
       {/* <2-3> User management - Menu authority */}
-      {showRoleModal && <UserManagementRoleModal setShowRoleModal={setShowRoleModal} />}
+      {showRoleModal && <UserManagementRoleModal setShowRoleModal={setShowRoleModal} userId={userId} />}
     </>
   );
 };
