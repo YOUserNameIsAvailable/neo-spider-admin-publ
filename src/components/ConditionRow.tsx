@@ -21,7 +21,7 @@ export const ConditionRow: FC<{
 
   const updateHandler = (e: any) => {
     console.log("updateHandler: ", e.target.value);
-    setForm((prev: any) => ({ ...prev, [Key]: e.target.value }));
+    setForm((prev: any) => ({ ...prev, [Key]: e?.value?.VALUE || e?.value || e?.target?.value || null }));
   };
 
   // useEffect(() => {

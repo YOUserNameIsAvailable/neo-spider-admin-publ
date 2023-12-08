@@ -4,7 +4,7 @@ import React, { KeyboardEvent, useEffect, useState } from "react";
 import { Input } from "@progress/kendo-react-inputs";
 import { Button } from "@progress/kendo-react-buttons";
 import { DropDownList } from "@progress/kendo-react-dropdowns";
-import { PAGES, SPORTS, USERS } from "@/constants";
+import { PAGES, SPORTS } from "@/constants";
 import { UserManagementTable } from "@/components/UserManagementTable";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -12,14 +12,16 @@ import { UserManagementAddModal } from "@/components/modal/UserManagementAddModa
 
 export default function Page() {
   const router = useRouter();
-  const [searchTypes, setSearchTypes] = useState<any>({
+  const [searchText, setSearchText] = useState<string>("");
+  const [form, setForm] = useState<any>({
     _search_userType: "_search_userName",
     _search_userId: null,
     _search_userName: null,
-    _search_state: null,
+    _search_userStateCode: null,
     _search_roleId: null,
     _search_class: null,
   });
+
   const [result, setResult] = useState<any[]>([]);
   const [count, setCount] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -36,7 +38,10 @@ export default function Page() {
         body: JSON.stringify({
           page: page || 1,
           displayCount: displayCount || 20,
-          ...searchTypes,
+          ...form,
+          ...(searchText !== "" && form._search_userType === "_search_userName"
+            ? { _search_userName: searchText }
+            : { _search_userId: searchText }),
         }),
       });
 
@@ -96,18 +101,13 @@ export default function Page() {
               ]}
               defaultItem={{ VALUE: "_search_userName", NAME: "사용자명" }}
               size={"small"}
-              onChange={(e) => setSearchTypes((prev: any) => ({ ...prev, _search_userType: e.target.value }))}
+              onChange={(e: any) => setForm((prev: any) => ({ ...prev, _search_userType: e.value.VALUE }))}
             />
 
             <Input
               className="h-[24px] w-[148px] min-w-[148px] border border-[#999999]"
-              onChange={(e) =>
-                setSearchTypes((prev: any) =>
-                  searchTypes._search_userType === "_search_userId"
-                    ? { ...prev, _search_userId: e.target.value }
-                    : { ...prev, _search_userName: e.target.value },
-                )
-              }
+              value={searchText}
+              onInput={(e) => setSearchText(e.currentTarget.value)}
               onKeyDown={handleKeyDown}
             />
 
@@ -137,7 +137,7 @@ export default function Page() {
                 ]}
                 defaultItem={{ VALUE: null, NAME: "전체" }}
                 size={"small"}
-                onChange={(e) => setSearchTypes((prev: any) => ({ ...prev, _search_state: e.target.value }))}
+                onChange={(e: any) => setForm((prev: any) => ({ ...prev, _search_userStateCode: e.value.VALUE }))}
               />
             </div>
 
@@ -149,7 +149,7 @@ export default function Page() {
                 data={SPORTS}
                 defaultValue="Option 1"
                 filterable={true}
-                onChange={(e) => setSearchTypes((prev: any) => ({ ...prev, _search_roleId: e.target.value }))}
+                onChange={(e) => setForm((prev: any) => ({ ...prev, _search_roleId: e.value.VALUE }))}
               />
             </div>
 
@@ -161,7 +161,7 @@ export default function Page() {
                 data={["사장", "전무", "부장", "차장", "과장"]}
                 defaultValue="전체"
                 filterable={true}
-                onChange={(e) => setSearchTypes((prev: any) => ({ ...prev, _search_class: e.target.value }))}
+                onChange={(e) => setForm((prev: any) => ({ ...prev, _search_class: e.value }))}
               />
             </div>
           </div>
