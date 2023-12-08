@@ -155,7 +155,7 @@ export default function Page() {
           + ADD
         </Button>
       </div>
-      {showAddModal && <UserManagementAddModal setShowAddModal={setShowAddModal} />}
+      {showAddModal && <UserManagementAddModal setShowAddModal={setShowAddModal} userId={""} />}
     </>
   );
 }

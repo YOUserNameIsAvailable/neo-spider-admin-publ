@@ -12,10 +12,9 @@ interface PositionInterface {
 }
 
 export const UserManagementAddModal: FC<{
-  getHandler: () => void;
   setShowAddModal: Dispatch<SetStateAction<boolean>>;
   userId: string;
-}> = ({ getHandler, setShowAddModal, userId }) => {
+}> = ({ setShowAddModal, userId }) => {
   const router = useRouter();
   const [position, setPosition] = useState<PositionInterface>({
     left: 341,
@@ -107,7 +106,7 @@ export const UserManagementAddModal: FC<{
       // TODO: 로그인 팝업으로 변경
       router.push("/login");
     } else {
-      getHandler();
+      // getHandler();
     }
   };
 
