@@ -3,7 +3,7 @@ import { getter } from "@progress/kendo-react-common";
 import { process } from "@progress/kendo-data-query";
 import { GridPDFExport } from "@progress/kendo-react-pdf";
 import { ExcelExport } from "@progress/kendo-react-excel-export";
-import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
+import { Grid, GridColumn as Column, GridNoRecords } from "@progress/kendo-react-grid";
 import { setGroupIds } from "@progress/kendo-react-data-tools";
 import { Button } from "@progress/kendo-react-buttons";
 import { UserManagementDetailModal } from "./modal/UserManagementDetailModal";
@@ -154,20 +154,18 @@ export const UserManagementTable: FC<{
   );
 
   useEffect(() => {
-    if (result?.length > 0) {
-      setFilteredData(result);
-      setDataResult({ data: result, total: count });
-      setData(result);
+    setFilteredData(result);
+    setDataResult({ data: result, total: count });
+    setData(result);
 
-      console.log("result: ", result);
-      console.log("dataResult: ", dataResult);
-      console.log("data: ", data);
-      console.log("dataState: ", dataState);
-      console.log("filteredData: ", filteredData);
-      console.log("currentSelectedState: ", currentSelectedState);
-      console.log("filterValue: ", filterValue);
-      console.log("initialDataState: ", initialDataState);
-    }
+    console.log("result: ", result);
+    console.log("dataResult: ", dataResult);
+    console.log("data: ", data);
+    console.log("dataState: ", dataState);
+    console.log("filteredData: ", filteredData);
+    console.log("currentSelectedState: ", currentSelectedState);
+    console.log("filterValue: ", filterValue);
+    console.log("initialDataState: ", initialDataState);
   }, [result]);
 
   useEffect(() => {
@@ -212,6 +210,11 @@ export const UserManagementTable: FC<{
             onDataStateChange={dataStateChange}
             expandField="expanded"
             resizable={true}>
+            <GridNoRecords>
+              <div id="noRecord" className="popup_pop_norecord">
+                No Record Found.
+              </div>
+            </GridNoRecords>
             <Column
               field="userId"
               title="User ID"

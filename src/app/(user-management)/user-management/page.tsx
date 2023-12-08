@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { KeyboardEvent, useEffect, useState } from "react";
 import { Input } from "@progress/kendo-react-inputs";
 import { Button } from "@progress/kendo-react-buttons";
 import { DropDownList } from "@progress/kendo-react-dropdowns";
@@ -36,7 +36,7 @@ export default function Page() {
         body: JSON.stringify({
           page: page || 1,
           displayCount: displayCount || 20,
-          // ...searchTypes,
+          ...searchTypes,
         }),
       });
 
@@ -56,6 +56,12 @@ export default function Page() {
       setCurrentPage(page || 1);
     } catch (err) {
       console.error(err);
+    }
+  };
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      getHandler(currentPage, displayCount);
     }
   };
 
@@ -102,6 +108,7 @@ export default function Page() {
                     : { ...prev, _search_userName: e.target.value },
                 )
               }
+              onKeyDown={handleKeyDown}
             />
 
             <div className="flex items-center gap-2">
@@ -174,7 +181,10 @@ export default function Page() {
               <span className="font-bold text-[#333333]">Items</span>
             </div>
 
-            <Button imageUrl="/images/refresh.png" className="basic-btn">
+            <Button
+              imageUrl="/images/refresh.png"
+              className="basic-btn"
+              onClick={() => getHandler(currentPage, displayCount)}>
               Find
             </Button>
           </div>
