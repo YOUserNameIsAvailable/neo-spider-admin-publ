@@ -324,12 +324,11 @@ export default function Page() {
                   [SELECTED_FIELD]: selectedState[idGetter(item) as keyof typeof selectedState],
                 }))}
                 sortable={true}
-                pageable={true}
                 dataItemKey={DATA_ITEM_KEY}
                 selectedField={SELECTED_FIELD}
                 onSelectionChange={onSelectionChange}
                 onHeaderSelectionChange={onHeaderSelectionChange}
-                pageSize={8}>
+                pageable={false}>
                 <Column
                   editable={false}
                   field={SELECTED_FIELD}

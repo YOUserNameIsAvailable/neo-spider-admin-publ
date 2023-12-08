@@ -161,7 +161,7 @@ export const ApprovalManagementAddApprovalItem: FC<{
         maximizeButton={() => null}
         restoreButton={() => null}
         doubleClickStageChange={false}
-        title={"작업함123123"}
+        title={"작업함"}
         width={position.width} // 1100
         height={position.height} // 700
         onMove={(e) => handleMove(e)}

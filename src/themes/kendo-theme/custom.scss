@@ -544,3 +544,15 @@ input:disabled {
 .custom-splitter > div.k-pane.k-pane-static.k-scrollable {
   z-index: 0;
 }
+
+.k-table-th,
+td,
+.k-table-td {
+  border-inline-start-width: 1px !important;
+}
+
+.k-table-th:first-child,
+td:first-child,
+.k-table-td:first-child {
+  border-inline-start-width: 0px !important;
+}
