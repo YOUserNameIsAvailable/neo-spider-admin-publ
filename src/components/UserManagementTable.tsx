@@ -180,10 +180,20 @@ export const UserManagementTable: FC<{
     }
   }, [displayCount]);
 
+  const _export = React.useRef<ExcelExport | null>(null);
+
+  const excelExport = () => {
+    if (_export.current) {
+      console.log("_exporter.current:", _export.current, dataResult);
+      _export.current?.save(dataResult);
+    }
+  };
+
   return (
     <>
       <div>
-        <ExcelExport>
+        <div onClick={excelExport}>export test</div>
+        <ExcelExport ref={_export}>
           <Grid
             style={{
               height: "500px",
@@ -200,7 +210,8 @@ export const UserManagementTable: FC<{
             data={dataResult}
             total={count || 0}
             onDataStateChange={dataStateChange}
-            expandField="expanded">
+            expandField="expanded"
+            resizable={true}>
             <Column
               field="userId"
               title="User ID"
@@ -250,7 +261,6 @@ export const UserManagementTable: FC<{
               className="col-width15per"
             />
             <Column
-              field="Menu init"
               title="Menu init"
               width="90px"
               headerClassName="justify-center"
@@ -261,7 +271,6 @@ export const UserManagementTable: FC<{
               }}
             />
             <Column
-              field="Menu authority"
               title="Menu authorityt"
               width="90px"
               headerClassName="justify-center"
@@ -274,7 +283,6 @@ export const UserManagementTable: FC<{
               }}
             />
             <Column
-              field="Status(Error count)"
               title="Status(Error count)"
               width="120px"
               headerClassName="justify-center"
@@ -285,7 +293,6 @@ export const UserManagementTable: FC<{
               }}
             />
             <Column
-              field="DO Login"
               title="DO Login"
               width="90px"
               headerClassName="justify-center"
