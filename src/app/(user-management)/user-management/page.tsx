@@ -14,7 +14,7 @@ export default function Page() {
   const router = useRouter();
   const [searchText, setSearchText] = useState<string>("");
   const [form, setForm] = useState<any>({
-    _search_userType: "_search_userName",
+    _search_type: "_search_userName",
     _search_userId: null,
     _search_userName: null,
     _search_userStateCode: null,
@@ -39,7 +39,7 @@ export default function Page() {
           page: page || 1,
           displayCount: displayCount || 20,
           ...form,
-          ...(searchText !== "" && form._search_userType === "_search_userName"
+          ...(searchText !== "" && form._search_type === "_search_userName"
             ? { _search_userName: searchText }
             : { _search_userId: searchText }),
         }),
@@ -101,7 +101,7 @@ export default function Page() {
               ]}
               defaultItem={{ VALUE: "_search_userName", NAME: "사용자명" }}
               size={"small"}
-              onChange={(e: any) => setForm((prev: any) => ({ ...prev, _search_userType: e.value.VALUE }))}
+              onChange={(e: any) => setForm((prev: any) => ({ ...prev, _search_type: e.value.VALUE }))}
             />
 
             <Input

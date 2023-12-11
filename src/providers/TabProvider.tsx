@@ -38,12 +38,11 @@ export const useTab = () => {
 };
 
 export const TabProvider: FC<TabProviderProps> = ({ children }) => {
-  const [tabs, setTabs] = useState<ITab[]>([...MENUS.filter((x) => x.url === "/service-management")]);
+  const [tabs, setTabs] = useState<ITab[]>([]);
   const [selectedTab, setSelectedTab] = useState<ITab>(tabs[0]);
 
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams(); // prevent tab flickering
 
   useEffect(() => {
     if (tabs && selectedTab) {
@@ -80,6 +79,9 @@ export const TabProvider: FC<TabProviderProps> = ({ children }) => {
       if (!isLoginPage && pathname !== sessionSelectedTab.url) {
         router.push(sessionSelectedTab.url as string);
       }
+    } else if (selectedTab) {
+      setTabs([{ text: "User Management", url: "/user-management" }]);
+      setSelectedTab({ text: "User Management", url: "/user-management" });
     }
   }, []);
 

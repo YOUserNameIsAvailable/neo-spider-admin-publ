@@ -27,7 +27,12 @@ const processWithGroups = (data: any, dataState: any) => {
   return newDataState;
 };
 
-export const ErrorCodeTable: FC<{ getHandler: () => void; result: any[] }> = ({ getHandler, result }) => {
+export const ErrorCodeTable: FC<{
+  getHandler: (page?: number, displayCount?: number) => void;
+  result: any[];
+  count: number;
+  displayCount: number;
+}> = ({ getHandler, result, count, displayCount }) => {
   const idGetter = getter("id");
   const [filterValue, setFilterValue] = useState();
   const [filteredData, setFilteredData] = useState<any[]>([]);
@@ -40,33 +45,6 @@ export const ErrorCodeTable: FC<{ getHandler: () => void; result: any[] }> = ({ 
   const [showHandlerModal, setShowHandlerModal] = useState(false); // <8-3> Error code management - Handler per error
   const [errorCode, setErrorCode] = useState("");
 
-  const onFilterChange = (ev: any) => {
-    let value = ev.value;
-    setFilterValue(ev.value);
-    let newData = EMPLOYEES.filter((item: any) => {
-      let match = false;
-      for (const property in item) {
-        if (item[property].toString().toLocaleLowerCase().indexOf(value.toLocaleLowerCase()) >= 0) {
-          match = true;
-        }
-        if (item[property].toLocaleDateString && item[property].toLocaleDateString().indexOf(value) >= 0) {
-          match = true;
-        }
-      }
-      return match;
-    });
-    setFilteredData(newData);
-    let clearedPagerDataState = {
-      ...dataState,
-      take: 8,
-      skip: 0,
-    };
-    let processedData = process(newData, clearedPagerDataState);
-    setDataResult(processedData);
-    setDataState(clearedPagerDataState);
-    setData(newData);
-  };
-
   const [resultState, setResultState] = useState(
     processWithGroups(
       EMPLOYEES.map((item: any) => ({
@@ -78,8 +56,9 @@ export const ErrorCodeTable: FC<{ getHandler: () => void; result: any[] }> = ({ 
   );
 
   const dataStateChange = (event: any) => {
-    setDataResult(process(filteredData, event.dataState));
     setDataState(event.dataState);
+    const page = Math.floor(event.dataState.skip / event.dataState.take) + 1;
+    getHandler(page, displayCount);
   };
 
   const onExpandChange = useCallback(
@@ -190,24 +169,38 @@ export const ErrorCodeTable: FC<{ getHandler: () => void; result: any[] }> = ({ 
     return count;
   };
 
-  const handleButtonClick = (row: any) => {
-    // Handle button click for the specific row
-    console.log(`Button clicked for user: ${row.full_name}`);
-  };
-
-  const renderButtonCell = (props: any) => (
-    <td>
-      <button onClick={() => handleButtonClick(props.dataItem)}>Click me</button>
+  const renderButtonCell = (dataItem: any, props: any, text: string, event?: () => void) => (
+    <td {...props.tdProps} style={{ textAlign: "center" }}>
+      <Button size={"small"} className="cell-inside-btn px-4 font-normal" themeColor={"primary"} onClick={event}>
+        {text}
+      </Button>
     </td>
   );
 
   useEffect(() => {
-    if (result?.length > 0) {
-      setFilteredData(result);
-      setDataResult(process(result, dataState));
-      setData(result);
-    }
+    setFilteredData(result);
+    setDataResult({ data: result, total: count });
+    setData(result);
+
+    console.log("result: ", result);
+    console.log("dataResult: ", dataResult);
+    console.log("data: ", data);
+    console.log("dataState: ", dataState);
+    console.log("filteredData: ", filteredData);
+    console.log("currentSelectedState: ", currentSelectedState);
+    console.log("filterValue: ", filterValue);
+    console.log("initialDataState: ", initialDataState);
   }, [result]);
+
+  useEffect(() => {
+    if (displayCount) {
+      console.log("useEffect displayCount: ", displayCount);
+      const page = Math.floor(dataState.skip / dataState.take) + 1;
+      const skip = (page - 1) * displayCount;
+
+      setDataState((prev) => ({ ...prev, skip: skip, take: displayCount }));
+    }
+  }, [displayCount]);
 
   return (
     <>
@@ -219,19 +212,16 @@ export const ErrorCodeTable: FC<{ getHandler: () => void; result: any[] }> = ({ 
             }}
             pageable={{
               pageSizes: true,
+              buttonCount: 10,
             }}
+            {...dataState}
             data={dataResult}
             sortable={false}
-            total={resultState.total}
+            total={count || 0}
             onDataStateChange={dataStateChange}
-            {...dataState}
             onExpandChange={onExpandChange}
             expandField="expanded"
-            dataItemKey={DATA_ITEM_KEY}
-            selectedField={SELECTED_FIELD}
-            onHeaderSelectionChange={onHeaderSelectionChange}
-            onSelectionChange={onSelectionChange}
-            groupable={false}
+            resizable={true}
             onRowClick={(e) => {
               setErrorCode(e.dataItem.errorCode);
               setShowModal(true);
@@ -268,19 +258,13 @@ export const ErrorCodeTable: FC<{ getHandler: () => void; result: any[] }> = ({ 
               width="150px"
               title="Handler per error"
               headerClassName="justify-center bg-[#adc6f4]"
-              cell={(props) => (
-                <td style={{ textAlign: "center" }}>
-                  <Button
-                    size={"small"}
-                    className="cell-inside-btn px-4"
-                    themeColor={"primary"}
-                    onClick={() => {
-                      setShowHandlerModal(true);
-                    }}>
-                    Handler
-                  </Button>
-                </td>
-              )}
+              cells={{
+                data: ({ dataItem, ...props }) => {
+                  return renderButtonCell(dataItem, props, "Handler", () => {
+                    setShowHandlerModal(true);
+                  });
+                },
+              }}
             />
           </Grid>
         </ExcelExport>

@@ -140,11 +140,6 @@ export const UserManagementTable: FC<{
     return count;
   };
 
-  const handleButtonClick = (row: any) => {
-    // Handle button click for the specific row
-    console.log(`Button clicked for user: ${row.full_name}`);
-  };
-
   const renderButtonCell = (dataItem: any, props: any, text: string, event?: () => void) => (
     <td {...props.tdProps} style={{ textAlign: "center" }}>
       <Button size={"small"} className="cell-inside-btn px-4 font-normal" themeColor={"primary"} onClick={event}>
@@ -198,18 +193,18 @@ export const UserManagementTable: FC<{
             }}
             pageable={{
               pageSizes: false,
-              buttonCount: 5,
+              buttonCount: 10,
             }}
             {...dataState}
+            data={dataResult}
+            total={count || 0}
+            expandField="expanded"
+            resizable={true}
+            onDataStateChange={dataStateChange}
             onRowClick={(e) => {
               setShowDetailModal(true);
               setUserId(e.dataItem.userId);
-            }}
-            data={dataResult}
-            total={count || 0}
-            onDataStateChange={dataStateChange}
-            expandField="expanded"
-            resizable={true}>
+            }}>
             <GridNoRecords>
               <div id="noRecord" className="popup_pop_norecord">
                 No Record Found.

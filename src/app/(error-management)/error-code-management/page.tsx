@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { KeyboardEvent, useEffect, useState } from "react";
 import { Input } from "@progress/kendo-react-inputs";
 import { Button } from "@progress/kendo-react-buttons";
 import { DropDownList } from "@progress/kendo-react-dropdowns";
-import { searchIcon, arrowRightIcon } from "@progress/kendo-svg-icons";
 import { SPORTS, PAGES } from "@/constants";
 import { ErrorCodeTable } from "@/components/ErrorCodeTable";
 import { ErrorCodeManagementAddModal } from "@/components/modal/ErrorCodeManagementAddModal";
@@ -12,21 +11,40 @@ import { useRouter } from "next/navigation";
 
 export default function Page() {
   const router = useRouter();
+  const [searchText, setSearchText] = useState<string>("");
+  const [form, setForm] = useState<any>({
+    _search_type: "_search_errorCode",
+    _search_errorTitle: null,
+    _search_errorCode: null,
+    _search_trxId: null,
+  });
+
+  const [result, setResult] = useState<any[]>([]);
+  const [count, setCount] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [displayCount, setDisplayCount] = useState<number>(20);
   const [isExpanded, setIsExpanded] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [result, setResult] = useState<any[]>([]);
 
   const toggleExpansion = () => {
     setIsExpanded(!isExpanded);
   };
 
-  const getHandler = async () => {
+  const getHandler = async (page?: number, displayCount?: number) => {
     try {
       const dataJson = await fetch("/api/spider/errCodeMng/list", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify({
+          page: page || 1,
+          displayCount: displayCount || 20,
+          ...form,
+          ...(searchText !== "" && form._search_type === "_search_errorCode"
+            ? { _search_errorCode: searchText }
+            : { _search_errorTitle: searchText }),
+        }),
       });
 
       const data = await dataJson.json();
@@ -41,8 +59,16 @@ export default function Page() {
       }
 
       setResult(data?.body?.list);
+      setCount(data?.body?.count);
+      setCurrentPage(page || 1);
     } catch (err) {
       console.error(err);
+    }
+  };
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      getHandler(currentPage, displayCount);
     }
   };
 
@@ -66,36 +92,77 @@ export default function Page() {
         <div className="flex justify-between gap-4 bg-[#dde6f0] p-4">
           <div className="flex w-full flex-row items-center">
             <DropDownList
-              className="mr-2 h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
+              className="mr-2 h-[30px] w-[148px] border bg-[#f6f6f6f6] text-[#656565]"
+              textField="NAME"
+              dataItemKey="VALUE"
+              data={[
+                { VALUE: "_search_errorCode", NAME: "오류코드" },
+                { VALUE: "_search_errorTitle", NAME: "오류제목" },
+              ]}
+              defaultItem={{ VALUE: "_search_errorCode", NAME: "오류코드" }}
               size={"small"}
-              data={SPORTS}
-              defaultValue="Option 1"
-              filterable={false}
-              style={{ width: "148px" }}
+              onChange={(e: any) => setForm((prev: any) => ({ ...prev, _search_type: e.value.VALUE }))}
             />
 
-            <Input className="h-[24px] w-[148px]" />
+            <Input
+              className="h-[24px] w-[148px] border border-[#999999]"
+              value={searchText}
+              onInput={(e) => setSearchText(e.currentTarget.value)}
+              onKeyDown={handleKeyDown}
+            />
 
             <div className="ml-2 flex items-center gap-2">
               <span className="whitespace-nowrap font-bold text-[#6f7071]">Error handler</span>
               <DropDownList
-                className="mr-2 h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
+                className="mr-2 h-[30px] w-[200px] border bg-[#f6f6f6f6] text-[#656565]"
+                textField="NAME"
+                dataItemKey="VALUE"
+                data={[
+                  {
+                    VALUE: null,
+                    NAME: "전체",
+                  },
+                  {
+                    VALUE: "1",
+                    NAME: "정상",
+                  },
+                  {
+                    VALUE: "2",
+                    NAME: "삭제",
+                  },
+                  {
+                    VALUE: "3",
+                    NAME: "정지",
+                  },
+                ]}
+                defaultItem={{ VALUE: null, NAME: "전체" }}
                 size={"small"}
-                data={SPORTS}
-                defaultValue="Option 1"
-                filterable={false}
-                style={{ width: "200px" }}
+                onChange={(e: any) => setForm((prev: any) => ({ ...prev, _search_userStateCode: e.value.VALUE }))}
               />
             </div>
           </div>
 
           <div className="flex items-center gap-8">
             <div className="flex items-center gap-2">
-              <DropDownList className="h-[24px]" size={"small"} data={PAGES} defaultValue="20" filterable={false} />
+              <DropDownList
+                size={"small"}
+                data={PAGES}
+                defaultValue={displayCount}
+                style={{ width: "80px" }}
+                onChange={(e) => {
+                  setDisplayCount(e.target.value);
+                  getHandler(currentPage, e.target.value);
+                }}
+              />
               <span className="font-bold text-[#333333]">Items</span>
             </div>
 
-            <Button svgIcon={searchIcon}>Find</Button>
+            <Button
+              imageUrl="/images/refresh.png"
+              className="basic-btn"
+              onClick={() => getHandler(currentPage, displayCount)}>
+              Find
+            </Button>
           </div>
         </div>
         {/* exandable */}
@@ -122,7 +189,7 @@ export default function Page() {
         <img src={"/images/dot_subtitle.gif"} alt="" style={{}} />
         <span className="font-bold text-[#656565]">List</span>
       </div>
-      <ErrorCodeTable getHandler={getHandler} result={result} />
+      <ErrorCodeTable getHandler={getHandler} result={result} count={count} displayCount={displayCount} />
       <div className="flex justify-end">
         <Button
           imageUrl="/images/dot-right-arrow.png"

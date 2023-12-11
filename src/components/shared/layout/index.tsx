@@ -55,8 +55,6 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
     if (selectedTab.url === tab.url) {
       const prevTab = newTabs[newTabs.length - 1];
       setSelectedTab(prevTab);
-      router.push(prevTab.url as string);
-      // setSelectedTab(null); // TODO
     }
 
     // navigate(-1);
@@ -106,35 +104,6 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
       setIsClose((prevState) => !prevState);
     }
   };
-
-  const tabHandler = () => {
-    const sessionTabsJson = sessionStorage.getItem("tabs") || "undefined";
-    const sessionSelectedTabJson = sessionStorage.getItem("selectedTab") || "undefined";
-    if (
-      sessionTabsJson &&
-      sessionSelectedTabJson &&
-      sessionTabsJson !== "undefined" &&
-      sessionSelectedTabJson !== "undefined"
-    ) {
-      const sessionTabs = JSON.parse(sessionTabsJson);
-      const sessionSelectedTab = JSON.parse(sessionSelectedTabJson);
-      const isLoginPage = pathname.indexOf("login") > -1;
-
-      console.log("sessionTabs: ", sessionTabs);
-      console.log("sessionSelectedTab: ", sessionSelectedTab);
-
-      setTabs(sessionTabs);
-      setSelectedTab(sessionSelectedTab);
-
-      if (!isLoginPage && pathname !== sessionSelectedTab.url) {
-        router.push(sessionSelectedTab.url as string);
-      }
-    }
-  };
-
-  useEffect(() => {
-    tabHandler();
-  }, []);
 
   return (
     <>
