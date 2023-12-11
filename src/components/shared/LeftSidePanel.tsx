@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MENUS } from "@/constants";
 import { Button, ButtonGroup } from "@progress/kendo-react-buttons";
 import { PanelBar, PanelBarItem } from "@progress/kendo-react-layout";
@@ -13,7 +13,6 @@ import {
 import { useTab } from "@/providers/TabProvider";
 import { IMenu, ITab } from "@/types";
 import { useRouter } from "next/navigation";
-// import { useNavigate } from "react-router-dom";
 
 const TreeItem = (props: ItemRenderProps) => {
   return (
@@ -33,7 +32,11 @@ export function LeftSideBar({ clickCollapseBtn }: { clickCollapseBtn: () => void
 
   const router = useRouter();
 
-  const [expand, setExpand] = useState<TreeViewOperationDescriptor>({ ids: [], idField: "text" });
+  // const [expand, setExpand] = useState<TreeViewOperationDescriptor>({ ids: [], idField: "text" });
+  const [expand, setExpand] = useState<TreeViewOperationDescriptor>(() => {
+    const sessionExpand = sessionStorage.getItem("expand");
+    return sessionExpand ? JSON.parse(sessionExpand) : { ids: [], idField: "text" };
+  });
   const [select, setSelect] = useState<string[]>();
 
   const onItemClick = ({ item: _item, itemHierarchicalIndex }: TreeViewItemClickEvent) => {
@@ -69,6 +72,7 @@ export function LeftSideBar({ clickCollapseBtn }: { clickCollapseBtn: () => void
     index === -1 ? ids.push(item.text) : ids.splice(index, 1);
 
     setExpand({ ids, idField: "text" });
+    sessionStorage.setItem("expand", JSON.stringify({ ids, idField: "text" }));
   };
 
   return (
@@ -105,7 +109,7 @@ export function LeftSideBar({ clickCollapseBtn }: { clickCollapseBtn: () => void
       </div>
       <ButtonGroup className="m-2 flex gap-[4px]">
         <Button className="leftPanelGroupBtn flex-grow !capitalize">Framework</Button>
-        <Button className="leftPanelGroupBtn flex-grow  !capitalize">MyMenu</Button>
+        <Button className="leftPanelGroupBtn flex-grow !capitalize">MyMenu</Button>
         <Button className="leftPanelGroupBtn flex-grow !capitalize">TestCase</Button>
       </ButtonGroup>
     </div>
