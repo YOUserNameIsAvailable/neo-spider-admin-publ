@@ -2,7 +2,7 @@
 
 import { MENUS } from "@/constants";
 import { ITab } from "@/types";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   createContext,
   useContext,
@@ -43,6 +43,7 @@ export const TabProvider: FC<TabProviderProps> = ({ children }) => {
 
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams(); // prevent tab flickering
 
   useEffect(() => {
     if (tabs && selectedTab) {
