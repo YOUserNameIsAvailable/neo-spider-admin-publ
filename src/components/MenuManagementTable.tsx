@@ -27,7 +27,12 @@ const processWithGroups = (data: any, dataState: any) => {
   return newDataState;
 };
 
-export const MenuManagementTable: FC<{ getHandler: () => void; result: any[] }> = ({ getHandler, result }) => {
+export const MenuManagementTable: FC<{
+  getHandler: (page?: number, displayCount?: number) => void;
+  result: any[];
+  count: number;
+  displayCount: number;
+}> = ({ getHandler, result, count, displayCount }) => {
   const idGetter = getter("id");
   const [filterValue, setFilterValue] = useState();
   const [filteredData, setFilteredData] = useState<any[]>([]);
@@ -36,6 +41,7 @@ export const MenuManagementTable: FC<{ getHandler: () => void; result: any[] }> 
   const [dataResult, setDataResult] = useState<any>({ data: [] });
   const [data, setData] = useState<any[]>([]);
 
+  const [menuId, setMenuId] = useState(""); // <3-2> Menu management - detail
   const [showModal, setShowModal] = useState(false); // <3-2> Menu management - detail
 
   const onFilterChange = (ev: any) => {
@@ -188,24 +194,30 @@ export const MenuManagementTable: FC<{ getHandler: () => void; result: any[] }> 
     return count;
   };
 
-  const handleButtonClick = (row: any) => {
-    // Handle button click for the specific row
-    console.log(`Button clicked for user: ${row.full_name}`);
-  };
+  useEffect(() => {
+    setFilteredData(result);
+    setDataResult({ data: result, total: count });
+    setData(result);
 
-  const renderButtonCell = (props: any) => (
-    <td>
-      <button onClick={() => handleButtonClick(props.dataItem)}>Click me</button>
-    </td>
-  );
+    console.log("result: ", result);
+    console.log("dataResult: ", dataResult);
+    console.log("data: ", data);
+    console.log("dataState: ", dataState);
+    console.log("filteredData: ", filteredData);
+    console.log("currentSelectedState: ", currentSelectedState);
+    console.log("filterValue: ", filterValue);
+    console.log("initialDataState: ", initialDataState);
+  }, [result]);
 
   useEffect(() => {
-    if (result?.length > 0) {
-      setFilteredData(result);
-      setDataResult(process(result, dataState));
-      setData(result);
+    if (displayCount) {
+      console.log("useEffect displayCount: ", displayCount);
+      const page = Math.floor(dataState.skip / dataState.take) + 1;
+      const skip = (page - 1) * displayCount;
+
+      setDataState((prev) => ({ ...prev, skip: skip, take: displayCount }));
     }
-  }, [result]);
+  }, [displayCount]);
 
   return (
     <>
@@ -216,53 +228,53 @@ export const MenuManagementTable: FC<{ getHandler: () => void; result: any[] }> 
               height: "500px",
             }}
             pageable={{
-              pageSizes: true,
+              pageSizes: false,
+              buttonCount: 10,
             }}
-            data={dataResult}
-            sortable={false}
-            total={resultState.total}
-            onDataStateChange={dataStateChange}
             {...dataState}
-            onExpandChange={onExpandChange}
+            data={dataResult}
+            total={count || 0}
             expandField="expanded"
-            dataItemKey={DATA_ITEM_KEY}
-            selectedField={SELECTED_FIELD}
-            onHeaderSelectionChange={onHeaderSelectionChange}
-            onSelectionChange={onSelectionChange}
-            groupable={false}
-            onRowClick={() => {
+            resizable={true}
+            onDataStateChange={dataStateChange}
+            onRowClick={(e) => {
+              setMenuId(e.dataItem.menuId);
               setShowModal(true);
             }}>
             <Column
-              field="budget"
+              field="menuId"
               title="Menu ID"
               columnMenu={ColumnMenu}
               headerClassName="justify-center col-width20per"
               className="col-width20per"
             />
             <Column
-              field="full_name"
+              field="menuName"
               title="Menu Name"
               columnMenu={ColumnMenu}
               headerClassName="justify-center col-width30per"
               className="col-width30per"
             />
             <Column
-              field="target"
+              field="menuUrl"
               title="메뉴 URL"
               columnMenu={ColumnMenu}
               headerClassName="justify-center col-width40per"
               className="col-width40per"
             />
             <Column
-              field="budget"
+              field="displayYn"
               title="Display"
               cells={{
                 data: ({ dataItem, ...props }) => {
                   return (
                     <td {...props.tdProps}>
                       <span className="flex w-full justify-center">
-                        <img src="/images/radio-on-button-green.png" className="h-5 w-5" />
+                        {dataItem.displayYn === "Y" ? (
+                          <img src="/images/radio-on-button-green.png" className="h-5 w-5" />
+                        ) : (
+                          <img src="/images/radio-on-button-red.png" className="h-5 w-5" />
+                        )}
                       </span>
                     </td>
                   );
@@ -272,14 +284,18 @@ export const MenuManagementTable: FC<{ getHandler: () => void; result: any[] }> 
               className="col-width10per"
             />
             <Column
-              field="budget"
+              field="useYn"
               title="Use"
               cells={{
                 data: ({ dataItem, ...props }) => {
                   return (
                     <td {...props.tdProps}>
                       <span className="flex w-full justify-center">
-                        <img src="/images/radio-on-button-green.png" className="h-5 w-5" />
+                        {dataItem.useYn === "Y" ? (
+                          <img src="/images/radio-on-button-green.png" className="h-5 w-5" />
+                        ) : (
+                          <img src="/images/radio-on-button-red.png" className="h-5 w-5" />
+                        )}
                       </span>
                     </td>
                   );
@@ -289,7 +305,6 @@ export const MenuManagementTable: FC<{ getHandler: () => void; result: any[] }> 
               className="col-width10per"
             />
             <Column
-              field="budget"
               title="Sub Menu"
               cells={{
                 data: ({ dataItem, ...props }) => {
@@ -330,7 +345,7 @@ export const MenuManagementTable: FC<{ getHandler: () => void; result: any[] }> 
         </GridPDFExport>
       </div>
 
-      {showModal && <MenuManagementModal setShowModal={setShowModal} />}
+      {showModal && <MenuManagementModal getHandler={getHandler} setShowModal={setShowModal} menuId={menuId} />}
     </>
   );
 };

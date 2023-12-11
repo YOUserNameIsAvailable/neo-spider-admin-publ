@@ -24,7 +24,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   console.log(123123, pathname, isHomePage, isLoginPage);
 
   useEffect(() => {
-    const _isLogin = sessionStorage.getItem("isLogin") === "true";
+    const sessionIsLogin = sessionStorage.getItem("isLogin") || {};
+    const _isLogin = Object.keys(sessionIsLogin).length > 0 ? true : false;
     setIsLogin(_isLogin);
 
     console.log(999, pathname, _isLogin, isLoginPage, !isLoaded && !isLoginPage && _isLogin);

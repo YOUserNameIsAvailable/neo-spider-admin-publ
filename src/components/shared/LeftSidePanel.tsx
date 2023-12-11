@@ -33,10 +33,7 @@ export function LeftSideBar({ clickCollapseBtn }: { clickCollapseBtn: () => void
   const router = useRouter();
 
   // const [expand, setExpand] = useState<TreeViewOperationDescriptor>({ ids: [], idField: "text" });
-  const [expand, setExpand] = useState<TreeViewOperationDescriptor>(() => {
-    const sessionExpand = sessionStorage.getItem("expand");
-    return sessionExpand ? JSON.parse(sessionExpand) : { ids: [], idField: "text" };
-  });
+  const [expand, setExpand] = useState<TreeViewOperationDescriptor>({ ids: [], idField: "text" });
   const [select, setSelect] = useState<string[]>();
 
   const onItemClick = ({ item: _item, itemHierarchicalIndex }: TreeViewItemClickEvent) => {
@@ -74,6 +71,13 @@ export function LeftSideBar({ clickCollapseBtn }: { clickCollapseBtn: () => void
     setExpand({ ids, idField: "text" });
     sessionStorage.setItem("expand", JSON.stringify({ ids, idField: "text" }));
   };
+
+  useEffect(() => {
+    if (sessionStorage.getItem("expand")) {
+      const expand = JSON.parse(sessionStorage.getItem("expand") || "");
+      setExpand(expand);
+    }
+  }, []);
 
   return (
     <div className="pane-content flex h-full flex-col gap-3 rounded-t-[12px] bg-[#603d86] p-[5px]">

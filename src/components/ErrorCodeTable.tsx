@@ -211,17 +211,15 @@ export const ErrorCodeTable: FC<{
               height: "500px",
             }}
             pageable={{
-              pageSizes: true,
+              pageSizes: false,
               buttonCount: 10,
             }}
             {...dataState}
             data={dataResult}
-            sortable={false}
             total={count || 0}
-            onDataStateChange={dataStateChange}
-            onExpandChange={onExpandChange}
             expandField="expanded"
             resizable={true}
+            onDataStateChange={dataStateChange}
             onRowClick={(e) => {
               setErrorCode(e.dataItem.errorCode);
               setShowModal(true);

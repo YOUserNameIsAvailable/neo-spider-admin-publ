@@ -101,7 +101,7 @@ export const UserManagementAddModal: FC<{
     console.log("user updated: ", updated);
     if (updated?.body !== "SUCCESS" && updated?.result?.status) {
       alert("사용자 정보 수정에 실패하였습니다.");
-      sessionStorage.setItem("isLogin", "false");
+      sessionStorage.removeItem("isLogin");
 
       // TODO: 로그인 팝업으로 변경
       router.push("/login");

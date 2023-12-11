@@ -94,7 +94,7 @@ export const UserManagementRoleModal: FC<{ setShowRoleModal: Dispatch<SetStateAc
   };
 
   useEffect(() => {
-    if (userId) {
+    if (userId && userId !== "") {
       getDetail();
     }
   }, [userId]);

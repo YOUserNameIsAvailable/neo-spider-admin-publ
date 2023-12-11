@@ -105,6 +105,16 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
     }
   };
 
+  useEffect(() => {
+    const sessionTabsJson = sessionStorage.getItem("tabs") || "undefined";
+    const sessionSelectedTabJson = sessionStorage.getItem("selectedTab") || "undefined";
+
+    if (sessionTabsJson === "undefined" || sessionSelectedTabJson === "undefined") {
+      setTabs([{ text: "User Management", url: "/user-management" }]);
+      setSelectedTab({ text: "User Management", url: "/user-management" });
+    }
+  }, []);
+
   return (
     <>
       {/* top bar */}

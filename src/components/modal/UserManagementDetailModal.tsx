@@ -40,7 +40,7 @@ export const UserManagementDetailModal: FC<{
   };
 
   const getDetail = async () => {
-    const userJson = await fetch("/api/spider/userMng/detail", {
+    const detailJson = await fetch("/api/spider/userMng/detail", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -50,9 +50,9 @@ export const UserManagementDetailModal: FC<{
       }),
     });
 
-    const user = await userJson.json();
-    const detail = user?.body?.detail[0];
-    console.log("user: ", detail);
+    const detailResult = await detailJson.json();
+    const detail = detailResult?.body?.detail[0];
+    console.log("detail: ", detail);
     setForm({
       org_userId: userId,
       userId: userId,
@@ -77,7 +77,7 @@ export const UserManagementDetailModal: FC<{
     }
     console.log("form: ", form);
 
-    const userJson = await fetch("/api/spider/userMng/update", {
+    const updatedJson = await fetch("/api/spider/userMng/update", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -90,7 +90,7 @@ export const UserManagementDetailModal: FC<{
       }),
     });
 
-    const updated = await userJson.json();
+    const updated = await updatedJson.json();
     console.log("user updated: ", updated);
     if (updated?.body !== "SUCCESS" && updated?.result?.status) {
     } else {
@@ -114,7 +114,7 @@ export const UserManagementDetailModal: FC<{
   };
 
   useEffect(() => {
-    if (userId !== "") {
+    if (userId && userId !== "") {
       getDetail();
     }
   }, [userId]);

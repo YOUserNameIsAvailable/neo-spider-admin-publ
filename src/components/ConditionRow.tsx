@@ -1,6 +1,6 @@
 import { Button } from "@progress/kendo-react-buttons";
 import { DropDownList } from "@progress/kendo-react-dropdowns";
-import { Input } from "@progress/kendo-react-inputs";
+import { Input, TextArea } from "@progress/kendo-react-inputs";
 import { Tooltip } from "@progress/kendo-react-tooltip";
 import { FC, useEffect, useRef, useState } from "react";
 
@@ -13,10 +13,24 @@ export const ConditionRow: FC<{
   isRequired?: boolean;
   Key: string;
   btnText?: string;
+  width?: string;
   setForm?: any;
   btnEvent?: () => void;
   isValidate?: boolean;
-}> = ({ label, type, value, listData, disabled, isRequired, Key, btnText, btnEvent, setForm, isValidate = false }) => {
+}> = ({
+  label,
+  type,
+  value,
+  listData,
+  disabled,
+  isRequired,
+  Key,
+  btnText,
+  width = "45%",
+  btnEvent,
+  setForm,
+  isValidate = false,
+}) => {
   const tooltip = useRef<Tooltip>(null);
 
   const updateHandler = (e: any) => {
@@ -32,7 +46,7 @@ export const ConditionRow: FC<{
   // }, [value]);
 
   return (
-    <div className="flex w-[50%] items-center">
+    <div className={`flex w-[${width}] items-center`}>
       <label className="flex h-full w-[150px] min-w-[150px] items-center bg-[#d1daec] p-1 text-[12px] text-black">
         {label}
       </label>
@@ -45,7 +59,7 @@ export const ConditionRow: FC<{
         </Button>
       ) : type === "select" ? (
         <div
-          className="w-[40%]"
+          className={`w-[${width}]`}
           onMouseOver={(e) => {
             // console.log(tooltip.current);
             tooltip.current && tooltip.current.handleMouseOver(e);
@@ -76,9 +90,38 @@ export const ConditionRow: FC<{
             />
           )}
         </div>
+      ) : type === "textarea" ? (
+        <>
+          <div
+            className={`w-[${width}]`}
+            onMouseOver={(e) => isValidate && tooltip.current && tooltip.current.handleMouseOver(e)}
+            onMouseOut={(e) => isValidate && tooltip.current && tooltip.current.handleMouseOut(e)}>
+            <TextArea
+              className="my-[2px] ml-[2px] mr-[2px] h-auto w-full rounded-[3px] border-[1px] border-[#999999]"
+              disabled={disabled}
+              required={isRequired}
+              defaultValue={value}
+              value={value}
+              title={`${label}을(를) 입력하세요`}
+              onInput={updateHandler}
+              onInvalid={(e) => {
+                e.preventDefault();
+              }}
+            />
+            {isValidate && isRequired && (
+              <Tooltip
+                ref={tooltip}
+                style={{ width: "max-content", height: "26px", whiteSpace: "nowrap" }}
+                anchorElement="target"
+                position="right"
+                openDelay={300}
+              />
+            )}
+          </div>
+        </>
       ) : (
         <div
-          className="w-[45%]"
+          className={`w-[${width}]`}
           onMouseOver={(e) => isValidate && tooltip.current && tooltip.current.handleMouseOver(e)}
           onMouseOut={(e) => isValidate && tooltip.current && tooltip.current.handleMouseOut(e)}>
           <Input

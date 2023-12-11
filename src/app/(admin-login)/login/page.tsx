@@ -34,10 +34,11 @@ export default function Page() {
       if (login.result.status !== "success") {
         alert("권한이 없거나 ID나 비밀번호가 틀립니다. 관리자에게 문의하세요");
         sessionStorage.removeItem("isLogin");
+      } else {
+        alert("로그인 되었습니다.");
+        sessionStorage.setItem("isLogin", JSON.stringify(login?.header));
+        router.push("/front/");
       }
-
-      sessionStorage.setItem("isLogin", "true");
-      router.push("/front/");
     } catch (err) {
       console.error(err);
     }

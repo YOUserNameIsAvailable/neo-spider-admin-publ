@@ -38,6 +38,8 @@ export const ErrorCodeManagementDetailModal: FC<{
 
   const getDetail = async () => {
     try {
+      const loginJson = sessionStorage.getItem("isLogin") || "";
+      const login = JSON.parse(loginJson);
       const resultJson = await fetch("/api/spider/errCodeMng/detail", {
         method: "POST",
         headers: {
@@ -55,7 +57,7 @@ export const ErrorCodeManagementDetailModal: FC<{
       setForm({
         trxId: "",
         errorTitle: errorrecord.errortitle,
-        orgId: "",
+        orgId: login?.userId,
         orgErrorCode: errorrecord.orgErrorode,
         errorLevel: errorrecord.errorLevel,
         errorCode: errorrecord.errorCode,
@@ -68,7 +70,7 @@ export const ErrorCodeManagementDetailModal: FC<{
 
   useEffect(() => {
     console.log("errorCode: ", errorCode);
-    if (errorCode !== "") {
+    if (errorCode && errorCode !== "") {
       getDetail();
     }
   }, [errorCode]);
