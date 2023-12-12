@@ -1,13 +1,14 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 import { getter } from "@progress/kendo-react-common";
 import { process } from "@progress/kendo-data-query";
 import { GridPDFExport } from "@progress/kendo-react-pdf";
 import { ExcelExport } from "@progress/kendo-react-excel-export";
-import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
+import { Grid, GridColumn as Column, GridNoRecords } from "@progress/kendo-react-grid";
 import { setGroupIds, setExpandedState } from "@progress/kendo-react-data-tools";
 import { EMPLOYEES } from "@/constants";
 import { ColumnMenu } from "./ColumnMenu";
 import { ClientWebProps } from "@/types";
+import { Button } from "@progress/kendo-react-buttons";
 
 const DATA_ITEM_KEY = "id";
 const SELECTED_FIELD = "selected";
@@ -28,7 +29,13 @@ const processWithGroups = (data: any, dataState: any) => {
   return newDataState;
 };
 
-export const ClientWebTable: FC<{ onRowClick?: (e: any) => void; result: any[] }> = ({ onRowClick, result }) => {
+export const ClientWebTable: FC<{
+  getHandler: (page?: number, displayCount?: number) => void;
+  onRowClick?: (e: any) => void;
+  result: any[];
+  count: number;
+  displayCount: number;
+}> = ({ getHandler, onRowClick, result, count, displayCount }) => {
   const idGetter = getter("id");
   const [filterValue, setFilterValue] = useState();
   const [filteredData, setFilteredData] = useState<any[]>([]);
@@ -36,43 +43,6 @@ export const ClientWebTable: FC<{ onRowClick?: (e: any) => void; result: any[] }
   const [dataState, setDataState] = useState(initialDataState);
   const [dataResult, setDataResult] = useState<any>({ data: [] });
   const [data, setData] = useState<any[]>([]);
-
-  const onFilterChange = (ev: any) => {
-    let value = ev.value;
-    setFilterValue(ev.value);
-    let newData = EMPLOYEES.filter((item: any) => {
-      let match = false;
-      for (const property in item) {
-        if (item[property].toString().toLocaleLowerCase().indexOf(value.toLocaleLowerCase()) >= 0) {
-          match = true;
-        }
-        if (item[property].toLocaleDateString && item[property].toLocaleDateString().indexOf(value) >= 0) {
-          match = true;
-        }
-      }
-      return match;
-    });
-    setFilteredData(newData);
-    let clearedPagerDataState = {
-      ...dataState,
-      take: 8,
-      skip: 0,
-    };
-    let processedData = process(newData, clearedPagerDataState);
-    setDataResult(processedData);
-    setDataState(clearedPagerDataState);
-    setData(newData);
-  };
-
-  const [resultState, setResultState] = React.useState(
-    processWithGroups(
-      EMPLOYEES.map((item: any) => ({
-        ...item,
-        selected: currentSelectedState[idGetter(item)],
-      })),
-      initialDataState,
-    ),
-  );
 
   const dataStateChange = (event: any) => {
     setDataResult(process(filteredData, event.dataState));
@@ -117,15 +87,11 @@ export const ClientWebTable: FC<{ onRowClick?: (e: any) => void; result: any[] }
         };
       }
     });
+
     return newData;
   };
 
-  const newData = setExpandedState({
-    data: setSelectedValue(resultState.data),
-    collapsedIds: [],
-  });
-
-  const onHeaderSelectionChange = React.useCallback(
+  const onHeaderSelectionChange = useCallback(
     (event: any) => {
       const checkboxElement = event.syntheticEvent.target;
       const checked = checkboxElement.checked;
@@ -141,14 +107,14 @@ export const ClientWebTable: FC<{ onRowClick?: (e: any) => void; result: any[] }
       const newDataResult = processWithGroups(newData, dataState);
       setDataResult(newDataResult);
     },
-    [data, dataState, idGetter],
+    [data, dataState],
   );
 
   const onSelectionChange = (event: any) => {
-    const selectedProductId = event.dataItem.id;
+    const selectedProductId = event.dataItem.rowSeq;
 
     const newData = data.map((item: any) => {
-      if (item.id === selectedProductId) {
+      if (item.rowSeq === selectedProductId) {
         item.selected = !item.selected;
       }
       return item;
@@ -161,6 +127,8 @@ export const ClientWebTable: FC<{ onRowClick?: (e: any) => void; result: any[] }
 
     const newDataResult = processWithGroups(newData, dataState);
     setDataResult(newDataResult);
+
+    console.log(123123, newDataResult);
   };
 
   const getNumberOfItems = (data: any) => {
@@ -181,13 +149,26 @@ export const ClientWebTable: FC<{ onRowClick?: (e: any) => void; result: any[] }
       if (item.items) {
         count = count + getNumberOfSelectedItems(item.items);
       } else {
-        count = count + (item.selected === true ? 1 : 0);
+        count = count + (item.selected == true ? 1 : 0);
       }
     });
     return count;
   };
 
+  const renderButtonCell = (dataItem: any, props: any, text: string, event?: () => void) => (
+    <td {...props.tdProps} style={{ textAlign: "center" }}>
+      <Button size={"small"} className="cell-inside-btn px-4 font-normal" themeColor={"primary"} onClick={event}>
+        {text}
+      </Button>
+    </td>
+  );
+
   const checkHeaderSelectionValue = () => {
+    const newData = setExpandedState({
+      data: setSelectedValue(dataResult.data),
+      collapsedIds: [],
+    });
+
     let selectedItems = getNumberOfSelectedItems(newData);
     return newData.length > 0 && selectedItems === getNumberOfItems(newData);
   };
@@ -209,25 +190,29 @@ export const ClientWebTable: FC<{ onRowClick?: (e: any) => void; result: any[] }
             cursor: "pointer",
           }}
           pageable={{
-            pageSizes: true,
+            pageSizes: false,
+            buttonCount: 10,
           }}
-          data={dataResult}
-          sortable={true}
-          total={resultState.total}
-          onDataStateChange={dataStateChange}
           {...dataState}
-          onExpandChange={onExpandChange}
+          data={dataResult}
+          total={count || 0}
           expandField="expanded"
           dataItemKey={DATA_ITEM_KEY}
           selectedField={SELECTED_FIELD}
+          resizable={true}
+          onDataStateChange={dataStateChange}
           onHeaderSelectionChange={onHeaderSelectionChange}
           onSelectionChange={onSelectionChange}
-          onRowClick={onRowClick}
-          groupable={false}>
+          onRowClick={onRowClick}>
+          <GridNoRecords>
+            <div id="noRecord" className="popup_pop_norecord">
+              No Record Found.
+            </div>
+          </GridNoRecords>
           <Column
             filterable={false}
             field={SELECTED_FIELD}
-            width={50}
+            width={30}
             headerSelectionValue={checkHeaderSelectionValue()}
             headerClassName="bg-[#adc6f4]"
           />
@@ -370,7 +355,7 @@ export const ClientWebTable: FC<{ onRowClick?: (e: any) => void; result: any[] }
           }}
           data={dataResult}
           sortable={false}
-          total={resultState.total}
+          total={count}
           onDataStateChange={dataStateChange}
           {...dataState}
           onExpandChange={onExpandChange}

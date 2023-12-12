@@ -5,10 +5,69 @@ import { PAGES, SPORTS } from "@/constants";
 import { Input } from "@progress/kendo-react-inputs";
 import { Button } from "@progress/kendo-react-buttons";
 import { RoleManagementTable } from "@/components/RoleManagementTable";
-import { arrowRightIcon } from "@progress/kendo-svg-icons";
-import React from "react";
+import React, { KeyboardEvent, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
+  const router = useRouter();
+  const [searchText, setSearchText] = useState<string>("");
+  const [form, setForm] = useState<any>({
+    _search_type: "_search_roleName",
+    _search_roleId: null,
+    _search_roleName: null,
+  });
+
+  const [result, setResult] = useState<any[]>([]);
+  const [count, setCount] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [displayCount, setDisplayCount] = useState<number>(20);
+
+  const getHandler = async (page?: number, displayCount?: number) => {
+    try {
+      const dataJson = await fetch("/api/spider/roleMng/list", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          page: page || 1,
+          displayCount: displayCount || 20,
+          ...form,
+          ...(searchText !== "" && form._search_type === "_search_roleName"
+            ? { _search_roleName: searchText }
+            : { _search_roleId: searchText }),
+        }),
+      });
+
+      const data = await dataJson.json();
+      console.log("data: ", data);
+
+      if (data?.result?.error?.code === "FRU00001") {
+        console.error(data?.result?.error);
+        alert("로그인이 만료되었습니다.");
+        sessionStorage.removeItem("isLogin");
+        router.push("/login");
+        return;
+      }
+
+      setResult(data?.body?.list);
+      setCount(data?.body?.count);
+      setCurrentPage(page || 1);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      getHandler(currentPage, displayCount);
+    }
+  };
+
+  useEffect(() => {
+    getHandler();
+  }, []);
+
   return (
     <>
       <>
@@ -20,23 +79,46 @@ export default function Page() {
           <div className="flex items-center gap-4">
             <div className="flex flex-row items-center justify-center">
               <DropDownList
-                className="mr-2 h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
+                className="mr-2 h-[30px] w-[148px] border bg-[#f6f6f6f6] text-[#656565]"
+                textField="NAME"
+                dataItemKey="VALUE"
+                data={[
+                  { VALUE: "_search_roleName", NAME: "권한명" },
+                  { VALUE: "_search_roleId", NAME: "권한ID" },
+                ]}
+                defaultValue={{ VALUE: "_search_roleName", NAME: "권한명" }}
                 size={"small"}
-                data={SPORTS}
-                defaultValue="Option 1"
-                filterable={false}
-                style={{ width: "148px" }}
+                onChange={(e: any) => setForm((prev: any) => ({ ...prev, _search_type: e.value.VALUE }))}
               />
-              <Input className="h-[24px] w-[148px]" />
+
+              <Input
+                className="h-[24px] w-[148px] min-w-[148px] border border-[#999999]"
+                value={searchText}
+                onInput={(e) => setSearchText(e.currentTarget.value)}
+                onKeyDown={handleKeyDown}
+              />
             </div>
           </div>
 
           <div className="flex items-center gap-8">
             <div className="flex items-center gap-2">
-              <DropDownList size={"small"} data={PAGES} defaultValue="20" filterable={false} />
+              <DropDownList
+                size={"small"}
+                data={PAGES}
+                defaultValue={displayCount}
+                style={{ width: "80px" }}
+                onChange={(e) => {
+                  setDisplayCount(e.target.value);
+                  getHandler(currentPage, e.target.value);
+                }}
+              />
               <span className="font-bold text-[#333333]">Items</span>
             </div>
-            <Button imageUrl="/images/refresh.png" className="basic-btn">
+
+            <Button
+              imageUrl="/images/refresh.png"
+              className="basic-btn"
+              onClick={() => getHandler(currentPage, displayCount)}>
               Find
             </Button>
           </div>
@@ -47,7 +129,7 @@ export default function Page() {
           <img src={"/images/dot_subtitle.gif"} alt="" style={{}} />
           <span className="font-bold text-[#656565]">List</span>
         </div>
-        <RoleManagementTable />
+        <RoleManagementTable getHandler={getHandler} result={result} count={count} displayCount={displayCount} />
       </div>
 
       <div className="flex justify-end gap-6">

@@ -71,7 +71,7 @@ export const ConditionRow: FC<{
             validityStyles={isValidate}
             style={{ marginRight: "2px", fontSize: "12px", marginLeft: "2px", paddingTop: "0px" }}
             size={"small"}
-            defaultItem={{ NAME: "선택 안함", VALUE: "" }}
+            defaultValue={{ NAME: "선택 안함", VALUE: "" }}
             textField="NAME"
             dataItemKey="VALUE"
             data={listData}

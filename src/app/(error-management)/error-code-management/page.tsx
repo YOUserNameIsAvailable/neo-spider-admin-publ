@@ -99,7 +99,7 @@ export default function Page() {
                 { VALUE: "_search_errorCode", NAME: "오류코드" },
                 { VALUE: "_search_errorTitle", NAME: "오류제목" },
               ]}
-              defaultItem={{ VALUE: "_search_errorCode", NAME: "오류코드" }}
+              defaultValue={{ VALUE: "_search_errorCode", NAME: "오류코드" }}
               size={"small"}
               onChange={(e: any) => setForm((prev: any) => ({ ...prev, _search_type: e.value.VALUE }))}
             />
@@ -135,7 +135,7 @@ export default function Page() {
                     NAME: "정지",
                   },
                 ]}
-                defaultItem={{ VALUE: null, NAME: "전체" }}
+                defaultValue={{ VALUE: null, NAME: "전체" }}
                 size={"small"}
                 onChange={(e: any) => setForm((prev: any) => ({ ...prev, _search_userStateCode: e.value.VALUE }))}
               />

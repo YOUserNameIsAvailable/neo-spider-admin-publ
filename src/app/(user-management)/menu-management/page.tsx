@@ -89,7 +89,7 @@ export default function Page() {
                   { VALUE: "_search_menuName", NAME: "메뉴명" },
                   { VALUE: "_search_menuId", NAME: "메뉴ID" },
                 ]}
-                defaultItem={{ VALUE: "_search_menuName", NAME: "메뉴명" }}
+                defaultValue={{ VALUE: "_search_menuName", NAME: "메뉴명" }}
                 size={"small"}
                 onChange={(e: any) => setForm((prev: any) => ({ ...prev, _search_type: e.value.VALUE }))}
               />
