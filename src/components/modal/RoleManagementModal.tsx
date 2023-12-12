@@ -3,7 +3,7 @@ import { Window, WindowMoveEvent } from "@progress/kendo-react-dialogs";
 import { Button } from "@progress/kendo-react-buttons";
 import { DropDownList } from "@progress/kendo-react-dropdowns";
 import { Splitter, SplitterOnChangeEvent } from "@progress/kendo-react-layout";
-import { Grid, GridColumn as Column, GridRowProps } from "@progress/kendo-react-grid";
+import { Grid, GridColumn as Column, GridRowProps, GridNoRecords } from "@progress/kendo-react-grid";
 
 interface PositionInterface {
   left: number;
@@ -149,16 +149,13 @@ const products = [
 export const RoleManagementModal: FC<{
   setShowModal: Dispatch<SetStateAction<boolean>>;
 }> = ({ setShowModal }) => {
+  const element = React.useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState<PositionInterface>({
     left: 250,
     top: 45,
     width: 1092,
     height: 728,
   });
-
-  const setPercentage = (percentage: number) => {
-    return Math.round(300 / 100) * percentage;
-  };
 
   const [nestedPanes, setNestedPanes] = useState<Array<any>>([{ size: "50%", resizable: true }, {}]);
 
@@ -214,7 +211,6 @@ export const RoleManagementModal: FC<{
   const rowForGridTwo = (row: React.ReactElement<HTMLTableRowElement>, props: GridRowProps) => {
     return <RowRender props={props} row={row} onDrop={handleOnDropTwo} onDragStart={handleDragStartTwo} />;
   };
-
   return (
     <>
       <div className="k-overlay" />
@@ -239,12 +235,12 @@ export const RoleManagementModal: FC<{
               onChange={(e) => {
                 setNestedPanes(e.newState);
               }}>
-              <div className="flex w-full flex-col gap-[15px] border-[1px]">
+              <div className="flex h-full w-full flex-col gap-[15px] border-[1px]">
                 <div className="flex items-center gap-1">
                   <img src="./images/dot_subtitle.gif" className="h-[12px] w-[12px]" />
                   <div className="text-[14px] font-bold text-[#656565]">권한ID 메뉴를 뺀 메뉴 목록</div>
                 </div>
-                <div className="flex flex-col">
+                <div className="flex h-full flex-col">
                   <div className="flex h-[40px] items-center gap-[8px] bg-[#dde6f0] px-[13px] py-[7px]">
                     <DropDownList
                       style={{
@@ -262,7 +258,14 @@ export const RoleManagementModal: FC<{
                     />
                     <input className="ml-[2px] w-[30%] rounded-[2px] border-[1px] border-[#999999] py-[6px]" />
                   </div>
-                  <Grid className="h-[88%]" rowHeight={29} fixedScroll={true} data={gridData} rowRender={rowForGridOne}>
+                  <Grid rowHeight={29} fixedScroll={true} data={gridData} rowRender={rowForGridOne}>
+                    <GridNoRecords>
+                      <div
+                        onDrop={handleOnDropOne}
+                        onDragOver={(e) => e.preventDefault()}
+                        className="h-[17px] w-full"
+                      />
+                    </GridNoRecords>
                     <Column
                       field="ProductID"
                       title="Menu ID"
@@ -276,20 +279,19 @@ export const RoleManagementModal: FC<{
                       className="w-[75%]"
                     />
                   </Grid>
+                  <div onDrop={handleOnDropOne} onDragOver={(e) => e.preventDefault()} className="h-full w-full" />
                 </div>
               </div>
-              <div className="flex w-full flex-col gap-[15px] border-[1px]">
+              <div className="flex h-full w-full flex-col gap-[15px] border-[1px]">
                 <div className="flex items-center gap-1">
                   <img src="./images/dot_subtitle.gif" className="h-[12px] w-[12px]" />
                   <div className="text-[14px] font-bold text-[#656565]">권한ID 메뉴 목록</div>
                 </div>
-                <div className="flex flex-col">
-                  <Grid
-                    className="h-[88%]"
-                    rowHeight={29}
-                    fixedScroll={true}
-                    data={gridDataTwo}
-                    rowRender={rowForGridTwo}>
+                <div className="flex h-full flex-col">
+                  <Grid rowHeight={29} fixedScroll={true} data={gridDataTwo} rowRender={rowForGridTwo}>
+                    <GridNoRecords>
+                      <div onDrop={handleOnDropTwo} onDragOver={(e) => e.preventDefault()} className="h-full w-full" />
+                    </GridNoRecords>
                     <Column
                       field="ProductID"
                       title="Menu ID"
@@ -315,6 +317,7 @@ export const RoleManagementModal: FC<{
                       className="w-[10%]"
                     />
                   </Grid>
+                  <div onDrop={handleOnDropTwo} onDragOver={(e) => e.preventDefault()} className="h-full w-full" />
                 </div>
               </div>
             </Splitter>
