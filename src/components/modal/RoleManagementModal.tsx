@@ -149,7 +149,6 @@ const products = [
 export const RoleManagementModal: FC<{
   setShowModal: Dispatch<SetStateAction<boolean>>;
 }> = ({ setShowModal }) => {
-  const element = React.useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState<PositionInterface>({
     left: 250,
     top: 45,
