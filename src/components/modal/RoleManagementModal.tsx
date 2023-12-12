@@ -2,14 +2,21 @@ import React, { Dispatch, FC, SetStateAction, useEffect, useState } from "react"
 import { Window, WindowMoveEvent } from "@progress/kendo-react-dialogs";
 import { Button } from "@progress/kendo-react-buttons";
 import { DropDownList } from "@progress/kendo-react-dropdowns";
-import { Splitter, SplitterOnChangeEvent } from "@progress/kendo-react-layout";
-import { Grid, GridColumn as Column, GridRowProps, GridNoRecords } from "@progress/kendo-react-grid";
+import { Splitter } from "@progress/kendo-react-layout";
+import {
+  Grid,
+  GridColumn as Column,
+  GridRowProps,
+  GridNoRecords,
+  GridHeaderCellProps,
+} from "@progress/kendo-react-grid";
+import { Checkbox, Input } from "@progress/kendo-react-inputs";
 
 interface PositionInterface {
-  left: number;
-  top: number;
-  width: number;
-  height: number;
+  left: any;
+  top: any;
+  width: any;
+  height: any;
 }
 
 const RowRender = (properties: any) => {
@@ -25,143 +32,70 @@ const RowRender = (properties: any) => {
   return React.cloneElement(row, { ...row.props, ...additionalProps }, row.props.children);
 };
 
-const products = [
-  {
-    ProductID: 1,
-    ProductName: "Chai",
-    SupplierID: 1,
-    CategoryID: 1,
-    QuantityPerUnit: "10 boxes x 20 bags",
-    UnitPrice: 18.0,
-    UnitsInStock: 39,
-    UnitsOnOrder: 0,
-    ReorderLevel: 10,
-    Discontinued: false,
-    Category: {
-      CategoryID: 1,
-      CategoryName: "Beverages",
-      Description: "Soft drinks, coffees, teas, beers, and ales",
-    },
-  },
-  {
-    ProductID: 2,
-    ProductName: "Chang",
-    SupplierID: 1,
-    CategoryID: 1,
-    QuantityPerUnit: "24 - 12 oz bottles",
-    UnitPrice: 19.0,
-    UnitsInStock: 17,
-    UnitsOnOrder: 40,
-    ReorderLevel: 25,
-    Discontinued: false,
-    Category: {
-      CategoryID: 1,
-      CategoryName: "Beverages",
-      Description: "Soft drinks, coffees, teas, beers, and ales",
-    },
-  },
-  {
-    ProductID: 3,
-    ProductName: "Aniseed Syrup",
-    SupplierID: 1,
-    CategoryID: 2,
-    QuantityPerUnit: "12 - 550 ml bottles",
-    UnitPrice: 10.0,
-    UnitsInStock: 13,
-    UnitsOnOrder: 70,
-    ReorderLevel: 25,
-    Discontinued: false,
-    Category: {
-      CategoryID: 2,
-      CategoryName: "Condiments",
-      Description: "Sweet and savory sauces, relishes, spreads, and seasonings",
-    },
-  },
-  {
-    ProductID: 4,
-    ProductName: "Chef Anton's Cajun Seasoning",
-    SupplierID: 2,
-    CategoryID: 2,
-    QuantityPerUnit: "48 - 6 oz jars",
-    UnitPrice: 22.0,
-    UnitsInStock: 53,
-    UnitsOnOrder: 0,
-    ReorderLevel: 0,
-    Discontinued: false,
-    Category: {
-      CategoryID: 2,
-      CategoryName: "Condiments",
-      Description: "Sweet and savory sauces, relishes, spreads, and seasonings",
-    },
-  },
-  {
-    ProductID: 5,
-    ProductName: "Chef Anton's Gumbo Mix",
-    SupplierID: 2,
-    CategoryID: 2,
-    QuantityPerUnit: "36 boxes",
-    UnitPrice: 21.35,
-    UnitsInStock: 0,
-    UnitsOnOrder: 0,
-    ReorderLevel: 0,
-    Discontinued: true,
-    Category: {
-      CategoryID: 2,
-      CategoryName: "Condiments",
-      Description: "Sweet and savory sauces, relishes, spreads, and seasonings",
-    },
-  },
-  {
-    ProductID: 6,
-    ProductName: "Grandma's Boysenberry Spread",
-    SupplierID: 3,
-    CategoryID: 2,
-    QuantityPerUnit: "12 - 8 oz jars",
-    UnitPrice: 25.0,
-    UnitsInStock: 120,
-    UnitsOnOrder: 0,
-    ReorderLevel: 25,
-    Discontinued: false,
-    Category: {
-      CategoryID: 2,
-      CategoryName: "Condiments",
-      Description: "Sweet and savory sauces, relishes, spreads, and seasonings",
-    },
-  },
-  {
-    ProductID: 7,
-    ProductName: "Uncle Bob's Organic Dried Pears",
-    SupplierID: 3,
-    CategoryID: 7,
-    QuantityPerUnit: "12 - 1 lb pkgs.",
-    UnitPrice: 30.0,
-    UnitsInStock: 15,
-    UnitsOnOrder: 0,
-    ReorderLevel: 10,
-    Discontinued: false,
-    Category: {
-      CategoryID: 7,
-      CategoryName: "Produce",
-      Description: "Dried fruit and bean curd",
-    },
-  },
-];
 export const RoleManagementModal: FC<{
   setShowModal: Dispatch<SetStateAction<boolean>>;
-}> = ({ setShowModal }) => {
+  roleId: string;
+}> = ({ setShowModal, roleId }) => {
+  const [searchType, setSearchType] = useState<string>("menuPath");
+  const [filterValue, setFilterValue] = useState();
+  const [filteredData, setFilteredData] = useState<any[]>([]);
+  const [dataResult, setDataResult] = useState<any[]>([]);
+  const [data, setData] = useState<any[]>([]);
+  const [nestedPanes, setNestedPanes] = useState<any[]>([{ size: "50%", resizable: true }, {}]);
+  const [form, setForm] = useState<any[]>([]);
+  const [modifyData, setModifyData] = useState<any[]>([]);
+  const [dragFrom, setDragFrom] = useState("");
+  const [dragDataItem, setDragDataItem] = useState<any>(null);
   const [position, setPosition] = useState<PositionInterface>({
-    left: 250,
-    top: 45,
-    width: 1092,
-    height: 728,
+    left: 101,
+    top: 53,
+    width: "calc(100vw - 10%)",
+    height: "calc(100vh - 10%)",
   });
 
-  const [nestedPanes, setNestedPanes] = useState<Array<any>>([{ size: "50%", resizable: true }, {}]);
+  const getDetail = async () => {
+    const detailJson = await fetch("/api/spider/roleMng/roleMenuList", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        roleId,
+      }),
+    });
+
+    const detailResult = await detailJson.json();
+    const detail = detailResult?.body?.menulist;
+    const mdofiy = detailResult?.body?.rolemenulist;
+    console.log("detail: ", detail, mdofiy);
+    setDataResult(detail);
+    setData(detail);
+    setModifyData(mdofiy);
+  };
+
+  const updateDetail = async () => {
+    const updateJson = await fetch("/api/spider/roleMng/saveRoleMenu", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        roleId,
+        deleteFlag: "false",
+        gridData: modifyData,
+      }),
+    });
+
+    const updateResult = await updateJson.json();
+    console.log("updateResult: ", updateResult);
+  };
 
   const handleMove = (event: WindowMoveEvent) => {
+    console.log("handleMove: ", event);
     setPosition({ ...position, left: event.left, top: event.top });
   };
   const handleResize = (event: WindowMoveEvent) => {
+    console.log("handleResize: ", event);
     setPosition({
       left: event.left,
       top: event.top,
@@ -170,35 +104,34 @@ export const RoleManagementModal: FC<{
     });
   };
 
-  const [gridData, setGridData] = useState(products);
-  const [gridDataTwo, setGridDataTwo] = useState([{}]);
-  const [dragFrom, setDragFrom] = useState("");
-  const [dragDataItem, setDragDataItem] = useState<any>(null);
-
   const handleOnDropOne = (e: any) => {
     if (dragFrom === "second") {
-      let newDataSecond = gridDataTwo.filter((item: any) => item.ProductID !== dragDataItem?.ProductID);
-      let newDataFirst = [dragDataItem, ...gridData];
-      setGridData(newDataFirst);
-      setGridDataTwo(newDataSecond);
+      let newDataSecond = modifyData.filter((item: any) => item.menuId !== dragDataItem?.menuId);
+      let newDataFirst = [dragDataItem, ...data];
+      setDataResult(newDataFirst);
+      setModifyData(newDataSecond);
+      console.log("handleOnDropOne: ", e, dragFrom, dragDataItem, newDataFirst, newDataSecond);
     }
   };
 
   const handleDragStartOne = (e: any, dataItem: any) => {
+    console.log("handleDragStartOne: ", e, dataItem);
     setDragFrom("first");
     setDragDataItem(dataItem);
   };
 
   const handleOnDropTwo = (e: any) => {
     if (dragFrom === "first") {
-      let newDataFirst = gridData.filter((item) => item.ProductID !== dragDataItem.ProductID);
-      let newDataSecond = [dragDataItem, ...gridDataTwo];
-      setGridData(newDataFirst);
-      setGridDataTwo(newDataSecond);
+      let newDataFirst = dataResult.filter((item: any) => item.menuId !== dragDataItem.menuId);
+      let newDataSecond = [dragDataItem, ...modifyData];
+      setDataResult(newDataFirst);
+      setModifyData(newDataSecond);
+      console.log("handleOnDropTwo: ", e, dragFrom, dragDataItem, newDataFirst, newDataSecond);
     }
   };
 
   const handleDragStartTwo = (e: any, dataItem: any) => {
+    console.log("handleDragStartOne: ", e, dataItem);
     setDragFrom("second");
     setDragDataItem(dataItem);
   };
@@ -210,25 +143,95 @@ export const RoleManagementModal: FC<{
   const rowForGridTwo = (row: React.ReactElement<HTMLTableRowElement>, props: GridRowProps) => {
     return <RowRender props={props} row={row} onDrop={handleOnDropTwo} onDragStart={handleDragStartTwo} />;
   };
+
+  const onFilterChange = (ev: any) => {
+    let value = ev.value;
+    setFilterValue(ev.value);
+    let newData = data.filter((item: any) => {
+      let match = false;
+      if (item[searchType].toString().toLocaleLowerCase().indexOf(value.toLocaleLowerCase()) >= 0) {
+        match = true;
+      }
+      if (item[searchType].toLocaleDateString && item[searchType].toLocaleDateString().indexOf(value) >= 0) {
+        match = true;
+      }
+      return match;
+    });
+    setFilteredData(newData);
+
+    console.log("onFilterChange: ", newData);
+    setDataResult(newData);
+  };
+
+  const onSelectionChange = (dataItem: any, field: string) => {
+    const selectedId = dataItem.menuId;
+
+    const newData = modifyData.map((item: any) => {
+      if (item.menuId === selectedId) {
+        item.selected = !item.selected;
+
+        if (field === "readFlag") {
+          item.readFlag = !item.readFlag ? "true" : "false";
+
+          if (item.readFlag) {
+            item.writeFlag = "false";
+          }
+        } else if (field === "writeFlag") {
+          item.writeFlag = !item.writeFlag ? "true" : "false";
+          if (item.writeFlag) {
+            item.readFlag = "false";
+          }
+        }
+      }
+      return item;
+    });
+
+    const newDataResult = newData;
+    setModifyData(newDataResult);
+
+    console.log(123123, newDataResult);
+  };
+
+  const renderCheckBox = (dataItem: any, props: any, event: (dataItem: any, field: string) => void) => {
+    console.log(123123, dataItem, props);
+    return (
+      <td {...props.tdProps} style={{ textAlign: "center" }}>
+        <Checkbox
+          className="border"
+          value={dataItem[props.field] === "true"}
+          onClick={() => event(dataItem, props.field)}
+        />
+      </td>
+    );
+  };
+
+  useEffect(() => {
+    if (roleId && roleId !== "") {
+      getDetail();
+    }
+  }, [roleId]);
+
   return (
     <>
       <div className="k-overlay" />
       <Window
+        width={position.width}
+        height={position.height}
+        top={position.top}
+        left={position.left}
         minimizeButton={() => null}
         maximizeButton={() => null}
         restoreButton={() => null}
         doubleClickStageChange={false}
-        title={"Role메뉴 권한 관리"}
-        width={position.width}
-        height={position.height}
+        title={`${roleId} - Role메뉴 권한 관리`}
         onMove={handleMove}
         onResize={handleResize}
         onClose={() => {
           setShowModal(false);
         }}>
-        <div className="flex w-full flex-col p-4">
+        <div className="flex w-full flex-col">
           <div className="pb-[10px] text-[17px] font-bold text-[#656565]">권한ID별 메뉴 권한 체크</div>
-          <div className="flex h-[75vh] w-full">
+          <div className="flex h-[72vh] w-full">
             <Splitter
               panes={nestedPanes}
               onChange={(e) => {
@@ -251,28 +254,32 @@ export const RoleManagementModal: FC<{
                         fontWeight: "bold",
                         color: "#656565",
                       }}
+                      textField="NAME"
+                      dataItemKey="VALUE"
+                      data={[
+                        { VALUE: "menuPath", NAME: "메뉴명" },
+                        { VALUE: "menuId", NAME: "메뉴ID" },
+                      ]}
+                      defaultValue={{ VALUE: "menuPath", NAME: "메뉴명" }}
                       size={"small"}
-                      data={["menuName", "안전", "주의", "경계"]}
-                      defaultValue={"menuName"}
+                      onChange={(e) => setSearchType(e.value.VALUE)}
                     />
-                    <input className="ml-[2px] w-[30%] rounded-[2px] border-[1px] border-[#999999] py-[6px]" />
+                    <Input
+                      className="ml-[2px] w-[30%] rounded-[2px] border-[1px] border-[#999999] py-[6px]"
+                      value={filterValue}
+                      onChange={onFilterChange}
+                    />
                   </div>
-                  <Grid rowHeight={29} fixedScroll={true} data={gridData} rowRender={rowForGridOne}>
-                    <GridNoRecords>
-                      <div
-                        onDrop={handleOnDropOne}
-                        onDragOver={(e) => e.preventDefault()}
-                        className="h-[17px] w-full"
-                      />
-                    </GridNoRecords>
+                  <Grid rowHeight={29} fixedScroll={true} data={dataResult} rowRender={rowForGridOne}>
+                    <GridNoRecords></GridNoRecords>
                     <Column
-                      field="ProductID"
+                      field="menuId"
                       title="Menu ID"
                       headerClassName="justify-center bg-[#adc6f4] w-[25%]"
                       className="w-[25%]"
                     />
                     <Column
-                      field="ProductName"
+                      field="menuPath"
                       title="Menu name"
                       headerClassName="justify-center bg-[#adc6f4] w-[75%]"
                       className="w-[75%]"
@@ -287,33 +294,41 @@ export const RoleManagementModal: FC<{
                   <div className="text-[14px] font-bold text-[#656565]">권한ID 메뉴 목록</div>
                 </div>
                 <div className="flex h-full flex-col">
-                  <Grid rowHeight={29} fixedScroll={true} data={gridDataTwo} rowRender={rowForGridTwo}>
-                    <GridNoRecords>
-                      <div onDrop={handleOnDropTwo} onDragOver={(e) => e.preventDefault()} className="h-full w-full" />
-                    </GridNoRecords>
+                  <Grid rowHeight={29} fixedScroll={true} data={modifyData} rowRender={rowForGridTwo}>
+                    <GridNoRecords></GridNoRecords>
                     <Column
-                      field="ProductID"
+                      field="menuId"
                       title="Menu ID"
                       headerClassName="justify-center bg-[#adc6f4] w-[15%]"
                       className="w-[15%]"
                     />
                     <Column
-                      field="ProductName"
+                      field="menuPath"
                       title="Menu name"
                       headerClassName="justify-center bg-[#adc6f4] w-[65%]"
                       className="w-[65%]"
                     />
                     <Column
-                      field="Category.CategoryName"
+                      field="readFlag"
                       title="Read"
                       headerClassName="justify-center bg-[#adc6f4] w-[10%]"
                       className="w-[10%]"
+                      cells={{
+                        data: ({ dataItem, ...props }) => {
+                          return renderCheckBox(dataItem, props, onSelectionChange);
+                        },
+                      }}
                     />
                     <Column
-                      field="UnitPrice"
+                      field="writeFlag"
                       title="R/Write"
                       headerClassName="justify-center bg-[#adc6f4] w-[10%]"
                       className="w-[10%]"
+                      cells={{
+                        data: ({ dataItem, ...props }) => {
+                          return renderCheckBox(dataItem, props, onSelectionChange);
+                        },
+                      }}
                     />
                   </Grid>
                   <div onDrop={handleOnDropTwo} onDragOver={(e) => e.preventDefault()} className="h-full w-full" />
@@ -325,7 +340,9 @@ export const RoleManagementModal: FC<{
             <Button className="basic-btn mt-2 flex h-7 items-center justify-start" onClick={() => setShowModal(false)}>
               닫기
             </Button>
-            <Button className="basic-btn mt-2 flex h-7 items-center justify-start">변경사항 저장</Button>
+            <Button className="basic-btn mt-2 flex h-7 items-center justify-start" onClick={updateDetail}>
+              변경사항 저장
+            </Button>
           </div>
         </div>
       </Window>

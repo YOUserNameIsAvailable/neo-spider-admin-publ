@@ -40,6 +40,7 @@ export const RoleManagementTable: FC<{
   const [dataResult, setDataResult] = useState<any>({ data: [] });
   const [data, setData] = useState<any[]>([]);
 
+  const [roleId, setRoleId] = useState<string>(""); // <4-1> Role management - RoleMenu authority management
   const [showModal, setShowModal] = React.useState(false); // <4-2> Role management - RoleMenu authority management
 
   const dataStateChange = (event: any) => {
@@ -109,10 +110,10 @@ export const RoleManagementTable: FC<{
   );
 
   const onSelectionChange = (event: any) => {
-    const selectedProductId = event.dataItem.rowSeq;
+    const selectedId = event.dataItem.rowSeq;
 
     const newData = data.map((item: any) => {
-      if (item.rowSeq === selectedProductId) {
+      if (item.rowSeq === selectedId) {
         item.selected = !item.selected;
       }
       return item;
@@ -120,7 +121,7 @@ export const RoleManagementTable: FC<{
 
     setCurrentSelectedState((prevState: any) => ({
       ...prevState,
-      [selectedProductId]: !prevState[selectedProductId],
+      [selectedId]: !prevState[selectedId],
     }));
 
     const newDataResult = processWithGroups(newData, dataState);
@@ -274,7 +275,10 @@ export const RoleManagementTable: FC<{
               sortable={false}
               cells={{
                 data: ({ dataItem, ...props }) => {
-                  return renderButtonCell(dataItem, props, "Menu", () => setShowModal(true));
+                  return renderButtonCell(dataItem, props, "Menu", () => {
+                    setRoleId(dataItem.roleId);
+                    setShowModal(true);
+                  });
                 },
               }}
               headerClassName="justify-center bg-[#adc6f4]"
@@ -304,7 +308,7 @@ export const RoleManagementTable: FC<{
             groupable={true}></Grid>
         </GridPDFExport>
       </div>
-      {showModal && <RoleManagementModal setShowModal={setShowModal} />}
+      {showModal && <RoleManagementModal setShowModal={setShowModal} roleId={roleId} />}
     </>
   );
 };
