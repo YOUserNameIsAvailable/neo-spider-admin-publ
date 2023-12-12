@@ -5,7 +5,6 @@ import { GridPDFExport } from "@progress/kendo-react-pdf";
 import { ExcelExport } from "@progress/kendo-react-excel-export";
 import { Grid, GridColumn as Column, GridNoRecords } from "@progress/kendo-react-grid";
 import { setGroupIds, setExpandedState } from "@progress/kendo-react-data-tools";
-import { EMPLOYEES } from "@/constants";
 import { ColumnMenu } from "./ColumnMenu";
 import { Button } from "@progress/kendo-react-buttons";
 import { RoleManagementModal } from "./modal/RoleManagementModal";

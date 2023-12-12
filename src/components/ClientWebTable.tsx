@@ -30,12 +30,11 @@ const processWithGroups = (data: any, dataState: any) => {
 };
 
 export const ClientWebTable: FC<{
-  getHandler: (page?: number, displayCount?: number) => void;
   onRowClick?: (e: any) => void;
   result: any[];
   count: number;
   displayCount: number;
-}> = ({ getHandler, onRowClick, result, count, displayCount }) => {
+}> = ({ onRowClick, result, count, displayCount }) => {
   const idGetter = getter("id");
   const [filterValue, setFilterValue] = useState();
   const [filteredData, setFilteredData] = useState<any[]>([]);

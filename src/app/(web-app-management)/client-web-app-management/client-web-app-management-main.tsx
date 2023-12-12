@@ -7,7 +7,12 @@ import { ClientWebTable } from "@/components/ClientWebTable";
 import { PAGES, SPORTS } from "@/constants";
 import { ClientWebAppManagementModal } from "@/components/modal/ClientWebAppManagementModal";
 
-export const ClientWebAppMain: FC<{ onRowClick?: (event: any) => void; result: any[] }> = ({ onRowClick, result }) => {
+export const ClientWebAppMain: FC<{
+  onRowClick?: (event: any) => void;
+  result: any[];
+  count: number;
+  displayCount: number;
+}> = ({ onRowClick, result, count, displayCount }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const [showModal, setShowModal] = useState(false); // <5-3> Client WebApp Manage - stop selection
@@ -210,7 +215,7 @@ export const ClientWebAppMain: FC<{ onRowClick?: (event: any) => void; result: a
           </Button>
         </div>
       </div>
-      <ClientWebTable onRowClick={onRowClick} result={result} />
+      <ClientWebTable onRowClick={onRowClick} result={result} count={count} displayCount={displayCount} />
       <div className="flex justify-end">
         <Button imageUrl="/images/dot-right-arrow.png" className="basic-btn mt-2 flex h-7 items-center justify-start">
           ADD
