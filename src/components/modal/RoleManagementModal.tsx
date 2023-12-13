@@ -229,7 +229,7 @@ export const RoleManagementModal: FC<{
         onClose={() => {
           setShowModal(false);
         }}>
-        <div className="flex w-full flex-col">
+        <div className="flex w-full select-none flex-col">
           <div className="pb-[10px] text-[17px] font-bold text-[#656565]">권한ID별 메뉴 권한 체크</div>
           <div className="flex h-[72vh] w-full">
             <Splitter
