@@ -8,6 +8,7 @@ export interface IMenu {
   text: string;
   url?: RouteValue;
   items?: IMenu[];
+  checkLayoutSegment?: string;
 }
 
 export interface ITab extends Pick<IMenu, "text" | "url"> {}

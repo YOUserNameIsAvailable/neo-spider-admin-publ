@@ -13,6 +13,7 @@ import {
 import { useTab } from "@/providers/TabProvider";
 import { IMenu, ITab } from "@/types";
 import { useRouter } from "next/navigation";
+import { useSelectedLayoutSegment } from "next/navigation";
 
 const TreeItem = (props: ItemRenderProps) => {
   return (
@@ -29,10 +30,11 @@ const TreeItem = (props: ItemRenderProps) => {
 
 export function LeftSideBar({ clickCollapseBtn }: { clickCollapseBtn: () => void }) {
   const { tabs, setTabs, setSelectedTab } = useTab();
+  const LayoutSegmentData = useSelectedLayoutSegment();
+  const foundIndex = MENUS.findIndex((menu) => menu.checkLayoutSegment === LayoutSegmentData);
 
   const router = useRouter();
 
-  // const [expand, setExpand] = useState<TreeViewOperationDescriptor>({ ids: [], idField: "text" });
   const [expand, setExpand] = useState<TreeViewOperationDescriptor>({ ids: [], idField: "text" });
   const [select, setSelect] = useState<string[]>();
 
@@ -91,7 +93,7 @@ export function LeftSideBar({ clickCollapseBtn }: { clickCollapseBtn: () => void
             <PanelBarItem
               key={item.data}
               title={item.text}
-              expanded={index === 0}
+              expanded={foundIndex !== -1 ? index === foundIndex : index === 0}
               headerClassName="panel-bar-header overflow-hidden whitespace-nowrap"
               className="panel-bar">
               <TreeView
