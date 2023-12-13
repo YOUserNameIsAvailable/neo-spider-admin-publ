@@ -12,8 +12,8 @@ import {
 } from "@progress/kendo-react-treeview";
 import { useTab } from "@/providers/TabProvider";
 import { IMenu, ITab } from "@/types";
-import { useRouter } from "next/navigation";
-import { useSelectedLayoutSegment } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useSelectedLayoutSegment, useSelectedLayoutSegments } from "next/navigation";
 
 const TreeItem = (props: ItemRenderProps) => {
   return (
@@ -31,12 +31,16 @@ const TreeItem = (props: ItemRenderProps) => {
 export function LeftSideBar({ clickCollapseBtn }: { clickCollapseBtn: () => void }) {
   const { tabs, setTabs, setSelectedTab } = useTab();
   const LayoutSegmentData = useSelectedLayoutSegment();
+  const LayoutSegmentsData = useSelectedLayoutSegments();
   const foundIndex = MENUS.findIndex((menu) => menu.checkLayoutSegment === LayoutSegmentData);
 
+  const indexString = findMenuIndex(MENUS, LayoutSegmentsData[LayoutSegmentsData.length - 1]);
+
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const [expand, setExpand] = useState<TreeViewOperationDescriptor>({ ids: [], idField: "text" });
-  const [select, setSelect] = useState<string[]>();
+  const [select, setSelect] = useState<string[]>(indexString ? [indexString] : []);
 
   const onItemClick = ({ item: _item, itemHierarchicalIndex }: TreeViewItemClickEvent) => {
     const item: IMenu = _item;
@@ -57,7 +61,6 @@ export function LeftSideBar({ clickCollapseBtn }: { clickCollapseBtn: () => void
     } else {
       setSelectedTab(item);
     }
-
     setSelect([itemHierarchicalIndex]);
   };
 
@@ -80,6 +83,19 @@ export function LeftSideBar({ clickCollapseBtn }: { clickCollapseBtn: () => void
       setExpand(expand);
     }
   }, []);
+
+  function findMenuIndex(menus: any[], url: string, parentIndex = 0): string | null {
+    for (let i = 0; i < menus.length; i++) {
+      const menu = menus[i];
+      if (menu.url === "/" + url) {
+        return `${parentIndex}_${i}`;
+      } else if (menu.items && menu.items.length > 0) {
+        const result = findMenuIndex(menu.items, url, i);
+        if (result) return result;
+      }
+    }
+    return null;
+  }
 
   return (
     <div className="pane-content flex h-full flex-col gap-3 rounded-t-[12px] bg-[#603d86] p-[5px]">
