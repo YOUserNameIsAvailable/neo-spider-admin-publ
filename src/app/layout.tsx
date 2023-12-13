@@ -2,6 +2,7 @@
 
 import { Inter } from "next/font/google";
 import "./globals.scss";
+import "@progress/kendo-theme-default/dist/all.css";
 import React, { useEffect, useState, ReactNode, Suspense } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { TabProvider } from "@/providers/TabProvider";
@@ -28,7 +29,14 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     const _isLogin = Object.keys(sessionIsLogin).length > 0 ? true : false;
     setIsLogin(_isLogin);
 
-    console.log(999, pathname, _isLogin, isLoginPage, !isLoaded && !isLoginPage && _isLogin);
+    console.log(
+      999,
+      pathname,
+      _isLogin,
+      isLoginPage,
+      !isLoaded && !isLoginPage && _isLogin,
+      Object.keys(sessionIsLogin).length,
+    );
 
     if (!_isLogin && !isLoginPage) {
       console.log(111, "login");
@@ -37,14 +45,14 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     } else if (_isLogin && isLoginPage) {
       console.log(222, "front");
       alert("이미 로그인 되어있습니다.");
-      router.push("/front");
+      router.push("/user-management");
     }
 
-    console.log("Rootlayout: ", !isLoginPage && _isLogin, isLoaded, isLoginPage, _isLogin, isHomePage);
+    console.log("Rootlayout: ", !isLoginPage && _isLogin, isLoaded, isLoginPage, _isLogin, isHomePage, isLogin);
 
-    setTimeout(() => {
-      setIsLoaded(false);
-    }, 600);
+    // setTimeout(() => {
+    //   setIsLoaded(true);
+    // }, 600);
   }, [pathname]);
 
   return (
@@ -52,7 +60,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body className={inter.className}>
         <TabProvider>
           <ThemeProvider>
-            {isLogin && !isLoginPage ? <Layout>{children}</Layout> : !isLoaded ? children : <Loading />}
+            {/*{isLogin && !isLoginPage ? <Layout>{children}</Layout> : !isLoaded ? children : <Loading />}*/}
+            <Suspense fallback={<Loading />}>
+              <Layout>{children}</Layout>
+            </Suspense>
           </ThemeProvider>
         </TabProvider>
       </body>

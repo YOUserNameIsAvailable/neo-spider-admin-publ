@@ -11,7 +11,7 @@ import { TopBar } from "./TopBar";
 import { FC, ReactNode, Suspense, useEffect, useState } from "react";
 import { LeftSideBar } from "../LeftSidePanel";
 import { BottomBar } from "./BottomBar";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@progress/kendo-react-buttons";
 import { TabTitle } from "./TapTitle";
 import { Loader } from "@progress/kendo-react-indicators";
@@ -41,6 +41,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
   const { tabs, selectedTab, selectedTabIndex, setSelectedTab, setTabs } = useTab();
 
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const onSelectTab = (tab: ITab, index: number) => {
     setSelectedTab(tab);
@@ -161,9 +162,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                 </div>
 
                 {/* content */}
-                <div className="h-[100vh] w-full bg-[#fff] px-4">
-                  <Suspense fallback={<Loading />}>{children}</Suspense>
-                </div>
+                <div className="h-[100vh] w-full bg-[#fff] px-4">{children}</div>
               </TabStripTab>
             ))}
           </TabStrip>
