@@ -1,4 +1,5 @@
 import * as React from "react";
+import { DropDownCell } from "./DropDownCell";
 
 interface CellRenderProps {
   originalProps: any;

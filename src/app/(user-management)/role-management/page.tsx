@@ -61,13 +61,27 @@ export default function Page() {
 
   const updateHandler = async () => {
     try {
+      const dataResult = childRef.current.dataResult;
+      console.log("dataResult: ", dataResult);
+      if (dataResult.length === 0) {
+        alert("저장할 데이터가 없습니다.");
+        return;
+      }
+
+      const modifyData = dataResult
+        .filter((item: any) => item.crud === "수정" || item.crud === "추가" || item.crud === "삭제")
+        .map((item: any) => {
+          const rest = { ...item, crud: item.crud === "추가" ? "CREATE" : item.crud === "수정" ? "UPDATE" : "DELETE" };
+          return rest;
+        });
+
       const dataJson = await fetch("/api/spider/roleMng/save", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          list: result,
+          list: modifyData,
         }),
       });
 
@@ -86,7 +100,7 @@ export default function Page() {
     } catch (err) {
       console.error(err);
     }
-  }
+  };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {

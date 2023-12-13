@@ -1,4 +1,4 @@
-import React, { FC, forwardRef, useCallback, useEffect, useImperativeHandle, useState } from "react";
+import React, { FC, ReactElement, forwardRef, useCallback, useEffect, useImperativeHandle, useState } from "react";
 import { getter } from "@progress/kendo-react-common";
 import { process } from "@progress/kendo-data-query";
 import { GridPDFExport } from "@progress/kendo-react-pdf";
@@ -16,6 +16,7 @@ import { ColumnMenu } from "./ColumnMenu";
 import { Button } from "@progress/kendo-react-buttons";
 import { RoleManagementModal } from "./modal/RoleManagementModal";
 import { CellRender, RowRender } from "./cellRender";
+import { DropDownCell } from "./DropDownCell";
 
 const DATA_ITEM_KEY = "rowSeq";
 const SELECTED_FIELD = "selected";
@@ -183,7 +184,7 @@ export const RoleManagementTable: FC<{
 
   const itemChange = (event: GridItemChangeEvent) => {
     let field = event.field || "";
-    let newData = data.map((item) => {
+    let newData = dataResult?.data.map((item: any) => {
       if (item.rowSeq === event.dataItem.rowSeq) {
         item[field] = event.value;
       }
@@ -193,32 +194,35 @@ export const RoleManagementTable: FC<{
     console.log("itemChange: ", newData);
     // setData(newData);
     // setChanges(true);
+    setDataResult(processWithGroups(newData, dataState));
   };
 
   const enterEdit = (dataItem: any, field?: string) => {
-    const newData = data.map((item) => ({
+    const newData = dataResult?.data.map((item: any) => ({
       ...item,
       ["inEdit"]: item.rowSeq === dataItem.rowSeq ? field : undefined,
     }));
 
-    console.log("enterEdit: ", newData);
+    console.log("enterEdit: ", newData, dataItem, field);
+
+    setDataResult(processWithGroups(newData, dataState));
 
     // setData(newData);
   };
 
   const exitEdit = () => {
-    const newData = data.map((item) => ({ ...item, ["inEdit"]: undefined }));
+    const newData = data.map((item) => ({ ...item, ["inEdit"]: undefined, ["crud"]: "수정" }));
 
     console.log("exitEdit: ", newData);
 
-    // setData(newData);
+    setDataResult(processWithGroups(newData, dataState));
   };
 
-  const customCellRender: any = (td: React.ReactElement<HTMLTableCellElement>, props: GridCellProps) => (
+  const customCellRender: any = (td: ReactElement<HTMLTableCellElement>, props: GridCellProps) => (
     <CellRender originalProps={props} td={td} enterEdit={enterEdit} editField={"inEdit"} />
   );
 
-  const customRowRender: any = (tr: React.ReactElement<HTMLTableRowElement>, props: GridRowProps) => (
+  const customRowRender: any = (tr: ReactElement<HTMLTableRowElement>, props: GridRowProps) => (
     <RowRender originalProps={props} tr={tr} exitEdit={exitEdit} editField={"inEdit"} />
   );
 
@@ -247,6 +251,7 @@ export const RoleManagementTable: FC<{
       setData(newData);
       setDataResult(processWithGroups(newData, _dataState));
     },
+    dataResult,
   }));
 
   useEffect(() => {
@@ -323,8 +328,6 @@ export const RoleManagementTable: FC<{
             <Column
               field="roleId"
               title="Role ID"
-              sortable={false}
-              columnMenu={ColumnMenu}
               headerClassName="justify-center bg-[#adc6f4] col-width20per"
               className="col-width20per"
               editor="text"
@@ -332,8 +335,6 @@ export const RoleManagementTable: FC<{
             <Column
               field="roleName"
               title="Role Name"
-              sortable={false}
-              columnMenu={ColumnMenu}
               headerClassName="justify-center bg-[#adc6f4] col-width20per"
               className="col-width20per"
               editor="text"
@@ -341,16 +342,14 @@ export const RoleManagementTable: FC<{
             <Column
               field="useYnNm"
               title="use"
-              sortable={false}
-              columnMenu={ColumnMenu}
               headerClassName="justify-center bg-[#adc6f4] col-width15per"
               className="col-width15per"
-              editor="boolean"
+              editable={true}
+              cell={(props) => <DropDownCell props={props} enterEdit={enterEdit} />}
             />
             <Column
               field="roleDesc"
               title="Role desc"
-              sortable={false}
               headerClassName="justify-center bg-[#adc6f4] col-width45per"
               className="col-width45per"
               editor="text"
@@ -358,14 +357,12 @@ export const RoleManagementTable: FC<{
             <Column
               field="ranking"
               title="Ranking"
-              sortable={false}
               headerClassName="justify-center bg-[#adc6f4] col-width10per"
               className="col-width10per"
               editor="numeric"
             />
             <Column
               title="Menu role"
-              sortable={false}
               cells={{
                 data: ({ dataItem, ...props }) => {
                   return renderButtonCell(dataItem, props, "Menu", () => {
