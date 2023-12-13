@@ -1,13 +1,21 @@
-import React, { FC, useCallback, useEffect, useState } from "react";
+import React, { FC, forwardRef, useCallback, useEffect, useImperativeHandle, useState } from "react";
 import { getter } from "@progress/kendo-react-common";
 import { process } from "@progress/kendo-data-query";
 import { GridPDFExport } from "@progress/kendo-react-pdf";
 import { ExcelExport } from "@progress/kendo-react-excel-export";
-import { Grid, GridColumn as Column, GridNoRecords } from "@progress/kendo-react-grid";
+import {
+  Grid,
+  GridColumn as Column,
+  GridNoRecords,
+  GridItemChangeEvent,
+  GridCellProps,
+  GridRowProps,
+} from "@progress/kendo-react-grid";
 import { setGroupIds, setExpandedState } from "@progress/kendo-react-data-tools";
 import { ColumnMenu } from "./ColumnMenu";
 import { Button } from "@progress/kendo-react-buttons";
 import { RoleManagementModal } from "./modal/RoleManagementModal";
+import { CellRender, RowRender } from "./cellRender";
 
 const DATA_ITEM_KEY = "rowSeq";
 const SELECTED_FIELD = "selected";
@@ -31,7 +39,8 @@ export const RoleManagementTable: FC<{
   result: any[];
   count: number;
   displayCount: number;
-}> = ({ getHandler, result, count, displayCount }) => {
+  ref: any;
+}> = forwardRef(({ getHandler, result, count, displayCount }, ref) => {
   const idGetter = getter(DATA_ITEM_KEY);
   const [filterValue, setFilterValue] = useState();
   const [filteredData, setFilteredData] = useState<any[]>([]);
@@ -172,6 +181,74 @@ export const RoleManagementTable: FC<{
     return newData.length > 0 && selectedItems === getNumberOfItems(newData);
   };
 
+  const itemChange = (event: GridItemChangeEvent) => {
+    let field = event.field || "";
+    let newData = data.map((item) => {
+      if (item.rowSeq === event.dataItem.rowSeq) {
+        item[field] = event.value;
+      }
+      return item;
+    });
+
+    console.log("itemChange: ", newData);
+    // setData(newData);
+    // setChanges(true);
+  };
+
+  const enterEdit = (dataItem: any, field?: string) => {
+    const newData = data.map((item) => ({
+      ...item,
+      ["inEdit"]: item.rowSeq === dataItem.rowSeq ? field : undefined,
+    }));
+
+    console.log("enterEdit: ", newData);
+
+    // setData(newData);
+  };
+
+  const exitEdit = () => {
+    const newData = data.map((item) => ({ ...item, ["inEdit"]: undefined }));
+
+    console.log("exitEdit: ", newData);
+
+    // setData(newData);
+  };
+
+  const customCellRender: any = (td: React.ReactElement<HTMLTableCellElement>, props: GridCellProps) => (
+    <CellRender originalProps={props} td={td} enterEdit={enterEdit} editField={"inEdit"} />
+  );
+
+  const customRowRender: any = (tr: React.ReactElement<HTMLTableRowElement>, props: GridRowProps) => (
+    <RowRender originalProps={props} tr={tr} exitEdit={exitEdit} editField={"inEdit"} />
+  );
+
+  useImperativeHandle(ref, () => ({
+    addRow() {
+      const addCount = dataResult.total + 1;
+      const newDataItem = { rowSeq: addCount, crud: "추가" };
+      const _dataState = { ...dataState, take: addCount };
+
+      setDataState(_dataState);
+      setData([...data, newDataItem]);
+      setDataResult(processWithGroups([...data, newDataItem], _dataState));
+
+      console.log("addRow: ", newDataItem, processWithGroups([...data, newDataItem], _dataState), _dataState);
+    },
+    delRow() {
+      const newData = data
+        .map((item: any) => {
+          console.log("item: ", item);
+          return !item.selected ? item : item?.crud ? {} : { ...item, crud: "삭제" };
+        })
+        .filter((item: any) => Object.keys(item).length > 0);
+      const _dataState = { ...dataState, take: newData?.length };
+
+      setDataState(_dataState);
+      setData(newData);
+      setDataResult(processWithGroups(newData, _dataState));
+    },
+  }));
+
   useEffect(() => {
     setFilteredData(result);
     setDataResult({ data: result, total: count });
@@ -216,6 +293,10 @@ export const RoleManagementTable: FC<{
             dataItemKey={DATA_ITEM_KEY}
             selectedField={SELECTED_FIELD}
             resizable={true}
+            editField="inEdit"
+            cellRender={customCellRender}
+            rowRender={customRowRender}
+            onItemChange={itemChange}
             onDataStateChange={dataStateChange}
             onHeaderSelectionChange={onHeaderSelectionChange}
             onSelectionChange={onSelectionChange}>
@@ -230,8 +311,15 @@ export const RoleManagementTable: FC<{
               width={30}
               headerSelectionValue={checkHeaderSelectionValue()}
               headerClassName="bg-[#adc6f4]"
+              editable={false}
             />
-            <Column field="budget" title="CRUD" headerClassName="justify-center bg-[#adc6f4]" width={53} />
+            <Column
+              field="crud"
+              title="CRUD"
+              headerClassName="justify-center bg-[#adc6f4]"
+              width={53}
+              editable={false}
+            />
             <Column
               field="roleId"
               title="Role ID"
@@ -239,6 +327,7 @@ export const RoleManagementTable: FC<{
               columnMenu={ColumnMenu}
               headerClassName="justify-center bg-[#adc6f4] col-width20per"
               className="col-width20per"
+              editor="text"
             />
             <Column
               field="roleName"
@@ -247,6 +336,7 @@ export const RoleManagementTable: FC<{
               columnMenu={ColumnMenu}
               headerClassName="justify-center bg-[#adc6f4] col-width20per"
               className="col-width20per"
+              editor="text"
             />
             <Column
               field="useYnNm"
@@ -255,6 +345,7 @@ export const RoleManagementTable: FC<{
               columnMenu={ColumnMenu}
               headerClassName="justify-center bg-[#adc6f4] col-width15per"
               className="col-width15per"
+              editor="boolean"
             />
             <Column
               field="roleDesc"
@@ -262,6 +353,7 @@ export const RoleManagementTable: FC<{
               sortable={false}
               headerClassName="justify-center bg-[#adc6f4] col-width45per"
               className="col-width45per"
+              editor="text"
             />
             <Column
               field="ranking"
@@ -269,6 +361,7 @@ export const RoleManagementTable: FC<{
               sortable={false}
               headerClassName="justify-center bg-[#adc6f4] col-width10per"
               className="col-width10per"
+              editor="numeric"
             />
             <Column
               title="Menu role"
@@ -276,6 +369,9 @@ export const RoleManagementTable: FC<{
               cells={{
                 data: ({ dataItem, ...props }) => {
                   return renderButtonCell(dataItem, props, "Menu", () => {
+                    if (dataItem?.crud === "추가") {
+                      return;
+                    }
                     setRoleId(dataItem.roleId);
                     setShowModal(true);
                   });
@@ -283,6 +379,7 @@ export const RoleManagementTable: FC<{
               }}
               headerClassName="justify-center bg-[#adc6f4]"
               width={83}
+              editable={false}
             />
           </Grid>
         </ExcelExport>
@@ -311,4 +408,4 @@ export const RoleManagementTable: FC<{
       {showModal && <RoleManagementModal setShowModal={setShowModal} roleId={roleId} />}
     </>
   );
-};
+});

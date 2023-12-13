@@ -171,14 +171,17 @@ export const RoleManagementModal: FC<{
         item.selected = !item.selected;
 
         if (field === "readFlag") {
-          item.readFlag = !item.readFlag ? "true" : "false";
+          const readFlag = item.readFlag === "true";
+          item.readFlag = !readFlag ? "true" : "false";
 
-          if (item.readFlag) {
+          if (readFlag) {
             item.writeFlag = "false";
           }
         } else if (field === "writeFlag") {
-          item.writeFlag = !item.writeFlag ? "true" : "false";
-          if (item.writeFlag) {
+          const writeFlag = item.writeFlag === "true";
+          item.writeFlag = !writeFlag ? "true" : "false";
+
+          if (writeFlag) {
             item.readFlag = "false";
           }
         }
@@ -193,14 +196,11 @@ export const RoleManagementModal: FC<{
   };
 
   const renderCheckBox = (dataItem: any, props: any, event: (dataItem: any, field: string) => void) => {
-    console.log(123123, dataItem, props);
+    console.log(123123, dataItem[props.field], dataItem[props.field] === "true");
+    const value = dataItem[props.field] === "true" ? true : false;
     return (
       <td {...props.tdProps} style={{ textAlign: "center" }}>
-        <Checkbox
-          className="border"
-          value={dataItem[props.field] === "true"}
-          onClick={() => event(dataItem, props.field)}
-        />
+        <Checkbox className="border" value={value} onClick={() => event(dataItem, props.field)} />
       </td>
     );
   };

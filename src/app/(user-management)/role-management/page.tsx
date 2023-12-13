@@ -5,11 +5,12 @@ import { PAGES, SPORTS } from "@/constants";
 import { Input } from "@progress/kendo-react-inputs";
 import { Button } from "@progress/kendo-react-buttons";
 import { RoleManagementTable } from "@/components/RoleManagementTable";
-import React, { KeyboardEvent, useEffect, useState } from "react";
+import React, { KeyboardEvent, use, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function Page() {
   const router = useRouter();
+  const childRef = useRef<any>();
   const [searchText, setSearchText] = useState<string>("");
   const [form, setForm] = useState<any>({
     _search_type: "_search_roleName",
@@ -57,6 +58,35 @@ export default function Page() {
       console.error(err);
     }
   };
+
+  const updateHandler = async () => {
+    try {
+      const dataJson = await fetch("/api/spider/roleMng/save", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          list: result,
+        }),
+      });
+
+      const data = await dataJson.json();
+      console.log("data: ", data);
+
+      if (data?.result?.error?.code === "FRU00001") {
+        console.error(data?.result?.error);
+        alert("로그인이 만료되었습니다.");
+        sessionStorage.removeItem("isLogin");
+        router.push("/login");
+        return;
+      }
+
+      alert("저장되었습니다.");
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
@@ -129,15 +159,27 @@ export default function Page() {
           <img src={"/images/dot_subtitle.gif"} alt="" style={{}} />
           <span className="font-bold text-[#656565]">List</span>
         </div>
-        <RoleManagementTable getHandler={getHandler} result={result} count={count} displayCount={displayCount} />
+        <RoleManagementTable
+          getHandler={getHandler}
+          result={result}
+          count={count}
+          displayCount={displayCount}
+          ref={childRef}
+        />
       </div>
 
       <div className="flex justify-end gap-6">
         <div className="flex flex-row gap-1">
-          <Button imageUrl="" className="mt-2 flex h-7 items-center justify-start px-[4px] py-[2px] text-[12px]">
+          <Button
+            imageUrl=""
+            className="mt-2 flex h-7 items-center justify-start px-[4px] py-[2px] text-[12px]"
+            onClick={() => childRef.current.addRow()}>
             Add row
           </Button>
-          <Button imageUrl="" className="mt-2 flex h-7 items-center justify-start px-[4px] py-[2px] text-[12px]">
+          <Button
+            imageUrl=""
+            className="mt-2 flex h-7 items-center justify-start px-[4px] py-[2px] text-[12px]"
+            onClick={() => childRef.current.delRow()}>
             Del row
           </Button>
         </div>
