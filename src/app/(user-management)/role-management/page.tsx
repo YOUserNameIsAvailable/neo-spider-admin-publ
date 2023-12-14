@@ -61,7 +61,7 @@ export default function Page() {
 
   const updateHandler = async () => {
     try {
-      const dataResult = childRef.current.dataResult;
+      const dataResult = childRef?.current?.dataResult?.data;
       console.log("dataResult: ", dataResult);
       if (dataResult.length === 0) {
         alert("저장할 데이터가 없습니다.");
@@ -69,9 +69,9 @@ export default function Page() {
       }
 
       const modifyData = dataResult
-        .filter((item: any) => item.crud === "수정" || item.crud === "추가" || item.crud === "삭제")
+        .filter((item: any) => item.CRUD === "수정" || item.CRUD === "추가" || item.CRUD === "삭제")
         .map((item: any) => {
-          const rest = { ...item, crud: item.crud === "추가" ? "CREATE" : item.crud === "수정" ? "UPDATE" : "DELETE" };
+          const rest = { ...item, CRUD: item.CRUD === "추가" ? "C" : item.CRUD === "수정" ? "U" : "D" };
           return rest;
         });
 
@@ -81,12 +81,12 @@ export default function Page() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          list: modifyData,
+          gridData: modifyData,
         }),
       });
 
       const data = await dataJson.json();
-      console.log("data: ", data);
+      console.log("data: ", data, data?.result?.httpCode, data?.result?.status, data?.result?.status !== "success");
 
       if (data?.result?.error?.code === "FRU00001") {
         console.error(data?.result?.error);
@@ -94,11 +94,16 @@ export default function Page() {
         sessionStorage.removeItem("isLogin");
         router.push("/login");
         return;
+      } else if (data?.result?.status !== "success") {
+        alert("실행에 실패하였습니다.");
+        return;
       }
 
       alert("저장되었습니다.");
     } catch (err) {
       console.error(err);
+    } finally {
+      getHandler(currentPage, displayCount);
     }
   };
 
@@ -197,7 +202,10 @@ export default function Page() {
             Del row
           </Button>
         </div>
-        <Button imageUrl="/images/dot-right-arrow.png" className="basic-btn mt-2 flex h-7 items-center justify-start">
+        <Button
+          imageUrl="/images/dot-right-arrow.png"
+          className="basic-btn mt-2 flex h-7 items-center justify-start"
+          onClick={updateHandler}>
           Save
         </Button>
       </div>

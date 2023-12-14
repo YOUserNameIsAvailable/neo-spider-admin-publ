@@ -17,6 +17,7 @@ import { Button } from "@progress/kendo-react-buttons";
 import { RoleManagementModal } from "./modal/RoleManagementModal";
 import { CellRender, RowRender } from "./cellRender";
 import { DropDownCell } from "./DropDownCell";
+import { Input } from "@progress/kendo-react-inputs";
 
 const DATA_ITEM_KEY = "rowSeq";
 const SELECTED_FIELD = "selected";
@@ -54,8 +55,10 @@ export const RoleManagementTable: FC<{
   const [showModal, setShowModal] = React.useState(false); // <4-2> Role management - RoleMenu authority management
 
   const dataStateChange = (event: any) => {
-    setDataResult(process(filteredData, event.dataState));
+    console.log("dataStateChange: ", event);
     setDataState(event.dataState);
+    const page = Math.floor(event.dataState.skip / event.dataState.take) + 1;
+    getHandler(page, displayCount);
   };
 
   const onExpandChange = React.useCallback(
@@ -198,6 +201,10 @@ export const RoleManagementTable: FC<{
   };
 
   const enterEdit = (dataItem: any, field?: string) => {
+    if (field === "roleId" && dataItem?.CRUD !== "추가") {
+      alert("Primary key 필드는 추가시에만 입력이 가능합니다.");
+      return;
+    }
     const newData = dataResult?.data.map((item: any) => ({
       ...item,
       ["inEdit"]: item.rowSeq === dataItem.rowSeq ? field : undefined,
@@ -210,8 +217,18 @@ export const RoleManagementTable: FC<{
     // setData(newData);
   };
 
-  const exitEdit = () => {
-    const newData = data.map((item) => ({ ...item, ["inEdit"]: undefined, ["crud"]: "수정" }));
+  const exitEdit = (dataItem: any, field: string) => {
+    const newData = dataResult?.data.map((item: any, index: number) => {
+      if (item.rowSeq === dataItem.rowSeq) {
+        item.inEdit = undefined;
+        console.log("exitEdit: ", data[index], dataItem);
+        if (JSON.stringify(data[index]) !== JSON.stringify(dataItem)) {
+          item.CRUD = "수정";
+        }
+      }
+
+      return item;
+    });
 
     console.log("exitEdit: ", newData);
 
@@ -229,7 +246,7 @@ export const RoleManagementTable: FC<{
   useImperativeHandle(ref, () => ({
     addRow() {
       const addCount = dataResult.total + 1;
-      const newDataItem = { rowSeq: addCount, crud: "추가" };
+      const newDataItem = { rowSeq: addCount, CRUD: "추가" };
       const _dataState = { ...dataState, take: addCount };
 
       setDataState(_dataState);
@@ -242,7 +259,7 @@ export const RoleManagementTable: FC<{
       const newData = data
         .map((item: any) => {
           console.log("item: ", item);
-          return !item.selected ? item : item?.crud ? {} : { ...item, crud: "삭제" };
+          return !item.selected ? item : item?.CRUD ? {} : { ...item, CRUD: "삭제" };
         })
         .filter((item: any) => Object.keys(item).length > 0);
       const _dataState = { ...dataState, take: newData?.length };
@@ -319,7 +336,7 @@ export const RoleManagementTable: FC<{
               editable={false}
             />
             <Column
-              field="crud"
+              field="CRUD"
               title="CRUD"
               headerClassName="justify-center bg-[#adc6f4]"
               width={53}
@@ -345,7 +362,7 @@ export const RoleManagementTable: FC<{
               headerClassName="justify-center bg-[#adc6f4] col-width15per"
               className="col-width15per"
               editable={true}
-              cell={(props) => <DropDownCell props={props} enterEdit={enterEdit} />}
+              cell={(props) => <DropDownCell props={props} enterEdit={enterEdit} exitEdit={exitEdit} />}
             />
             <Column
               field="roleDesc"
@@ -366,7 +383,7 @@ export const RoleManagementTable: FC<{
               cells={{
                 data: ({ dataItem, ...props }) => {
                   return renderButtonCell(dataItem, props, "Menu", () => {
-                    if (dataItem?.crud === "추가") {
+                    if (dataItem?.CRUD === "추가") {
                       return;
                     }
                     setRoleId(dataItem.roleId);

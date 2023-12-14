@@ -1,5 +1,6 @@
 import * as React from "react";
 import { DropDownCell } from "./DropDownCell";
+import { data } from "jquery";
 
 interface CellRenderProps {
   originalProps: any;
@@ -11,7 +12,7 @@ interface CellRenderProps {
 interface RowRenderProps {
   originalProps: any;
   tr: React.ReactElement<HTMLTableRowElement>;
-  exitEdit: () => void;
+  exitEdit: (dataItem: any, field: string) => void;
   editField: string | undefined;
 }
 
@@ -45,6 +46,7 @@ export const CellRender = (props: CellRenderProps) => {
 
   const clonedProps: any = { ...props.td.props, ...additionalProps };
   const childNodes: any = props.td.props.children;
+
   return React.cloneElement(props.td, clonedProps, childNodes);
 };
 
@@ -56,7 +58,10 @@ export const RowRender = (props: RowRenderProps) => {
         const activeElement = document.activeElement;
 
         if (activeElement && activeElement.className.indexOf("k-calendar") < 0) {
-          props.exitEdit();
+          const dataItem = props.originalProps.dataItem;
+          const cellField = props.originalProps.field;
+
+          props.exitEdit(dataItem, cellField);
         }
       });
     },

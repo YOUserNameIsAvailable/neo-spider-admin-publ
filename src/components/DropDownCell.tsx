@@ -2,10 +2,11 @@ import * as React from "react";
 import { DropDownList, DropDownListChangeEvent } from "@progress/kendo-react-dropdowns";
 import { GridCellProps } from "@progress/kendo-react-grid";
 
-export const DropDownCell: React.FC<{ props: GridCellProps; enterEdit: (dataItem: any, field?: string) => void }> = ({
-  props,
-  enterEdit,
-}) => {
+export const DropDownCell: React.FC<{
+  props: GridCellProps;
+  enterEdit: (dataItem: any, field?: string) => void;
+  exitEdit: (dataItem: any, field: string) => void;
+}> = ({ props, enterEdit, exitEdit }) => {
   const localizedData = [
     { text: "사용중", value: "Y" },
     { text: "중지", value: "N" },
@@ -31,7 +32,7 @@ export const DropDownCell: React.FC<{ props: GridCellProps; enterEdit: (dataItem
       );
       props.dataItem[props.field || ""] = e.target.value.text;
       props.dataItem.useYn = e.target.value.value;
-      props.dataItem.inEdit = undefined;
+      exitEdit(props.dataItem, props.field || "");
     }
   };
 
@@ -42,7 +43,7 @@ export const DropDownCell: React.FC<{ props: GridCellProps; enterEdit: (dataItem
   return dataItem.inEdit === field ? (
     <td colSpan={props.colSpan} className={props.className} aria-colindex={props.ariaColumnIndex} style={props.style}>
       <DropDownList
-        style={{ width: "100px" }}
+        style={{ width: "100%" }}
         onChange={handleChange}
         value={localizedData.find((c) => c.text === dataValue)}
         data={localizedData}
