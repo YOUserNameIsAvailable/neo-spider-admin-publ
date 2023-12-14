@@ -7,6 +7,7 @@ import { Button } from "@progress/kendo-react-buttons";
 import { RoleManagementTable } from "@/components/RoleManagementTable";
 import React, { KeyboardEvent, use, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { validateResult } from "@/utils/util";
 
 export default function Page() {
   const router = useRouter();
@@ -43,17 +44,11 @@ export default function Page() {
       const data = await dataJson.json();
       console.log("data: ", data);
 
-      if (data?.result?.error?.code === "FRU00001") {
-        console.error(data?.result?.error);
-        alert("로그인이 만료되었습니다.");
-        sessionStorage.removeItem("isLogin");
-        router.push("/login");
-        return;
+      if (validateResult(data, router)) {
+        setResult(data?.body?.list);
+        setCount(data?.body?.count);
+        setCurrentPage(page || 1);
       }
-
-      setResult(data?.body?.list);
-      setCount(data?.body?.count);
-      setCurrentPage(page || 1);
     } catch (err) {
       console.error(err);
     }

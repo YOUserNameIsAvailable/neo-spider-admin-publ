@@ -1,12 +1,13 @@
-import React, { Dispatch, FC, SetStateAction, useState } from "react";
+import React, { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { Window, WindowMoveEvent } from "@progress/kendo-react-dialogs";
 import { Button } from "@progress/kendo-react-buttons";
 import { ColumnMenu } from "@/components/ColumnMenu";
 import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
-import { EMPLOYEES } from "@/constants";
 import { getter } from "@progress/kendo-react-common";
 import { process } from "@progress/kendo-data-query";
 import { setGroupIds } from "@progress/kendo-react-data-tools";
+import { Input, TextArea } from "@progress/kendo-react-inputs";
+import moment from "moment";
 
 interface PositionInterface {
   left: number;
@@ -15,7 +16,7 @@ interface PositionInterface {
   height: number;
 }
 
-const DATA_ITEM_KEY = "id";
+const DATA_ITEM_KEY = "rowSeq";
 const SELECTED_FIELD = "selected";
 const initialDataState = {
   take: 10,
@@ -34,22 +35,16 @@ const processWithGroups = (data: any, dataState: any) => {
 
 export const CodeGroupManagementDetailModal: FC<{
   setShowDetailModal: Dispatch<SetStateAction<boolean>>;
-}> = ({ setShowDetailModal }) => {
-  const idGetter = getter("id");
-  const [filteredData, setFilteredData] = React.useState(EMPLOYEES);
-  const [data, setData] = React.useState(filteredData);
-  const [currentSelectedState, setCurrentSelectedState] = React.useState<any>({});
-  const [dataState, setDataState] = React.useState(initialDataState);
-  const [dataResult, setDataResult] = React.useState(process(filteredData, dataState));
-  const [resultState, setResultState] = React.useState(
-    processWithGroups(
-      EMPLOYEES.map((item: any) => ({
-        ...item,
-        selected: currentSelectedState[idGetter(item)],
-      })),
-      initialDataState,
-    ),
-  );
+  codeGroupId: string;
+}> = ({ setShowDetailModal, codeGroupId }) => {
+  const idGetter = getter(DATA_ITEM_KEY);
+  const [filterValue, setFilterValue] = useState();
+  const [filteredData, setFilteredData] = useState<any[]>([]);
+  const [currentSelectedState, setCurrentSelectedState] = useState<any>({});
+  const [group, setGroup] = useState<any>();
+  const [dataState, setDataState] = useState(initialDataState);
+  const [dataResult, setDataResult] = useState<any>({ data: [] });
+  const [data, setData] = useState<any[]>([]);
   const [position, setPosition] = useState<PositionInterface>({
     left: 307,
     top: 225,
@@ -57,9 +52,31 @@ export const CodeGroupManagementDetailModal: FC<{
     height: 640,
   });
 
+  const getDetail = async () => {
+    const detailJson = await fetch("/api/spider/codeGroup/detail", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        codeGroupId,
+      }),
+    });
+
+    const detailResult = await detailJson.json();
+    const detail = detailResult?.body?.detail?.codelist;
+    const group = detailResult?.body?.detail?.codegrouplist;
+
+    console.log("detail: ", detail, detailResult);
+    setDataResult(detail);
+    setData(detail);
+    setGroup(group[0]);
+  };
+
   const handleMove = (event: WindowMoveEvent) => {
     setPosition({ ...position, left: event.left, top: event.top });
   };
+
   const handleResize = (event: WindowMoveEvent) => {
     setPosition({
       left: event.left,
@@ -112,6 +129,13 @@ export const CodeGroupManagementDetailModal: FC<{
     setDataResult(newDataResult);
   };
 
+  useEffect(() => {
+    console.log(123123, codeGroupId);
+    if (codeGroupId && codeGroupId !== "") {
+      getDetail();
+    }
+  }, [codeGroupId]);
+
   return (
     <>
       <div className="k-overlay" />
@@ -141,9 +165,10 @@ export const CodeGroupManagementDetailModal: FC<{
                 <label className="flex h-full w-[150px] min-w-[150px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
                   코드그룹ID
                 </label>
-                <input
+                <Input
                   className="my-[2px] ml-[2px] w-[175px] rounded-[2px] border-[1px] border-[#999999] py-[2px]"
                   disabled={true}
+                  value={group?.codeGroupId}
                 />
               </div>
             </div>
@@ -153,13 +178,18 @@ export const CodeGroupManagementDetailModal: FC<{
                 <label className="flex h-full w-[150px] min-w-[150px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
                   코드그룹
                 </label>
-                <input className="my-[2px] ml-[2px] w-[175px] rounded-[2px] border-[1px] border-[#999999] py-[2px]" />
+                <Input
+                  className="my-[2px] ml-[2px] w-[175px] rounded-[2px] border-[1px] border-[#999999] py-[2px]"
+                  value={group?.codeGroupName}
+                />
               </div>
               <div className="flex w-[50%] flex-row">
                 <label className="flex h-full w-[150px] min-w-[150px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
                   최종수정사용자
                 </label>
-                <div className="break-all px-[2px] py-[4px] text-[11px] font-bold text-[#656565]">Admin</div>
+                <div className="break-all px-[2px] py-[4px] text-[11px] font-bold text-[#656565]">
+                  {group?.lastUpdateUserId}
+                </div>
               </div>
             </div>
             {/*  */}
@@ -168,14 +198,17 @@ export const CodeGroupManagementDetailModal: FC<{
                 <label className="flex h-full w-[150px] min-w-[150px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
                   코드그룹설명
                 </label>
-                <textarea className="m-[2px] w-full resize-none rounded-[2px] border-[1px] border-[#999999] py-[2px]" />
+                <TextArea
+                  className="m-[2px] w-full resize-none rounded-[2px] border-[1px] border-[#999999] py-[2px]"
+                  value={group?.codeGroupDesc}
+                />
               </div>
               <div className="flex w-[50%] flex-row">
                 <label className="flex h-full w-[150px] min-w-[150px] items-center bg-[#d1daec] p-[4px] text-[12px] text-black">
                   최종수정일시
                 </label>
                 <div className="flex items-center break-all px-[2px] py-[4px] text-[11px] font-bold text-[#656565]">
-                  Admin
+                  {moment(group?.lastUpdateDtime).format("YYYY/MM/DD HH:mm:ss")}
                 </div>
               </div>
             </div>
@@ -238,13 +271,11 @@ export const CodeGroupManagementDetailModal: FC<{
             rowHeight={29}
             fixedScroll={true}
             data={dataResult}
-            sortable={true}
-            total={resultState.total}
-            onDataStateChange={dataStateChange}
             {...dataState}
             expandField="expanded"
             dataItemKey={DATA_ITEM_KEY}
             selectedField={SELECTED_FIELD}
+            onDataStateChange={dataStateChange}
             onHeaderSelectionChange={onHeaderSelectionChange}
             onSelectionChange={onSelectionChange}
             groupable={false}>
@@ -258,14 +289,14 @@ export const CodeGroupManagementDetailModal: FC<{
             />
             <Column field="budget" title="CRUD" headerClassName="justify-center bg-[#adc6f4]" width={53} />
             <Column
-              field="budget"
+              field="code"
               headerClassName="justify-center w-[6%]"
               className="w-[6%]"
               title="코드"
               columnMenu={ColumnMenu}
             />
             <Column
-              field="budget"
+              field="codeName"
               headerClassName="justify-center w-[17%]"
               className="w-[17%]"
               title="코드한글명"
@@ -279,21 +310,21 @@ export const CodeGroupManagementDetailModal: FC<{
               columnMenu={ColumnMenu}
             />
             <Column
-              field="budget"
+              field="codeDesc"
               headerClassName="justify-center w-[26%]"
               className="w-[26%]"
               title="코드설명"
               columnMenu={ColumnMenu}
             />{" "}
             <Column
-              field="budget"
+              field="sortOrder"
               headerClassName="justify-center w-[9%]"
               className="w-[9%]"
               title="정렬순서"
               columnMenu={ColumnMenu}
             />
             <Column
-              field="budget"
+              field="useYn"
               headerClassName="justify-center w-[13%]"
               className="w-[13%]"
               title="사용여부"

@@ -4,20 +4,73 @@ import { Input } from "@progress/kendo-react-inputs";
 import { Button } from "@progress/kendo-react-buttons";
 import { DropDownList } from "@progress/kendo-react-dropdowns";
 import { searchIcon, arrowRightIcon } from "@progress/kendo-svg-icons";
-import React, { useState } from "react";
+import React, { KeyboardEvent, useEffect, useState } from "react";
 import { SPORTS, PAGES } from "@/constants";
 
 import { CodeManagementTable } from "@/components/CodeManagementTable";
 import { CodeManagementAddModal } from "@/components/modal/CodeManagementAddModal";
+import { useRouter } from "next/navigation";
+import { validateResult } from "@/utils/util";
 
 export default function Page() {
-  const [isExpanded, setIsExpanded] = useState(true);
+  const router = useRouter();
+  const [searchText, setSearchText] = useState<string>("");
+  const [form, setForm] = useState<any>({
+    _search_type: "_search_roleName",
+    _search_roleId: null,
+    _search_roleName: null,
+  });
 
+  const [result, setResult] = useState<any[]>([]);
+  const [count, setCount] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [displayCount, setDisplayCount] = useState<number>(20);
+  const [isExpanded, setIsExpanded] = useState(true);
   const [showModal, setShowModal] = React.useState(false);
 
   const toggleExpansion = () => {
     setIsExpanded(!isExpanded);
   };
+
+  const getHandler = async (page?: number, displayCount?: number) => {
+    try {
+      const dataJson = await fetch("/api/spider/codeGroup/list", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          page: page || 1,
+          displayCount: displayCount || 20,
+          ...form,
+          ...(searchText !== "" && form._search_type === "_search_roleName"
+            ? { _search_roleName: searchText }
+            : { _search_roleId: searchText }),
+        }),
+      });
+
+      const data = await dataJson.json();
+      console.log("data: ", data);
+
+      if (validateResult(data, router)) {
+        setResult(data?.body?.list);
+        setCount(data?.body?.count);
+        setCurrentPage(page || 1);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      getHandler(currentPage, displayCount);
+    }
+  };
+
+  useEffect(() => {
+    getHandler();
+  }, []);
 
   return (
     <>

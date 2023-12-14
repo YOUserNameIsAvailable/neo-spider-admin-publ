@@ -44,33 +44,6 @@ export const MenuManagementTable: FC<{
   const [menuId, setMenuId] = useState(""); // <3-2> Menu management - detail
   const [showModal, setShowModal] = useState(false); // <3-2> Menu management - detail
 
-  const onFilterChange = (ev: any) => {
-    let value = ev.value;
-    setFilterValue(ev.value);
-    let newData = EMPLOYEES.filter((item: any) => {
-      let match = false;
-      for (const property in item) {
-        if (item[property].toString().toLocaleLowerCase().indexOf(value.toLocaleLowerCase()) >= 0) {
-          match = true;
-        }
-        if (item[property].toLocaleDateString && item[property].toLocaleDateString().indexOf(value) >= 0) {
-          match = true;
-        }
-      }
-      return match;
-    });
-    setFilteredData(newData);
-    let clearedPagerDataState = {
-      ...dataState,
-      take: 8,
-      skip: 0,
-    };
-    let processedData = process(newData, clearedPagerDataState);
-    setDataResult(processedData);
-    setDataState(clearedPagerDataState);
-    setData(newData);
-  };
-
   const [resultState, setResultState] = React.useState(
     processWithGroups(
       EMPLOYEES.map((item: any) => ({
@@ -82,8 +55,10 @@ export const MenuManagementTable: FC<{
   );
 
   const dataStateChange = (event: any) => {
-    setDataResult(process(filteredData, event.dataState));
+    console.log("dataStateChange: ", event);
     setDataState(event.dataState);
+    const page = Math.floor(event.dataState.skip / event.dataState.take) + 1;
+    getHandler(page, displayCount);
   };
 
   const onExpandChange = React.useCallback(
@@ -244,21 +219,18 @@ export const MenuManagementTable: FC<{
             <Column
               field="menuId"
               title="Menu ID"
-              columnMenu={ColumnMenu}
               headerClassName="justify-center col-width20per"
               className="col-width20per"
             />
             <Column
               field="menuName"
               title="Menu Name"
-              columnMenu={ColumnMenu}
               headerClassName="justify-center col-width30per"
               className="col-width30per"
             />
             <Column
               field="menuUrl"
               title="메뉴 URL"
-              columnMenu={ColumnMenu}
               headerClassName="justify-center col-width40per"
               className="col-width40per"
             />

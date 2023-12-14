@@ -1,15 +1,16 @@
-import React from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 import { getter } from "@progress/kendo-react-common";
 import { process } from "@progress/kendo-data-query";
 import { GridPDFExport } from "@progress/kendo-react-pdf";
 import { ExcelExport } from "@progress/kendo-react-excel-export";
-import { Grid, GridColumn as Column, GridRowClickEvent } from "@progress/kendo-react-grid";
+import { Grid, GridColumn as Column, GridRowClickEvent, GridNoRecords } from "@progress/kendo-react-grid";
 import { setGroupIds, setExpandedState } from "@progress/kendo-react-data-tools";
 import { EMPLOYEES } from "@/constants";
 import { ColumnMenu } from "./ColumnMenu";
 import { CodeGroupManagementDetailModal } from "@/components/modal/CodeGroupManagementDetailModal";
+import { Button } from "@progress/kendo-react-buttons";
 
-const DATA_ITEM_KEY = "id";
+const DATA_ITEM_KEY = "rowSeq";
 const SELECTED_FIELD = "selected";
 const initialDataState = {
   take: 10,
@@ -33,57 +34,28 @@ interface PositionInterface {
   height: number;
 }
 
-export function CodeGroupManagementTable() {
-  const idGetter = getter("id");
-  const [filterValue, setFilterValue] = React.useState();
-  const [filteredData, setFilteredData] = React.useState(EMPLOYEES);
-  const [currentSelectedState, setCurrentSelectedState] = React.useState<any>({});
-  const [dataState, setDataState] = React.useState(initialDataState);
-  const [dataResult, setDataResult] = React.useState(process(filteredData, dataState));
-  const [data, setData] = React.useState(filteredData);
+export const CodeGroupManagementTable: FC<{
+  getHandler: (page?: number, displayCount?: number) => void;
+  result: any[];
+  count: number;
+  displayCount: number;
+}> = ({ getHandler, result, count, displayCount }) => {
+  const idGetter = getter(DATA_ITEM_KEY);
+  const [filterValue, setFilterValue] = useState();
+  const [filteredData, setFilteredData] = useState<any[]>([]);
+  const [currentSelectedState, setCurrentSelectedState] = useState<any>({});
+  const [dataState, setDataState] = useState(initialDataState);
+  const [dataResult, setDataResult] = useState<any>({ data: [] });
+  const [data, setData] = useState<any[]>([]);
 
+  const [codeGroupId, setCodeGroupId] = useState<string>("");
   const [showDetailModal, setShowDetailModal] = React.useState(false);
 
-  const onFilterChange = (ev: any) => {
-    let value = ev.value;
-    setFilterValue(ev.value);
-    let newData = EMPLOYEES.filter((item: any) => {
-      let match = false;
-      for (const property in item) {
-        if (item[property].toString().toLocaleLowerCase().indexOf(value.toLocaleLowerCase()) >= 0) {
-          match = true;
-        }
-        if (item[property].toLocaleDateString && item[property].toLocaleDateString().indexOf(value) >= 0) {
-          match = true;
-        }
-      }
-      return match;
-    });
-    setFilteredData(newData);
-    let clearedPagerDataState = {
-      ...dataState,
-      take: 8,
-      skip: 0,
-    };
-    let processedData = process(newData, clearedPagerDataState);
-    setDataResult(processedData);
-    setDataState(clearedPagerDataState);
-    setData(newData);
-  };
-
-  const [resultState, setResultState] = React.useState(
-    processWithGroups(
-      EMPLOYEES.map((item: any) => ({
-        ...item,
-        ["selected"]: currentSelectedState[idGetter(item)],
-      })),
-      initialDataState,
-    ),
-  );
-
   const dataStateChange = (event: any) => {
-    setDataResult(process(filteredData, event.dataState));
+    console.log("dataStateChange: ", event);
     setDataState(event.dataState);
+    const page = Math.floor(event.dataState.skip / event.dataState.take) + 1;
+    getHandler(page, displayCount);
   };
 
   const onExpandChange = React.useCallback(
@@ -120,19 +92,15 @@ export function CodeGroupManagementTable() {
       } else {
         return {
           ...item,
-          ["selected"]: currentSelectedState[idGetter(item)],
+          selected: currentSelectedState[idGetter(item)],
         };
       }
     });
+
     return newData;
   };
 
-  const newData = setExpandedState({
-    data: setSelectedValue(resultState.data),
-    collapsedIds: [],
-  });
-
-  const onHeaderSelectionChange = React.useCallback(
+  const onHeaderSelectionChange = useCallback(
     (event: any) => {
       const checkboxElement = event.syntheticEvent.target;
       const checked = checkboxElement.checked;
@@ -152,10 +120,10 @@ export function CodeGroupManagementTable() {
   );
 
   const onSelectionChange = (event: any) => {
-    const selectedProductId = event.dataItem.id;
+    const selectedId = event.dataItem.rowSeq;
 
     const newData = data.map((item: any) => {
-      if (item.id === selectedProductId) {
+      if (item.rowSeq === selectedId) {
         item.selected = !item.selected;
       }
       return item;
@@ -163,11 +131,13 @@ export function CodeGroupManagementTable() {
 
     setCurrentSelectedState((prevState: any) => ({
       ...prevState,
-      [selectedProductId]: !prevState[selectedProductId],
+      [selectedId]: !prevState[selectedId],
     }));
 
     const newDataResult = processWithGroups(newData, dataState);
     setDataResult(newDataResult);
+
+    console.log(123123, newDataResult);
   };
 
   const getNumberOfItems = (data: any) => {
@@ -194,16 +164,48 @@ export function CodeGroupManagementTable() {
     return count;
   };
 
-  const handleButtonClick = (row: any) => {
-    // Handle button click for the specific row
-    console.log(`Button clicked for user: ${row.full_name}`);
-  };
-
-  const renderButtonCell = (props: any) => (
-    <td>
-      <button onClick={() => handleButtonClick(props.dataItem)}>Click me</button>
+  const renderButtonCell = (dataItem: any, props: any, text: string, event?: () => void) => (
+    <td {...props.tdProps} style={{ textAlign: "center" }}>
+      <Button size={"small"} className="cell-inside-btn px-4 font-normal" themeColor={"primary"} onClick={event}>
+        {text}
+      </Button>
     </td>
   );
+
+  const checkHeaderSelectionValue = () => {
+    const newData = setExpandedState({
+      data: setSelectedValue(dataResult.data),
+      collapsedIds: [],
+    });
+
+    let selectedItems = getNumberOfSelectedItems(newData);
+    return newData.length > 0 && selectedItems === getNumberOfItems(newData);
+  };
+
+  useEffect(() => {
+    setFilteredData(result);
+    setDataResult({ data: result, total: count });
+    setData(result);
+
+    console.log("result: ", result);
+    console.log("dataResult: ", dataResult);
+    console.log("data: ", data);
+    console.log("dataState: ", dataState);
+    console.log("filteredData: ", filteredData);
+    console.log("currentSelectedState: ", currentSelectedState);
+    console.log("filterValue: ", filterValue);
+    console.log("initialDataState: ", initialDataState);
+  }, [result]);
+
+  useEffect(() => {
+    if (displayCount) {
+      console.log("useEffect displayCount: ", displayCount);
+      const page = Math.floor(dataState.skip / dataState.take) + 1;
+      const skip = (page - 1) * displayCount;
+
+      setDataState((prev) => ({ ...prev, skip: skip, take: displayCount }));
+    }
+  }, [displayCount]);
 
   return (
     <div>
@@ -213,61 +215,57 @@ export function CodeGroupManagementTable() {
             height: "500px",
           }}
           pageable={{
-            buttonCount: 3,
-            info: true,
-            type: "numeric",
-            pageSizes: [5, 10, 15],
-            previousNext: true,
+            pageSizes: false,
+            buttonCount: 10,
           }}
-          onRowClick={(event: GridRowClickEvent) => {
-            setShowDetailModal(true);
-          }}
-          data={dataResult}
-          sortable={true}
-          total={resultState.total}
-          onDataStateChange={dataStateChange}
           {...dataState}
-          onExpandChange={onExpandChange}
+          data={dataResult}
+          total={count || 0}
           expandField="expanded"
           dataItemKey={DATA_ITEM_KEY}
           selectedField={SELECTED_FIELD}
+          resizable={true}
+          onDataStateChange={dataStateChange}
           onHeaderSelectionChange={onHeaderSelectionChange}
           onSelectionChange={onSelectionChange}
-          groupable={false}>
+          onRowClick={(event: GridRowClickEvent) => {
+            setCodeGroupId(event.dataItem.codeGroupId);
+            setShowDetailModal(true);
+          }}>
+          <GridNoRecords>
+            <div id="noRecord" className="popup_pop_norecord">
+              No Record Found.
+            </div>
+          </GridNoRecords>
           <Column
-            field="budget"
+            field="codeGroupId"
+            title="Code group ID"
             headerClassName="justify-center col-width70per"
             className="col-width70per"
-            title="Code group ID"
-            columnMenu={ColumnMenu}
           />
           <Column
-            field="full_name"
+            field="codeGroupName"
+            title="Code group name"
             headerClassName="justify-center col-width100per"
             className="col-width100per"
-            title="Code group name"
-            columnMenu={ColumnMenu}
           />
           <Column
-            field="target"
+            field="codeGroupDesc"
+            title="Code desc."
             headerClassName="justify-center col-width200per"
             className="col-width200per"
-            title="Code desc."
-            columnMenu={ColumnMenu}
           />
           <Column
-            field="budget"
-            headerClassName="justify-center col-width70per"
-            className="col-width70per"
+            field="bizGroupName"
             title="Biz class"
-            columnMenu={ColumnMenu}
-          />
-          <Column
-            field="budget"
             headerClassName="justify-center col-width70per"
             className="col-width70per"
+          />
+          <Column
+            field="codeCount"
             title="Code count"
-            columnMenu={ColumnMenu}
+            headerClassName="justify-center col-width70per"
+            className="col-width70per"
           />
         </Grid>
       </ExcelExport>
@@ -281,7 +279,7 @@ export function CodeGroupManagementTable() {
           }}
           data={dataResult}
           sortable={false}
-          total={resultState.total}
+          total={count || 0}
           onDataStateChange={dataStateChange}
           {...dataState}
           onExpandChange={onExpandChange}
@@ -292,7 +290,9 @@ export function CodeGroupManagementTable() {
           onSelectionChange={onSelectionChange}
           groupable={true}></Grid>
       </GridPDFExport>
-      {showDetailModal && <CodeGroupManagementDetailModal setShowDetailModal={setShowDetailModal} />}
+      {showDetailModal && (
+        <CodeGroupManagementDetailModal setShowDetailModal={setShowDetailModal} codeGroupId={codeGroupId} />
+      )}
     </div>
   );
-}
+};
