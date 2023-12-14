@@ -1091,6 +1091,12 @@ export const MENUS: IMenu[] = [
             text: "Personal information modification",
             url: "/edit-personal-information",
           },
+          {
+            data: "custom_menu_management",
+            level: 3,
+            text: "Custom Menu Management",
+            url: "/custom-menu-management",
+          },
         ],
       },
       {
