@@ -42,7 +42,6 @@ export const RoleManagementModal: FC<{
   const [dataResult, setDataResult] = useState<any[]>([]);
   const [data, setData] = useState<any[]>([]);
   const [nestedPanes, setNestedPanes] = useState<any[]>([{ size: "50%", resizable: true }, {}]);
-  const [form, setForm] = useState<any[]>([]);
   const [modifyData, setModifyData] = useState<any[]>([]);
   const [dragFrom, setDragFrom] = useState("");
   const [dragDataItem, setDragDataItem] = useState<any>(null);

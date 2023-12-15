@@ -9,6 +9,7 @@ import { TabProvider } from "@/providers/TabProvider";
 import { Layout } from "@/components/shared/layout";
 import ThemeProvider from "@/providers/ThemeProvider";
 import Loading from "../components/loading";
+import DialogModalContextProvider from "@/hooks/ModalDialogContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -60,10 +61,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body className={inter.className}>
         <TabProvider>
           <ThemeProvider>
-            {/*{isLogin && !isLoginPage ? <Layout>{children}</Layout> : !isLoaded ? children : <Loading />}*/}
-            <Suspense fallback={<Loading />}>
-              <Layout>{children}</Layout>
-            </Suspense>
+            <DialogModalContextProvider>
+              {/*{isLogin && !isLoginPage ? <Layout>{children}</Layout> : !isLoaded ? children : <Loading />}*/}
+              <Suspense fallback={<Loading />}>
+                <Layout>{children}</Layout>
+              </Suspense>
+            </DialogModalContextProvider>
           </ThemeProvider>
         </TabProvider>
       </body>

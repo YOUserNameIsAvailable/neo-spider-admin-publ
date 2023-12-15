@@ -1,13 +1,37 @@
-import React, { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
+import React, {
+  ChangeEvent,
+  Dispatch,
+  FC,
+  ReactElement,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { Window, WindowMoveEvent } from "@progress/kendo-react-dialogs";
 import { Button } from "@progress/kendo-react-buttons";
-import { ColumnMenu } from "@/components/ColumnMenu";
-import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
+import {
+  Grid,
+  GridColumn as Column,
+  GridItemChangeEvent,
+  GridCellProps,
+  GridRowProps,
+  GridNoRecords,
+} from "@progress/kendo-react-grid";
 import { getter } from "@progress/kendo-react-common";
-import { process } from "@progress/kendo-data-query";
-import { setGroupIds } from "@progress/kendo-react-data-tools";
-import { Input, TextArea } from "@progress/kendo-react-inputs";
+import { setExpandedState } from "@progress/kendo-react-data-tools";
+import {
+  Input,
+  InputChangeEvent,
+  NumericTextBox,
+  NumericTextBoxChangeEvent,
+  TextArea,
+} from "@progress/kendo-react-inputs";
 import moment from "moment";
+import { CellRender, RowRender } from "../cellRender";
+import { DropDownCell } from "../DropDownCell";
+import { useDialogModalContext } from "@/hooks/ModalDialogContext";
+import { Tooltip } from "@progress/kendo-react-tooltip";
 
 interface PositionInterface {
   left: number;
@@ -18,32 +42,23 @@ interface PositionInterface {
 
 const DATA_ITEM_KEY = "rowSeq";
 const SELECTED_FIELD = "selected";
-const initialDataState = {
-  take: 10,
-  skip: 0,
-  group: [],
-};
-
-const processWithGroups = (data: any, dataState: any) => {
-  const newDataState = process(data, dataState);
-  setGroupIds({
-    data: newDataState.data,
-    group: dataState.group,
-  });
-  return newDataState;
-};
 
 export const CodeGroupManagementDetailModal: FC<{
+  getHandler: () => void;
   setShowDetailModal: Dispatch<SetStateAction<boolean>>;
   codeGroupId: string;
-}> = ({ setShowDetailModal, codeGroupId }) => {
+  ref: any;
+}> = ({ getHandler, setShowDetailModal, codeGroupId }, ref) => {
   const idGetter = getter(DATA_ITEM_KEY);
+  const modalContext = useDialogModalContext();
   const [filterValue, setFilterValue] = useState();
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [currentSelectedState, setCurrentSelectedState] = useState<any>({});
   const [group, setGroup] = useState<any>();
-  const [dataState, setDataState] = useState(initialDataState);
-  const [dataResult, setDataResult] = useState<any>({ data: [] });
+
+  const [isExcelCopy, setIsExcelCopy] = useState<boolean>(false);
+  const [copyData, setCopyData] = useState<any[]>([]);
+  const [dataResult, setDataResult] = useState<any[]>([]);
   const [data, setData] = useState<any[]>([]);
   const [position, setPosition] = useState<PositionInterface>({
     left: 307,
@@ -64,13 +79,63 @@ export const CodeGroupManagementDetailModal: FC<{
     });
 
     const detailResult = await detailJson.json();
-    const detail = detailResult?.body?.detail?.codelist;
+    const detail = detailResult?.body?.detail?.codelist.map((item: any, index: number) => ({
+      ...item,
+      rowSeq: index,
+    }));
     const group = detailResult?.body?.detail?.codegrouplist;
 
     console.log("detail: ", detail, detailResult);
     setDataResult(detail);
     setData(detail);
     setGroup(group[0]);
+  };
+
+  const updateDetail = async () => {
+    const gridData = dataResult
+      .filter((item: any) => item.CRUD === "수정" || item.CRUD === "추가" || item.CRUD === "삭제")
+      .map((item: any) => {
+        const rest = { ...item, codeGroupId, CRUD: item.CRUD === "추가" ? "C" : item.CRUD === "수정" ? "U" : "D" };
+        return rest;
+      });
+
+    const updateJson = await fetch("/api/spider/codeGroup/update", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        codeGroupId: group.codeGroupId,
+        codeGroupName: group.codeGroupName,
+        codeGroupDesc: group.codeGroupDesc,
+        gridData,
+      }),
+    });
+
+    const updateResult = await updateJson.json();
+    console.log("updateResult: ", updateResult);
+    getDetail();
+    getHandler();
+  };
+
+  const deleteDetail = async () => {
+    const isConfirm = await modalContext.showDialog("Confirmation", "코드그룹정보를 삭제 하시겠습니까?", "confirm");
+
+    if (!isConfirm) {
+      return;
+    }
+    const deleteJson = await fetch("/api/spider/codeGroup/delete", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        codeGroupId,
+      }),
+    });
+
+    const deleteResult = await deleteJson.json();
+    console.log("deleteResult: ", deleteResult);
   };
 
   const handleMove = (event: WindowMoveEvent) => {
@@ -86,7 +151,25 @@ export const CodeGroupManagementDetailModal: FC<{
     });
   };
 
-  const onHeaderSelectionChange = React.useCallback(
+  const setSelectedValue = (data: any) => {
+    let newData = data.map((item: any) => {
+      if (item.items) {
+        return {
+          ...item,
+          items: setSelectedValue(item.items),
+        };
+      } else {
+        return {
+          ...item,
+          selected: currentSelectedState[idGetter(item)],
+        };
+      }
+    });
+
+    return newData;
+  };
+
+  const onHeaderSelectionChange = useCallback(
     (event: any) => {
       const checkboxElement = event.syntheticEvent.target;
       const checked = checkboxElement.checked;
@@ -99,22 +182,17 @@ export const CodeGroupManagementDetailModal: FC<{
         ...item,
         [SELECTED_FIELD]: checked,
       }));
-      const newDataResult = processWithGroups(newData, dataState);
-      setDataResult(newDataResult);
+
+      setDataResult(newData);
     },
-    [data, dataState],
+    [data],
   );
 
-  const dataStateChange = (event: any) => {
-    setDataResult(process(filteredData, event.dataState));
-    setDataState(event.dataState);
-  };
-
   const onSelectionChange = (event: any) => {
-    const selectedProductId = event.dataItem.id;
+    const selectedId = event.dataItem.rowSeq;
 
     const newData = data.map((item: any) => {
-      if (item.id === selectedProductId) {
+      if (item.rowSeq === selectedId) {
         item.selected = !item.selected;
       }
       return item;
@@ -122,15 +200,155 @@ export const CodeGroupManagementDetailModal: FC<{
 
     setCurrentSelectedState((prevState: any) => ({
       ...prevState,
-      [selectedProductId]: !prevState[selectedProductId],
+      [selectedId]: !prevState[selectedId],
     }));
 
-    const newDataResult = processWithGroups(newData, dataState);
-    setDataResult(newDataResult);
+    setDataResult(newData);
+  };
+
+  const getNumberOfItems = (data: any) => {
+    let count = 0;
+    data.forEach((item: any) => {
+      if (item.items) {
+        count = count + getNumberOfItems(item.items);
+      } else {
+        count++;
+      }
+    });
+    return count;
+  };
+
+  const getNumberOfSelectedItems = (data: any) => {
+    let count = 0;
+    data.forEach((item: any) => {
+      if (item.items) {
+        count = count + getNumberOfSelectedItems(item.items);
+      } else {
+        count = count + (item.selected == true ? 1 : 0);
+      }
+    });
+    return count;
+  };
+
+  const checkHeaderSelectionValue = () => {
+    const newData = setExpandedState({
+      data: setSelectedValue(dataResult),
+      collapsedIds: [],
+    });
+
+    let selectedItems = getNumberOfSelectedItems(newData);
+    return newData.length > 0 && selectedItems === getNumberOfItems(newData);
+  };
+
+  const itemChange = (event: GridItemChangeEvent) => {
+    let field = event.field || "";
+    let newData = dataResult.map((item: any) => {
+      if (item.rowSeq === event.dataItem.rowSeq) {
+        item[field] = event.value;
+      }
+      return item;
+    });
+
+    console.log("itemChange: ", newData);
+    // setData(newData);
+    // setChanges(true);
+    setDataResult(newData);
+  };
+
+  const enterEdit = async (dataItem: any, field?: string) => {
+    if (field === "code" && dataItem?.CRUD !== "추가") {
+      await modalContext.showDialog("알림", "Primary key 필드는 추가시에만 입력이 가능합니다.", "alert");
+      return;
+    }
+    const newData = dataResult.map((item: any) => ({
+      ...item,
+      ["inEdit"]: item.rowSeq === dataItem.rowSeq ? field : undefined,
+    }));
+
+    console.log("enterEdit: ", newData, dataItem, field);
+
+    setDataResult(newData);
+
+    // setData(newData);
+  };
+
+  const exitEdit = (dataItem: any, field: string) => {
+    const newData = dataResult.map((item: any, index: number) => {
+      if (item.rowSeq === dataItem.rowSeq) {
+        item.inEdit = undefined;
+        console.log("exitEdit: ", data[index], dataItem);
+        if (JSON.stringify(data[index]) !== JSON.stringify(dataItem) && dataItem.CRUD !== "추가") {
+          item.CRUD = "수정";
+        }
+      }
+
+      return item;
+    });
+
+    console.log("exitEdit: ", newData);
+
+    setDataResult(newData);
+  };
+
+  const customCellRender: any = (td: ReactElement<HTMLTableCellElement>, props: GridCellProps) => (
+    <CellRender originalProps={props} td={td} enterEdit={enterEdit} exitEdit={exitEdit} editField={"inEdit"} />
+  );
+
+  const customRowRender: any = (tr: ReactElement<HTMLTableRowElement>, props: GridRowProps) => (
+    <RowRender originalProps={props} tr={tr} exitEdit={exitEdit} editField={"inEdit"} />
+  );
+
+  const addRow = () => {
+    const addCount = dataResult.length + 1;
+    const newDataItem = { rowSeq: addCount, CRUD: "추가" };
+
+    setData([...data, newDataItem]);
+    setDataResult([...data, newDataItem]);
+
+    console.log("addRow: ", newDataItem, [...data, newDataItem]);
+  };
+
+  const delRow = () => {
+    const newData = data
+      .map((item: any) => {
+        console.log("item: ", item);
+        return !item.selected ? item : item?.CRUD ? {} : { ...item, CRUD: "삭제" };
+      })
+      .filter((item: any) => Object.keys(item).length > 0);
+
+    setData(newData);
+    setDataResult(newData);
+  };
+
+  const handlePaste = (e: any) => {
+    if (e.target.tagName && e.target.tagName.match(/(input|textarea)/i)) {
+      // Do not handle past when an input element is currently focused
+      return;
+    }
+
+    // Get clipboard data as text
+    const data = e.clipboardData.getData("text");
+
+    // Simplified parsing of the TSV data with hard-coded columns
+    const rows = data.split("\n");
+    const result = rows.map((row: any, index: number) => {
+      const cells = row.split("\t");
+      return {
+        CURD: "추가",
+        code: cells[0],
+        codeDesc: cells[1],
+        codeEngname: cells[2],
+        codeGroupId,
+        codeName: cells[3],
+        rowSeq: dataResult.length + index + 1,
+        sortOrder: cells[4],
+        useYn: cells[5],
+      };
+    });
+    setCopyData(result);
   };
 
   useEffect(() => {
-    console.log(123123, codeGroupId);
     if (codeGroupId && codeGroupId !== "") {
       getDetail();
     }
@@ -181,6 +399,7 @@ export const CodeGroupManagementDetailModal: FC<{
                 <Input
                   className="my-[2px] ml-[2px] w-[175px] rounded-[2px] border-[1px] border-[#999999] py-[2px]"
                   value={group?.codeGroupName}
+                  onInput={(e) => setGroup((prev: any) => ({ ...prev, codeGroupName: e?.currentTarget?.value }))}
                 />
               </div>
               <div className="flex w-[50%] flex-row">
@@ -201,6 +420,7 @@ export const CodeGroupManagementDetailModal: FC<{
                 <TextArea
                   className="m-[2px] w-full resize-none rounded-[2px] border-[1px] border-[#999999] py-[2px]"
                   value={group?.codeGroupDesc}
+                  onInput={(e) => setGroup((prev: any) => ({ ...prev, codeGroupDesc: e?.currentTarget?.value }))}
                 />
               </div>
               <div className="flex w-[50%] flex-row">
@@ -219,136 +439,209 @@ export const CodeGroupManagementDetailModal: FC<{
               ※Excel데이터 Copy는 Excel복사버튼 클릭하세요!
             </div>
             <div className="flex flex-row gap-[2px]">
-              <button
-                className="k-button"
-                style={{
-                  height: "23px",
-                  backgroundColor: "#F6F6F6",
-                  borderColor: "#656565",
-                  borderRadius: "2px",
-                  paddingRight: "4px",
-                  paddingLeft: "4px",
-                  paddingTop: "2px",
-                  paddingBottom: "2px",
-                }}>
-                Excel복사
-              </button>
-              <button
-                className="k-button"
-                style={{
-                  height: "23px",
-                  backgroundColor: "#F6F6F6",
-                  borderColor: "#656565",
-                  borderRadius: "2px",
-                  paddingRight: "4px",
-                  paddingLeft: "4px",
-                  paddingTop: "2px",
-                  paddingBottom: "2px",
-                }}>
-                행 추가
-              </button>
-              <button
-                className="k-button"
-                style={{
-                  height: "23px",
-                  backgroundColor: "#F6F6F6",
-                  borderColor: "#656565",
-                  borderRadius: "2px",
-                  paddingRight: "4px",
-                  paddingLeft: "4px",
-                  paddingTop: "2px",
-                  paddingBottom: "2px",
-                }}>
-                선택형 삭제
-              </button>
+              {isExcelCopy ? (
+                <>
+                  <Button
+                    style={{
+                      height: "23px",
+                      backgroundColor: "#F6F6F6",
+                      borderColor: "#656565",
+                      borderRadius: "2px",
+                      paddingRight: "4px",
+                      paddingLeft: "4px",
+                      paddingTop: "2px",
+                      paddingBottom: "2px",
+                    }}
+                    onClick={() => {
+                      setDataResult((prev) => [...prev, ...copyData]);
+                      setCopyData([]);
+                      setIsExcelCopy(false);
+                    }}>
+                    확인
+                  </Button>
+                  <Button
+                    style={{
+                      height: "23px",
+                      backgroundColor: "#F6F6F6",
+                      borderColor: "#656565",
+                      borderRadius: "2px",
+                      paddingRight: "4px",
+                      paddingLeft: "4px",
+                      paddingTop: "2px",
+                      paddingBottom: "2px",
+                    }}
+                    onClick={() => setIsExcelCopy(false)}>
+                    취소
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button
+                    style={{
+                      height: "23px",
+                      backgroundColor: "#F6F6F6",
+                      borderColor: "#656565",
+                      borderRadius: "2px",
+                      paddingRight: "4px",
+                      paddingLeft: "4px",
+                      paddingTop: "2px",
+                      paddingBottom: "2px",
+                    }}
+                    onClick={() => setIsExcelCopy(true)}>
+                    Excel복사
+                  </Button>
+                  <Button
+                    style={{
+                      height: "23px",
+                      backgroundColor: "#F6F6F6",
+                      borderColor: "#656565",
+                      borderRadius: "2px",
+                      paddingRight: "4px",
+                      paddingLeft: "4px",
+                      paddingTop: "2px",
+                      paddingBottom: "2px",
+                    }}
+                    onClick={addRow}>
+                    행 추가
+                  </Button>
+                  <Button
+                    style={{
+                      height: "23px",
+                      backgroundColor: "#F6F6F6",
+                      borderColor: "#656565",
+                      borderRadius: "2px",
+                      paddingRight: "4px",
+                      paddingLeft: "4px",
+                      paddingTop: "2px",
+                      paddingBottom: "2px",
+                    }}
+                    onClick={delRow}>
+                    선택형 삭제
+                  </Button>
+                </>
+              )}
             </div>
           </div>
           {/*  */}
-          <Grid
-            style={{
-              height: "300px",
-            }}
-            rowHeight={29}
-            fixedScroll={true}
-            data={dataResult}
-            {...dataState}
-            expandField="expanded"
-            dataItemKey={DATA_ITEM_KEY}
-            selectedField={SELECTED_FIELD}
-            onDataStateChange={dataStateChange}
-            onHeaderSelectionChange={onHeaderSelectionChange}
-            onSelectionChange={onSelectionChange}
-            groupable={false}>
-            <Column
-              filterable={false}
-              sortable={false}
-              field={SELECTED_FIELD}
-              headerClassName="bg-[#adc6f4] overflow-none"
-              className="overflow-none"
-              width={30}
-            />
-            <Column field="budget" title="CRUD" headerClassName="justify-center bg-[#adc6f4]" width={53} />
-            <Column
-              field="code"
-              headerClassName="justify-center w-[6%]"
-              className="w-[6%]"
-              title="코드"
-              columnMenu={ColumnMenu}
-            />
-            <Column
-              field="codeName"
-              headerClassName="justify-center w-[17%]"
-              className="w-[17%]"
-              title="코드한글명"
-              columnMenu={ColumnMenu}
-            />
-            <Column
-              field="budget"
-              headerClassName="justify-center w-[17%]"
-              className="w-[17%]"
-              title="코드영문명"
-              columnMenu={ColumnMenu}
-            />
-            <Column
-              field="codeDesc"
-              headerClassName="justify-center w-[26%]"
-              className="w-[26%]"
-              title="코드설명"
-              columnMenu={ColumnMenu}
-            />{" "}
-            <Column
-              field="sortOrder"
-              headerClassName="justify-center w-[9%]"
-              className="w-[9%]"
-              title="정렬순서"
-              columnMenu={ColumnMenu}
-            />
-            <Column
-              field="useYn"
-              headerClassName="justify-center w-[13%]"
-              className="w-[13%]"
-              title="사용여부"
-              columnMenu={ColumnMenu}
-            />
-          </Grid>
+          <div onPaste={handlePaste}>
+            <Grid
+              style={
+                isExcelCopy
+                  ? {
+                      height: "300px",
+                      backgroundColor: "red",
+                      padding: "1px",
+                    }
+                  : {
+                      height: "300px",
+                    }
+              }
+              rowHeight={29}
+              fixedScroll={true}
+              data={isExcelCopy ? copyData : dataResult}
+              expandField="expanded"
+              dataItemKey={DATA_ITEM_KEY}
+              selectedField={SELECTED_FIELD}
+              resizable={true}
+              editField="inEdit"
+              cellRender={customCellRender}
+              rowRender={customRowRender}
+              onItemChange={itemChange}
+              onHeaderSelectionChange={onHeaderSelectionChange}
+              onSelectionChange={onSelectionChange}>
+              <GridNoRecords>
+                <div id="noRecord" className="popup_pop_norecord">
+                  No Record Found.
+                </div>
+              </GridNoRecords>
+              <Column
+                filterable={false}
+                field={SELECTED_FIELD}
+                width={30}
+                editable={false}
+                headerSelectionValue={checkHeaderSelectionValue()}
+                headerClassName="bg-[#adc6f4] overflow-none"
+                className="overflow-none"
+              />
+              <Column
+                field="CRUD"
+                title="CRUD"
+                headerClassName="justify-center bg-[#adc6f4]"
+                width={53}
+                editable={false}
+              />
+              <Column
+                field="code"
+                headerClassName="justify-center w-[6%]"
+                className="w-[6%]"
+                title="코드"
+                editor="text"
+              />
+              <Column
+                field="codeName"
+                headerClassName="justify-center w-[17%]"
+                className="w-[17%]"
+                title="코드한글명"
+                editor="text"
+              />
+              <Column
+                field="codeEngname"
+                headerClassName="justify-center w-[17%]"
+                className="w-[17%]"
+                title="코드영문명"
+                editor="text"
+              />
+              <Column
+                field="codeDesc"
+                headerClassName="justify-center w-[26%]"
+                className="w-[26%]"
+                title="코드설명"
+                editor="text"
+              />
+              <Column
+                field="sortOrder"
+                headerClassName="justify-center w-[9%]"
+                className="w-[9%]"
+                title="정렬순서"
+                editor="numeric"
+              />
+              <Column
+                field="useYn"
+                headerClassName="justify-center w-[13%]"
+                className="w-[13%]"
+                title="사용여부"
+                cell={(props) => (
+                  <DropDownCell
+                    props={props}
+                    enterEdit={enterEdit}
+                    exitEdit={exitEdit}
+                    listData={[
+                      { text: "Y", value: "Y" },
+                      { text: "N", value: "N" },
+                    ]}
+                  />
+                )}
+              />
+            </Grid>
+          </div>
           {/*  */}
           <div className="my-4 flex w-full flex-row justify-end gap-[4px]">
             <Button
               imageUrl="/images/dot-right-arrow.png"
               className="basic-btn flex items-center justify-start"
-              onClick={undefined}>
+              onClick={deleteDetail}>
               전체삭제
             </Button>
             <Button
               imageUrl="/images/dot-right-arrow.png"
               className="basic-btn flex items-center justify-start"
-              onClick={undefined}>
+              onClick={updateDetail}>
               저장
             </Button>
             <Button
               imageUrl="/images/dot-right-arrow.png"
               className="basic-btn flex items-center justify-start"
-              onClick={undefined}>
+              onClick={() => setShowDetailModal(false)}>
               닫기
             </Button>
           </div>

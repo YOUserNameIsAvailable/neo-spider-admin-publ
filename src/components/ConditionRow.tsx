@@ -31,6 +31,7 @@ export const ConditionRow: FC<{
   setForm,
   isValidate = false,
 }) => {
+  const ele = useRef<any>(null);
   const tooltip = useRef<Tooltip>(null);
 
   const updateHandler = (e: any) => {
@@ -66,6 +67,7 @@ export const ConditionRow: FC<{
           }}
           onMouseOut={(e) => tooltip.current && tooltip.current.handleMouseOut(e)}>
           <DropDownList
+            ref={ele}
             validationMessage=""
             className="test"
             validityStyles={isValidate}
@@ -80,15 +82,6 @@ export const ConditionRow: FC<{
             required={isRequired}
             onChange={updateHandler}
           />
-          {isValidate && isRequired && (
-            <Tooltip
-              ref={tooltip}
-              style={{ width: "max-content", height: "26px", whiteSpace: "nowrap" }}
-              anchorElement="target"
-              position="right"
-              openDelay={300}
-            />
-          )}
         </div>
       ) : type === "textarea" ? (
         <>
@@ -97,6 +90,7 @@ export const ConditionRow: FC<{
             onMouseOver={(e) => isValidate && tooltip.current && tooltip.current.handleMouseOver(e)}
             onMouseOut={(e) => isValidate && tooltip.current && tooltip.current.handleMouseOut(e)}>
             <TextArea
+              ref={ele}
               className="my-[2px] ml-[2px] mr-[2px] h-auto w-full rounded-[3px] border-[1px] border-[#999999]"
               disabled={disabled}
               required={isRequired}
@@ -108,15 +102,6 @@ export const ConditionRow: FC<{
                 e.preventDefault();
               }}
             />
-            {isValidate && isRequired && (
-              <Tooltip
-                ref={tooltip}
-                style={{ width: "max-content", height: "26px", whiteSpace: "nowrap" }}
-                anchorElement="target"
-                position="right"
-                openDelay={300}
-              />
-            )}
           </div>
         </>
       ) : (
@@ -125,6 +110,7 @@ export const ConditionRow: FC<{
           onMouseOver={(e) => isValidate && tooltip.current && tooltip.current.handleMouseOver(e)}
           onMouseOut={(e) => isValidate && tooltip.current && tooltip.current.handleMouseOut(e)}>
           <Input
+            ref={ele}
             validityStyles={isValidate}
             className="ml-[2px] mr-[2px] rounded-[2px] border-[1px] border-[#999999] py-[2px]"
             disabled={disabled}
@@ -137,18 +123,18 @@ export const ConditionRow: FC<{
               e.preventDefault();
             }}
           />
-          {isValidate && isRequired && (
-            <Tooltip
-              ref={tooltip}
-              style={{ width: "max-content", height: "26px", whiteSpace: "nowrap" }}
-              anchorElement="target"
-              position="right"
-              openDelay={300}
-            />
-          )}
         </div>
       )}
       {isRequired && <span className="required">*</span>}
+      {isValidate && isRequired && (
+        <Tooltip
+          ref={tooltip}
+          style={{ width: "max-content", height: "26px", whiteSpace: "nowrap" }}
+          anchorElement={ele.current && ele.current.element}
+          position="right"
+          openDelay={100}
+        />
+      )}
     </div>
   );
 };

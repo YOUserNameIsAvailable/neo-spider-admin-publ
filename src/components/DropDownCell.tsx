@@ -6,8 +6,10 @@ export const DropDownCell: React.FC<{
   props: GridCellProps;
   enterEdit: (dataItem: any, field?: string) => void;
   exitEdit: (dataItem: any, field: string) => void;
-}> = ({ props, enterEdit, exitEdit }) => {
-  const localizedData = [
+  listData?: any[];
+  valueField?: string;
+}> = ({ props, enterEdit, exitEdit, listData, valueField = "useYn" }) => {
+  const localizedData = listData || [
     { text: "사용중", value: "Y" },
     { text: "중지", value: "N" },
   ];
@@ -31,7 +33,7 @@ export const DropDownCell: React.FC<{
         e.target.state.text,
       );
       props.dataItem[props.field || ""] = e.target.value.text;
-      props.dataItem.useYn = e.target.value.value;
+      props.dataItem[valueField] = e.target.value.value;
       exitEdit(props.dataItem, props.field || "");
     }
   };
@@ -45,6 +47,7 @@ export const DropDownCell: React.FC<{
       <DropDownList
         style={{ width: "100%" }}
         onChange={handleChange}
+        defaultValue={localizedData[0]}
         value={localizedData.find((c) => c.text === dataValue)}
         data={localizedData}
         textField="text"

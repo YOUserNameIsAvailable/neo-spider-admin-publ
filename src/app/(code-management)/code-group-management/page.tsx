@@ -3,9 +3,8 @@
 import { Input } from "@progress/kendo-react-inputs";
 import { Button } from "@progress/kendo-react-buttons";
 import { DropDownList } from "@progress/kendo-react-dropdowns";
-import { searchIcon, arrowRightIcon } from "@progress/kendo-svg-icons";
 import React, { KeyboardEvent, useEffect, useState } from "react";
-import { SPORTS, PAGES } from "@/constants";
+import { PAGES } from "@/constants";
 import { CodeGroupManagementTable } from "@/components/CodeGroupMangementTable";
 import { CodeGroupManagementAddModal } from "@/components/modal/CodeGroupManagementAddModal";
 import { validateResult } from "@/utils/util";

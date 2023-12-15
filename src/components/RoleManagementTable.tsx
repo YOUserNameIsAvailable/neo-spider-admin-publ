@@ -331,9 +331,10 @@ export const RoleManagementTable: FC<{
               filterable={false}
               field={SELECTED_FIELD}
               width={30}
-              headerSelectionValue={checkHeaderSelectionValue()}
-              headerClassName="bg-[#adc6f4]"
               editable={false}
+              headerSelectionValue={checkHeaderSelectionValue()}
+              headerClassName="bg-[#adc6f4] overflow-none"
+              className="overflow-none"
             />
             <Column
               field="CRUD"

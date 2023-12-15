@@ -1,12 +1,10 @@
-import React, { FC, useCallback, useEffect, useState } from "react";
+import React, { FC, useCallback, useEffect, useRef, useState } from "react";
 import { getter } from "@progress/kendo-react-common";
 import { process } from "@progress/kendo-data-query";
 import { GridPDFExport } from "@progress/kendo-react-pdf";
 import { ExcelExport } from "@progress/kendo-react-excel-export";
 import { Grid, GridColumn as Column, GridRowClickEvent, GridNoRecords } from "@progress/kendo-react-grid";
 import { setGroupIds, setExpandedState } from "@progress/kendo-react-data-tools";
-import { EMPLOYEES } from "@/constants";
-import { ColumnMenu } from "./ColumnMenu";
 import { CodeGroupManagementDetailModal } from "@/components/modal/CodeGroupManagementDetailModal";
 import { Button } from "@progress/kendo-react-buttons";
 
@@ -27,13 +25,6 @@ const processWithGroups = (data: any, dataState: any) => {
   return newDataState;
 };
 
-interface PositionInterface {
-  left: number;
-  top: number;
-  width: number;
-  height: number;
-}
-
 export const CodeGroupManagementTable: FC<{
   getHandler: (page?: number, displayCount?: number) => void;
   result: any[];
@@ -41,6 +32,7 @@ export const CodeGroupManagementTable: FC<{
   displayCount: number;
 }> = ({ getHandler, result, count, displayCount }) => {
   const idGetter = getter(DATA_ITEM_KEY);
+  const childRef = useRef<any>();
   const [filterValue, setFilterValue] = useState();
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [currentSelectedState, setCurrentSelectedState] = useState<any>({});
@@ -164,22 +156,9 @@ export const CodeGroupManagementTable: FC<{
     return count;
   };
 
-  const renderButtonCell = (dataItem: any, props: any, text: string, event?: () => void) => (
-    <td {...props.tdProps} style={{ textAlign: "center" }}>
-      <Button size={"small"} className="cell-inside-btn px-4 font-normal" themeColor={"primary"} onClick={event}>
-        {text}
-      </Button>
-    </td>
-  );
-
-  const checkHeaderSelectionValue = () => {
-    const newData = setExpandedState({
-      data: setSelectedValue(dataResult.data),
-      collapsedIds: [],
-    });
-
-    let selectedItems = getNumberOfSelectedItems(newData);
-    return newData.length > 0 && selectedItems === getNumberOfItems(newData);
+  const _getHandler = () => {
+    const page = Math.floor(dataState.skip / dataState.take) + 1;
+    getHandler(page);
   };
 
   useEffect(() => {
@@ -291,7 +270,12 @@ export const CodeGroupManagementTable: FC<{
           groupable={true}></Grid>
       </GridPDFExport>
       {showDetailModal && (
-        <CodeGroupManagementDetailModal setShowDetailModal={setShowDetailModal} codeGroupId={codeGroupId} />
+        <CodeGroupManagementDetailModal
+          getHandler={_getHandler}
+          setShowDetailModal={setShowDetailModal}
+          codeGroupId={codeGroupId}
+          ref={childRef}
+        />
       )}
     </div>
   );
