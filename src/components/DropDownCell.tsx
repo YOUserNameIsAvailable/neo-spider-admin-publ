@@ -4,7 +4,7 @@ import { GridCellProps } from "@progress/kendo-react-grid";
 
 export const DropDownCell: React.FC<{
   props: GridCellProps;
-  enterEdit: (dataItem: any, field?: string) => void;
+  enterEdit: (dataItem: any, field?: string, type?: string) => void;
   exitEdit: (dataItem: any, field: string) => void;
   listData?: any[];
   valueField?: string;

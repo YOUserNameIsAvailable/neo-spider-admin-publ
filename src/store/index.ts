@@ -1,17 +1,8 @@
 'use client';
 
-import { atom, useRecoilTransaction_UNSTABLE } from 'recoil';
+import { atom, selector, useRecoilTransaction_UNSTABLE } from 'recoil';
 
-export const themeState = atom<any>({
-    key: 'themes',
-    default: null,
-});
-
-export const tests = useRecoilTransaction_UNSTABLE(({ get, set }) => async (distance) => {
-    const themes = get(themeState) as any;
-
-    if (!themes) {
-        console.log(123123, themes)
-        set(themeState, themes);
-    }
-});
+export const validateFieldState = atom({
+    key: 'validateFieldState', // unique ID(다른 atom/selectors 와 구별하기 위함)
+    default: '', // default value (=initial value)
+})

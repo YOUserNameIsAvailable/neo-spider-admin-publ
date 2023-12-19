@@ -10,6 +10,7 @@ import { Layout } from "@/components/shared/layout";
 import ThemeProvider from "@/providers/ThemeProvider";
 import Loading from "../components/loading";
 import DialogModalContextProvider from "@/hooks/ModalDialogContext";
+import { RecoilRoot } from "recoil";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -62,10 +63,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <TabProvider>
           <ThemeProvider>
             <DialogModalContextProvider>
-              {/*{isLogin && !isLoginPage ? <Layout>{children}</Layout> : !isLoaded ? children : <Loading />}*/}
-              <Suspense fallback={<Loading />}>
-                <Layout>{children}</Layout>
-              </Suspense>
+              <RecoilRoot>
+                {/*{isLogin && !isLoginPage ? <Layout>{children}</Layout> : !isLoaded ? children : <Loading />}*/}
+                <Suspense fallback={<Loading />}>
+                  <Layout>{children}</Layout>
+                </Suspense>
+              </RecoilRoot>
             </DialogModalContextProvider>
           </ThemeProvider>
         </TabProvider>

@@ -32,6 +32,8 @@ import { CellRender, RowRender } from "../cellRender";
 import { DropDownCell } from "../DropDownCell";
 import { useDialogModalContext } from "@/hooks/ModalDialogContext";
 import { Tooltip } from "@progress/kendo-react-tooltip";
+import { useRecoilState } from "recoil";
+import { validateFieldState } from "@/store";
 
 interface PositionInterface {
   left: number;
@@ -50,6 +52,7 @@ export const CodeGroupManagementDetailModal: FC<{
   ref: any;
 }> = ({ getHandler, setShowDetailModal, codeGroupId }, ref) => {
   const idGetter = getter(DATA_ITEM_KEY);
+  const [validateField, setValidateField] = useRecoilState(validateFieldState);
   const modalContext = useDialogModalContext();
   const [filterValue, setFilterValue] = useState();
   const [filteredData, setFilteredData] = useState<any[]>([]);
@@ -255,7 +258,19 @@ export const CodeGroupManagementDetailModal: FC<{
     setDataResult(newData);
   };
 
+  const validateLogic = (value: any, type: string) => {
+    if (type === "numeric") {
+      return value > 0;
+    } else if (type === "text") {
+      return value === "";
+    }
+    return true;
+  };
+
   const enterEdit = async (dataItem: any, field?: string) => {
+    if (field !== validateField && validateField !== "") {
+      return;
+    }
     if (field === "code" && dataItem?.CRUD !== "추가") {
       await modalContext.showDialog("알림", "Primary key 필드는 추가시에만 입력이 가능합니다.", "alert");
       return;
@@ -273,6 +288,9 @@ export const CodeGroupManagementDetailModal: FC<{
   };
 
   const exitEdit = (dataItem: any, field: string) => {
+    if (field !== validateField && validateField !== "") {
+      return;
+    }
     const newData = dataResult.map((item: any, index: number) => {
       if (item.rowSeq === dataItem.rowSeq) {
         item.inEdit = undefined;
@@ -334,7 +352,7 @@ export const CodeGroupManagementDetailModal: FC<{
     const result = rows.map((row: any, index: number) => {
       const cells = row.split("\t");
       return {
-        CURD: "추가",
+        CRUD: "추가",
         code: cells[0],
         codeDesc: cells[1],
         codeEngname: cells[2],
