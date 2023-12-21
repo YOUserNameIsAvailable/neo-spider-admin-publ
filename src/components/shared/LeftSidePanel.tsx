@@ -110,7 +110,6 @@ export function LeftSideBar({ clickCollapseBtn }: { clickCollapseBtn: () => void
               key={item.data}
               title={item.text}
               expanded={foundIndex !== -1 ? index === foundIndex : index === 0}
-              expanded={index === 0}
               headerClassName="panel-bar-header overflow-hidden whitespace-nowrap"
               className="panel-bar">
               <TreeView
