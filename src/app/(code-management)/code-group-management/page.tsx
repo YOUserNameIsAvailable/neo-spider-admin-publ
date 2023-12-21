@@ -19,7 +19,6 @@ export default function Page() {
     _search_codeGroupId: null,
     _search_codeGroupNm: null,
   });
-
   const [result, setResult] = useState<any[]>([]);
   const [count, setCount] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -73,88 +72,85 @@ export default function Page() {
 
   return (
     <>
-      {/* filters */}
-      <>
-        <div>
-          <div className="flex items-center gap-2 py-4">
-            <img src={"/images/dot_subtitle.gif"} alt="" style={{}} />
-            <span className="font-bold text-[#656565]">Condition</span>
-            <button
-              className="border border-[#999999] bg-[#f6f6f6f6] px-[4px] py-[2px]"
-              onClick={() => toggleExpansion()}>
-              Expand / Colapse
-            </button>
-          </div>
-          <div className="flex flex-wrap justify-between gap-4 overflow-x-scroll bg-[#dde6f0] p-[5px]">
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <DropDownList
-                  className="mr-2 h-[30px] w-[148px] border bg-[#f6f6f6f6] text-[#656565]"
-                  textField="NAME"
-                  dataItemKey="VALUE"
-                  data={[
-                    { VALUE: "_search_codeGroupNm", NAME: "코드그룹명" },
-                    { VALUE: "_search_codeGroupId", NAME: "코드그룹ID" },
-                  ]}
-                  defaultValue={{ VALUE: "_search_codeGroupNm", NAME: "권한명" }}
-                  size={"small"}
-                  onChange={(e: any) => setForm((prev: any) => ({ ...prev, _search_type: e.value.VALUE }))}
-                />
+      <div>
+        <div className="flex items-center gap-2 py-4">
+          <img src={"/images/dot_subtitle.gif"} alt="" style={{}} />
+          <span className="font-bold text-[#656565]">Condition</span>
+          <button
+            className="border border-[#999999] bg-[#f6f6f6f6] px-[4px] py-[2px]"
+            onClick={() => toggleExpansion()}>
+            Expand / Colapse
+          </button>
+        </div>
+        <div className="flex flex-wrap justify-between gap-4 overflow-x-scroll bg-[#dde6f0] p-[5px]">
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <DropDownList
+                className="mr-2 h-[30px] w-[148px] border bg-[#f6f6f6f6] text-[#656565]"
+                textField="NAME"
+                dataItemKey="VALUE"
+                data={[
+                  { VALUE: "_search_codeGroupNm", NAME: "코드그룹명" },
+                  { VALUE: "_search_codeGroupId", NAME: "코드그룹ID" },
+                ]}
+                defaultValue={{ VALUE: "_search_codeGroupNm", NAME: "권한명" }}
+                size={"small"}
+                onChange={(e: any) => setForm((prev: any) => ({ ...prev, _search_type: e.value.VALUE }))}
+              />
 
-                <Input
-                  className="h-[24px] w-[148px] min-w-[148px] border border-[#999999]"
-                  value={searchText}
-                  onInput={(e) => setSearchText(e.currentTarget.value)}
-                  onKeyDown={handleKeyDown}
-                />
-              </div>
+              <Input
+                className="h-[24px] w-[148px] min-w-[148px] border border-[#999999]"
+                value={searchText}
+                onInput={(e) => setSearchText(e.currentTarget.value)}
+                onKeyDown={handleKeyDown}
+              />
             </div>
-            <div className="flex items-center gap-8">
-              <div className="flex items-center gap-2">
-                <DropDownList
-                  size={"small"}
-                  data={PAGES}
-                  defaultValue={displayCount}
-                  style={{ width: "80px" }}
-                  onChange={(e) => {
-                    setDisplayCount(e.target.value);
-                    getHandler(currentPage, e.target.value);
-                  }}
-                />
-                <span className="font-bold text-[#333333]">Items</span>
-              </div>
-              <Button
-                imageUrl="/images/refresh.png"
-                className="basic-btn"
-                onClick={() => getHandler(currentPage, displayCount)}>
-                Find
-              </Button>
+          </div>
+          <div className="flex items-center gap-8">
+            <div className="flex items-center gap-2">
+              <DropDownList
+                size={"small"}
+                data={PAGES}
+                defaultValue={displayCount}
+                style={{ width: "80px" }}
+                onChange={(e) => {
+                  setDisplayCount(e.target.value);
+                  getHandler(currentPage, e.target.value);
+                }}
+              />
+              <span className="font-bold text-[#333333]">Items</span>
+            </div>
+            <Button
+              imageUrl="/images/refresh.png"
+              className="basic-btn"
+              onClick={() => getHandler(currentPage, displayCount)}>
+              Find
+            </Button>
+          </div>
+        </div>
+      </div>
+      {isExpanded ? (
+        <div className="flex justify-between gap-4 overflow-x-scroll border-t border-[#ccc] bg-[#dde6f0] p-[5px]">
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <span className="whitespace-nowrap font-bold text-[#6f7071]">Sort division</span>
+              <DropDownList
+                className="h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
+                textField="NAME"
+                dataItemKey="VALUE"
+                data={[
+                  { VALUE: "", NAME: "전체" },
+                  { VALUE: "CODE_GROUP_NAME", NAME: "그룹명" },
+                  { VALUE: "CODE_GROUP_ID", NAME: "그룹ID" },
+                ]}
+                defaultValue={{ VALUE: "", NAME: "전체" }}
+                size={"small"}
+                onChange={(e: any) => setForm((prev: any) => ({ ...prev, _order_type: e.value.VALUE }))}
+              />
             </div>
           </div>
         </div>
-        {isExpanded ? (
-          <div className="flex justify-between gap-4 overflow-x-scroll border-t border-[#ccc] bg-[#dde6f0] p-[5px]">
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <span className="whitespace-nowrap font-bold text-[#6f7071]">Sort division</span>
-                <DropDownList
-                  className="h-[30px] border bg-[#f6f6f6f6] text-[#656565]"
-                  textField="NAME"
-                  dataItemKey="VALUE"
-                  data={[
-                    { VALUE: "", NAME: "전체" },
-                    { VALUE: "CODE_GROUP_NAME", NAME: "그룹명" },
-                    { VALUE: "CODE_GROUP_ID", NAME: "그룹ID" },
-                  ]}
-                  defaultValue={{ VALUE: "", NAME: "전체" }}
-                  size={"small"}
-                  onChange={(e: any) => setForm((prev: any) => ({ ...prev, _order_type: e.value.VALUE }))}
-                />
-              </div>
-            </div>
-          </div>
-        ) : null}
-      </>
+      ) : null}
       {/* table */}
       <div className="flex items-center gap-2 py-4">
         <img src={"/images/dot_subtitle.gif"} alt="" style={{}} />

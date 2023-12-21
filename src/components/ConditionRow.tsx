@@ -1,7 +1,7 @@
 import { Button } from "@progress/kendo-react-buttons";
 import { DropDownList } from "@progress/kendo-react-dropdowns";
 import { Input, TextArea } from "@progress/kendo-react-inputs";
-import { Tooltip } from "@progress/kendo-react-tooltip";
+import { Popover, Tooltip } from "@progress/kendo-react-tooltip";
 import { FC, useEffect, useRef, useState } from "react";
 
 export const ConditionRow: FC<{
@@ -106,7 +106,7 @@ export const ConditionRow: FC<{
         </>
       ) : (
         <div
-          className={`w-[${width}]`}
+          className={`w-[${width}] pr-[5px]`}
           onMouseOver={(e) => isValidate && tooltip.current && tooltip.current.handleMouseOver(e)}
           onMouseOut={(e) => isValidate && tooltip.current && tooltip.current.handleMouseOut(e)}>
           <Input
@@ -127,12 +127,11 @@ export const ConditionRow: FC<{
       )}
       {isRequired && <span className="required">*</span>}
       {isValidate && isRequired && (
-        <Tooltip
-          ref={tooltip}
+        <Popover
+          show={isValidate && isRequired}
           style={{ width: "max-content", height: "26px", whiteSpace: "nowrap" }}
-          anchorElement={ele.current && ele.current.element}
+          anchor={ele.current && ele.current.element}
           position="right"
-          openDelay={100}
         />
       )}
     </div>

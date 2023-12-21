@@ -73,14 +73,19 @@ const DialogModalContextProvider: React.FC<DialogModalContextProviderProps> = (p
 
           <DialogActionsBar>
             {content?.type === "confirm" ? (
-              <Button className="" onClick={handleCancel}>
-                No
+              <>
+                <Button className="" onClick={handleCancel}>
+                  No
+                </Button>
+                <Button className="" onClick={handleOk}>
+                  Yes
+                </Button>
+              </>
+            ) : (
+              <Button className="" onClick={handleOk}>
+                OK
               </Button>
-            ) : null}
-
-            <Button className="" onClick={handleOk}>
-              Yes
-            </Button>
+            )}
           </DialogActionsBar>
         </Dialog>
       )}

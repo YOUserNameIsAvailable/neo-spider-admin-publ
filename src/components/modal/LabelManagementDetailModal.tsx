@@ -6,6 +6,8 @@ import dynamic from "next/dynamic";
 const Editor = dynamic(() => import("react-draft-wysiwyg").then((mod) => mod.Editor), { ssr: false });
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { EditorState } from "draft-js";
+import { Input } from "@progress/kendo-react-inputs";
+import { ConditionRow } from "../ConditionRow";
 
 interface PositionInterface {
   left: number;
@@ -15,8 +17,12 @@ interface PositionInterface {
 }
 
 export const LabelManagementDetailModal: FC<{
+  getHandler: () => void;
   setShowModal: Dispatch<SetStateAction<boolean>>;
-}> = ({ setShowModal }) => {
+  labelId: string;
+}> = ({ getHandler, setShowModal, labelId }) => {
+  const [form, setForm] = useState<any>({});
+  const [isValidate, setIsValidate] = useState<boolean>(false);
   const [position, setPosition] = useState<PositionInterface>({
     left: 336,
     top: 100,
@@ -31,6 +37,39 @@ export const LabelManagementDetailModal: FC<{
     setEditorState(editorState);
   };
 
+  const getDetail = async () => {
+    const detailJson = await fetch("/api/spider/label/detail", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        labelId,
+      }),
+    });
+
+    const detailResult = await detailJson.json();
+    const detail = detailResult?.body?.detail;
+
+    console.log("detail: ", detail, detailResult);
+    setForm(detail);
+  };
+
+  const updateDetail = async () => {
+    const updateJson = await fetch("/api/spider/codeGroup/update", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(form),
+    });
+
+    const updateResult = await updateJson.json();
+    console.log("updateResult: ", updateResult);
+    getDetail();
+    getHandler();
+  };
+
   const handleMove = (event: WindowMoveEvent) => {
     setPosition({ ...position, left: event.left, top: event.top });
   };
@@ -42,6 +81,13 @@ export const LabelManagementDetailModal: FC<{
       height: event.height,
     });
   };
+
+  useEffect(() => {
+    console.log("labelId: ", labelId);
+    if (labelId && labelId !== "") {
+      getDetail();
+    }
+  }, [labelId]);
 
   return (
     <>
@@ -68,14 +114,46 @@ export const LabelManagementDetailModal: FC<{
           </div>
           <div className="flex w-full flex-col">
             <div className="flex h-[30px] w-full  border-[1px]">
-              <div className="flex w-[50%] items-center">
+              <ConditionRow
+                label={"LABEL ID"}
+                type="input"
+                value={form?.labelId}
+                disabled={false}
+                isRequired={true}
+                Key="labelId"
+                width="50%"
+                setForm={setForm}
+                isValidate={isValidate}
+              />
+              <ConditionRow
+                label={"LABEL 구분"}
+                type="select"
+                value={{ NAME: form?.labelTypeNm, VALUE: form?.labelTypeNm }}
+                disabled={false}
+                isRequired={false}
+                listData={[
+                  {
+                    VALUE: "사용",
+                    NAME: "Y",
+                  },
+                  {
+                    VALUE: "미사용",
+                    NAME: "N",
+                  },
+                ]}
+                Key="labelTypeNm"
+                width="50%"
+                setForm={setForm}
+                isValidate={isValidate}
+              />
+              {/* <div className="flex w-[50%] items-center">
                 <label className="flex h-full w-[150px] min-w-[150px] items-center bg-[#d1daec] p-1 text-[12px] text-black">
                   LABEL ID
                 </label>
-                <input className="ml-[2px] w-[50%] rounded-[2px] border-[1px] border-[1px] border-[#999999] py-[2px]" />
+                <Input className="ml-[2px] w-[50%] rounded-[2px]  border-[#999999] py-[2px]" />
                 <span className="required">*</span>
-              </div>
-              <div className="flex w-[50%] items-center">
+              </div> */}
+              {/* <div className="flex w-[50%] items-center">
                 <label className="flex h-full w-[150px] min-w-[150px] items-center bg-[#d1daec] p-1 text-[12px] text-black">
                   LABEL 구분
                 </label>
@@ -92,23 +170,45 @@ export const LabelManagementDetailModal: FC<{
                   data={["선택 안 함", "안전", "주의", "경계"]}
                   defaultValue={"선택 안 함"}
                 />
-              </div>
+              </div> */}
             </div>
             <div className="flex h-[30px] w-full border-[1px]">
-              <div className="flex w-full items-center">
+              <ConditionRow
+                label={"LABEL 설명"}
+                type="input"
+                value={form?.labelDesc}
+                disabled={false}
+                isRequired={false}
+                Key="labelDesc"
+                width="100%"
+                setForm={setForm}
+                isValidate={isValidate}
+              />
+              {/* <div className="flex w-full items-center">
                 <label className="flex h-full w-[150px] min-w-[150px] items-center bg-[#d1daec] p-1 text-[12px] text-black">
                   LABEL 설명
                 </label>
                 <input className="ml-[2px] w-[75%] rounded-[2px] border-[1px] border-[1px] border-[#999999] py-[2px]" />
-              </div>
+              </div> */}
             </div>
             <div className="flex h-[30px] w-full border-[1px]">
-              <div className="flex w-full items-center">
+              <ConditionRow
+                label={"변경사유"}
+                type="input"
+                value={form?.labelUpdateReason}
+                disabled={false}
+                isRequired={false}
+                Key="labelUpdateReason"
+                width="100%"
+                setForm={setForm}
+                isValidate={isValidate}
+              />
+              {/* <div className="flex w-full items-center">
                 <label className="flex h-full w-[150px] min-w-[150px] items-center bg-[#d1daec] p-1 text-[12px] text-black">
                   변경사유
                 </label>
                 <input className="ml-[2px] w-[75%] rounded-[2px] border-[1px] border-[1px] border-[#999999] py-[2px]" />
-              </div>
+              </div> */}
             </div>
           </div>
           <div className="my-[10px] flex items-center gap-1">

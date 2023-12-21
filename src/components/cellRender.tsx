@@ -37,9 +37,7 @@ const ValidationCell = (props: any) => {
   const [isValidate, setIsValidate] = React.useState<boolean>(false);
   const dataItem = props.originalProps.dataItem;
   const field = props.originalProps.field;
-  // const td = props.td;
   const type = props.originalProps.editor;
-  // const tdClassName = td.props.className;
   const editField = props.editField || "";
   const inEditField = dataItem[editField];
   const [value, setValue] = React.useState<any>(dataItem[field]);
@@ -68,13 +66,13 @@ const ValidationCell = (props: any) => {
   return (
     <td {...props.td}>
       {field !== inEditField || (validateField !== "" && validateField !== field) ? (
-        <span>{dataItem[field]}</span>
+        props?.childNodes
       ) : type === "numeric" ? (
         <NumericTextBox required spinners={false} value={value} onChange={handleOnChange} ref={ele} />
       ) : type === "text" ? (
         <Input required value={value} onInput={handleOnChange} ref={ele} />
       ) : (
-        <span>{dataItem[field]}</span>
+        props?.childNodes
       )}
 
       <Popover show={isValidate} anchor={ele.current && ele.current.element} position="bottom">
@@ -89,7 +87,6 @@ export const CellRender = (props: CellRenderProps) => {
   const dataItem = props.originalProps.dataItem;
   const cellField = props.originalProps.field;
   const inEditField = dataItem[props.editField || ""];
-  const type = props?.originalProps?.editor;
   const additionalProps =
     cellField && cellField === inEditField
       ? {
@@ -117,12 +114,7 @@ export const CellRender = (props: CellRenderProps) => {
   const clonedProps: any = { ...props.td.props, ...additionalProps };
   const childNodes: any = props.td.props.children;
 
-  // return cellField && cellField === inEditField ? (
-  //   <ValidationCell {...props} />
-  // ) : (
-  //   React.cloneElement(props.td, clonedProps, childNodes)
-  // );
-  return <ValidationCell {...props} td={clonedProps} />;
+  return <ValidationCell {...props} td={clonedProps} childNodes={childNodes} />;
 };
 
 export const RowRender = (props: RowRenderProps) => {

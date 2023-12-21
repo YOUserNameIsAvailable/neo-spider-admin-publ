@@ -1,15 +1,13 @@
-import React from "react";
+import React, { FC, useCallback, useEffect, useRef, useState } from "react";
 import { getter } from "@progress/kendo-react-common";
 import { process } from "@progress/kendo-data-query";
 import { GridPDFExport } from "@progress/kendo-react-pdf";
 import { ExcelExport } from "@progress/kendo-react-excel-export";
-import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
-import { setGroupIds, setExpandedState } from "@progress/kendo-react-data-tools";
-import { EMPLOYEES } from "@/constants";
-import { ColumnMenu } from "./ColumnMenu";
+import { Grid, GridColumn as Column, GridRowClickEvent, GridNoRecords } from "@progress/kendo-react-grid";
+import { setGroupIds } from "@progress/kendo-react-data-tools";
 import { LabelManagementDetailModal } from "./modal/LabelManagementDetailModal";
 
-const DATA_ITEM_KEY = "id";
+const DATA_ITEM_KEY = "rowSeq";
 const SELECTED_FIELD = "selected";
 const initialDataState = {
   take: 10,
@@ -26,57 +24,29 @@ const processWithGroups = (data: any, dataState: any) => {
   return newDataState;
 };
 
-export function LabelManagementTable() {
-  const idGetter = getter("id");
-  const [filterValue, setFilterValue] = React.useState();
-  const [filteredData, setFilteredData] = React.useState(EMPLOYEES);
-  const [currentSelectedState, setCurrentSelectedState] = React.useState<any>({});
-  const [dataState, setDataState] = React.useState(initialDataState);
-  const [dataResult, setDataResult] = React.useState(process(filteredData, dataState));
-  const [data, setData] = React.useState(filteredData);
+export const LabelManagementTable: FC<{
+  getHandler: (page?: number, displayCount?: number) => void;
+  result: any[];
+  count: number;
+  displayCount: number;
+}> = ({ getHandler, result, count, displayCount }) => {
+  const idGetter = getter(DATA_ITEM_KEY);
+  const childRef = useRef<any>();
+  const [filterValue, setFilterValue] = useState();
+  const [filteredData, setFilteredData] = useState<any[]>([]);
+  const [currentSelectedState, setCurrentSelectedState] = useState<any>({});
+  const [dataState, setDataState] = useState(initialDataState);
+  const [dataResult, setDataResult] = useState<any>({ data: [] });
+  const [data, setData] = useState<any[]>([]);
 
-  const [showModal, setShowModal] = React.useState(false); // <12-2> Label Management - LABEL Manage Detail search
-
-  const onFilterChange = (ev: any) => {
-    let value = ev.value;
-    setFilterValue(ev.value);
-    let newData = EMPLOYEES.filter((item: any) => {
-      let match = false;
-      for (const property in item) {
-        if (item[property].toString().toLocaleLowerCase().indexOf(value.toLocaleLowerCase()) >= 0) {
-          match = true;
-        }
-        if (item[property].toLocaleDateString && item[property].toLocaleDateString().indexOf(value) >= 0) {
-          match = true;
-        }
-      }
-      return match;
-    });
-    setFilteredData(newData);
-    let clearedPagerDataState = {
-      ...dataState,
-      take: 8,
-      skip: 0,
-    };
-    let processedData = process(newData, clearedPagerDataState);
-    setDataResult(processedData);
-    setDataState(clearedPagerDataState);
-    setData(newData);
-  };
-
-  const [resultState, setResultState] = React.useState(
-    processWithGroups(
-      EMPLOYEES.map((item: any) => ({
-        ...item,
-        ["selected"]: currentSelectedState[idGetter(item)],
-      })),
-      initialDataState,
-    ),
-  );
+  const [labelId, setLabelId] = useState<string>("");
+  const [showModal, setShowModal] = useState(false); // <12-2> Label Management - LABEL Manage Detail search
 
   const dataStateChange = (event: any) => {
-    setDataResult(process(filteredData, event.dataState));
+    console.log("dataStateChange: ", event);
     setDataState(event.dataState);
+    const page = Math.floor(event.dataState.skip / event.dataState.take) + 1;
+    getHandler(page, displayCount);
   };
 
   const onExpandChange = React.useCallback(
@@ -113,19 +83,15 @@ export function LabelManagementTable() {
       } else {
         return {
           ...item,
-          ["selected"]: currentSelectedState[idGetter(item)],
+          selected: currentSelectedState[idGetter(item)],
         };
       }
     });
+
     return newData;
   };
 
-  const newData = setExpandedState({
-    data: setSelectedValue(resultState.data),
-    collapsedIds: [],
-  });
-
-  const onHeaderSelectionChange = React.useCallback(
+  const onHeaderSelectionChange = useCallback(
     (event: any) => {
       const checkboxElement = event.syntheticEvent.target;
       const checked = checkboxElement.checked;
@@ -145,10 +111,10 @@ export function LabelManagementTable() {
   );
 
   const onSelectionChange = (event: any) => {
-    const selectedProductId = event.dataItem.id;
+    const selectedId = event.dataItem.rowSeq;
 
     const newData = data.map((item: any) => {
-      if (item.id === selectedProductId) {
+      if (item.rowSeq === selectedId) {
         item.selected = !item.selected;
       }
       return item;
@@ -156,11 +122,13 @@ export function LabelManagementTable() {
 
     setCurrentSelectedState((prevState: any) => ({
       ...prevState,
-      [selectedProductId]: !prevState[selectedProductId],
+      [selectedId]: !prevState[selectedId],
     }));
 
     const newDataResult = processWithGroups(newData, dataState);
     setDataResult(newDataResult);
+
+    console.log(123123, newDataResult);
   };
 
   const getNumberOfItems = (data: any) => {
@@ -187,10 +155,30 @@ export function LabelManagementTable() {
     return count;
   };
 
-  const handleButtonClick = (row: any) => {
-    // Handle button click for the specific row
-    console.log(`Button clicked for user: ${row.full_name}`);
-  };
+  useEffect(() => {
+    setFilteredData(result);
+    setDataResult({ data: result, total: count });
+    setData(result);
+
+    console.log("result: ", result);
+    console.log("dataResult: ", dataResult);
+    console.log("data: ", data);
+    console.log("dataState: ", dataState);
+    console.log("filteredData: ", filteredData);
+    console.log("currentSelectedState: ", currentSelectedState);
+    console.log("filterValue: ", filterValue);
+    console.log("initialDataState: ", initialDataState);
+  }, [result]);
+
+  useEffect(() => {
+    if (displayCount) {
+      console.log("useEffect displayCount: ", displayCount);
+      const page = Math.floor(dataState.skip / dataState.take) + 1;
+      const skip = (page - 1) * displayCount;
+
+      setDataState((prev) => ({ ...prev, skip: skip, take: displayCount }));
+    }
+  }, [displayCount]);
 
   return (
     <>
@@ -201,43 +189,44 @@ export function LabelManagementTable() {
               height: "500px",
             }}
             pageable={{
-              pageSizes: true,
+              pageSizes: false,
+              buttonCount: 10,
             }}
-            data={dataResult}
-            sortable={true}
-            total={resultState.total}
-            onDataStateChange={dataStateChange}
             {...dataState}
-            onExpandChange={onExpandChange}
+            data={dataResult}
+            total={count || 0}
             expandField="expanded"
             dataItemKey={DATA_ITEM_KEY}
             selectedField={SELECTED_FIELD}
-            onHeaderSelectionChange={onHeaderSelectionChange}
+            resizable={true}
+            onDataStateChange={dataStateChange}
             onSelectionChange={onSelectionChange}
-            groupable={false}
-            onRowClick={() => {
+            onRowClick={(event: GridRowClickEvent) => {
+              setLabelId(event.dataItem.labelId);
               setShowModal(true);
             }}>
+            <GridNoRecords>
+              <div id="noRecord" className="popup_pop_norecord">
+                No Record Found.
+              </div>
+            </GridNoRecords>
             <Column
-              field="budget"
+              field="labelId"
               title="LABEL ID"
               headerClassName="justify-center bg-[#adc6f4] col-width40per"
               className="col-width40per"
-              columnMenu={ColumnMenu}
             />
             <Column
-              field="full_name"
+              field="labelTypeNm"
               title="LABEL Distinction"
               headerClassName="justify-center bg-[#adc6f4] col-width20per"
               className="col-width20per"
-              columnMenu={ColumnMenu}
             />
             <Column
-              field="target"
+              field="labelDesc"
               title="LABEL Description"
               headerClassName="justify-center bg-[#adc6f4] col-width40per"
               className="col-width40per"
-              columnMenu={ColumnMenu}
             />
           </Grid>
         </ExcelExport>
@@ -251,7 +240,7 @@ export function LabelManagementTable() {
             }}
             data={dataResult}
             sortable={false}
-            total={resultState.total}
+            total={count || 0}
             onDataStateChange={dataStateChange}
             {...dataState}
             onExpandChange={onExpandChange}
@@ -263,7 +252,9 @@ export function LabelManagementTable() {
             groupable={true}></Grid>
         </GridPDFExport>
       </div>
-      {showModal && <LabelManagementDetailModal setShowModal={setShowModal} />}
+      {showModal && (
+        <LabelManagementDetailModal getHandler={getHandler} setShowModal={setShowModal} labelId={labelId} />
+      )}
     </>
   );
-}
+};

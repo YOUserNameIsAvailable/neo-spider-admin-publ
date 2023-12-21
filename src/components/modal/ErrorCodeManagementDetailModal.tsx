@@ -3,6 +3,7 @@ import { Window, WindowMoveEvent } from "@progress/kendo-react-dialogs";
 import { Button } from "@progress/kendo-react-buttons";
 import { DropDownList } from "@progress/kendo-react-dropdowns";
 import { get } from "jquery";
+import { ConditionRow } from "../ConditionRow";
 
 interface PositionInterface {
   left: number;
@@ -15,13 +16,14 @@ export const ErrorCodeManagementDetailModal: FC<{
   setShowModal: Dispatch<SetStateAction<boolean>>;
   errorCode?: string;
 }> = ({ setShowModal, errorCode }) => {
+  const [form, setForm] = useState<any>({});
+  const [isValidate, setIsValidate] = useState<boolean>(false);
   const [position, setPosition] = useState<PositionInterface>({
     left: 250,
     top: 20,
     width: 924,
     height: 680,
   });
-  const [form, setForm] = useState<any>({});
 
   const handleMove = (event: WindowMoveEvent) => {
     setPosition({ ...position, left: event.left, top: event.top });
@@ -51,17 +53,13 @@ export const ErrorCodeManagementDetailModal: FC<{
       });
 
       const result = await resultJson.json();
-      const errordesc = result?.body?.detail?.errordesc;
-      const errorrecord = result?.body?.detail?.errorrecord[0];
-      console.log("detail: ", errordesc);
+      const detail = result?.body?.detail;
+      const errordesc = detail?.errordesc;
+      const errorrecord = detail?.errorrecord[0];
+      console.log("detail: ", errordesc, errorrecord, detail);
       setForm({
-        trxId: "",
-        errorTitle: errorrecord.errortitle,
-        orgId: login?.userId,
-        orgErrorCode: errorrecord.orgErrorode,
-        errorLevel: errorrecord.errorLevel,
-        errorCode: errorrecord.errorCode,
-        errordesc: errordesc,
+        ...errorrecord,
+        errordesc,
       });
     } catch (err) {
       console.error(err);
@@ -102,42 +100,98 @@ export const ErrorCodeManagementDetailModal: FC<{
             </div>
             <div className="flex flex-col">
               <div className="flex h-[30px] w-full  border-[1px]">
-                <div className="flex w-[50%] items-center">
-                  <label className="flex h-full w-[150px] min-w-[150px] items-center bg-[#d1daec] p-1 text-[12px] text-black">
-                    오류코드
-                  </label>
-                  <input
-                    className="ml-[2px] mr-[15px] w-[57%] rounded-[2px] border-[1px] border-[1px] border-[#999999] py-[2px]"
-                    disabled={true}
-                  />
-                  <span className="required">*</span>
-                </div>
-                <div className="flex w-[50%] items-center">
-                  <label className="flex h-full w-[150px] min-w-[150px] items-center bg-[#d1daec]  p-1  text-[12px] text-black">
-                    오류레벨
-                  </label>
-                  <div className="flex">
-                    <DropDownList
-                      style={{ width: "100%", marginRight: "2px", fontSize: "12px", marginLeft: "2px" }}
-                      size={"small"}
-                      data={["선택 안 함", "안전", "주의", "경계"]}
-                      defaultValue={"선택 안 함"}
-                    />
-                    <span className="required">*</span>
-                  </div>
-                </div>
+                <ConditionRow
+                  label={"오류코드"}
+                  type="input"
+                  value={form?.errorCode}
+                  disabled={true}
+                  isRequired={true}
+                  Key="errorCode"
+                  width="50%"
+                  setForm={setForm}
+                  isValidate={isValidate}
+                />
+                <ConditionRow
+                  label={"오류레벨"}
+                  type="select"
+                  value={form?.errorLevel}
+                  disabled={false}
+                  isRequired={true}
+                  listData={[
+                    {
+                      VALUE: "선택안함",
+                      NAME: "",
+                    },
+                    {
+                      VALUE: "안전",
+                      NAME: "1",
+                    },
+                    {
+                      VALUE: "주의",
+                      NAME: "2",
+                    },
+                    {
+                      VALUE: "경계",
+                      NAME: "3",
+                    },
+                  ]}
+                  Key="errorLevel"
+                  width="50%"
+                  setForm={setForm}
+                  isValidate={isValidate}
+                />
               </div>
               <div className="flex h-[30px]  border-[1px]">
-                <div className="flex w-full items-center">
+                <ConditionRow
+                  label={"오류제목"}
+                  type="input"
+                  value={form?.errorTitle}
+                  disabled={false}
+                  isRequired={true}
+                  Key="errorTitle"
+                  width="100%"
+                  setForm={setForm}
+                  isValidate={isValidate}
+                />
+                {/* <div className="flex w-full items-center">
                   <label className="flex h-full w-[150px] min-w-[150px] items-center bg-[#d1daec] p-1 text-[12px] text-black">
                     오류제목
                   </label>
                   <input className="ml-[2px] mr-[15px] w-[78%] rounded-[2px] border-[1px] border-[1px] border-[#999999] py-[2px]" />
                   <span className="required">*</span>
-                </div>
+                </div> */}
               </div>
               <div className="flex h-[30px] border-[1px]">
-                <div className="flex w-full items-center">
+                <ConditionRow
+                  label={"기관명"}
+                  type="select"
+                  value={form?.orgId}
+                  disabled={false}
+                  isRequired={false}
+                  listData={[
+                    {
+                      VALUE: "선택안함",
+                      NAME: "",
+                    },
+                    {
+                      VALUE: "WEB",
+                      NAME: "WEB",
+                    },
+                    {
+                      VALUE: "주의",
+                      NAME: "2",
+                    },
+                    {
+                      VALUE: "경계",
+                      NAME: "3",
+                    },
+                  ]}
+                  Key="orgId"
+                  width="50%"
+                  setForm={setForm}
+                  isValidate={isValidate}
+                />
+                {/* <div className="flex w-full items-center">
                   <label className="flex h-full w-[150px] min-w-[150px] items-center bg-[#d1daec] p-1 text-[12px] text-black">
                     기관명
                   </label>
@@ -147,15 +201,26 @@ export const ErrorCodeManagementDetailModal: FC<{
                     data={["선택 안 함", "안전", "주의", "경계"]}
                     defaultValue={"선택 안 함"}
                   />
-                </div>
+                </div> */}
               </div>
               <div className="flex h-[30px]  border-[1px]">
-                <div className="flex w-full items-center">
+                <ConditionRow
+                  label={"기관오류코드"}
+                  type="input"
+                  value={form?.errorTitle}
+                  disabled={false}
+                  isRequired={false}
+                  Key="errorTitle"
+                  width="100%"
+                  setForm={setForm}
+                  isValidate={isValidate}
+                />
+                {/* <div className="flex w-full items-center">
                   <label className="flex h-full w-[150px] min-w-[150px] items-center bg-[#d1daec] p-1 text-[12px] text-black">
                     기관명
                   </label>
                   <input className="ml-[2px] mr-[2px] w-[80%] rounded-[2px] border-[1px] border-[1px] border-[#999999] py-[2px]" />
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
@@ -174,7 +239,29 @@ export const ErrorCodeManagementDetailModal: FC<{
                 </label>
               </div>
               <div className="flex h-[30px] w-full  border-[1px]">
-                <div className="flex w-[50%] items-center">
+                <ConditionRow
+                  label={"오류제목"}
+                  type="input"
+                  value={form?.errordesc?.errorTitle}
+                  disabled={false}
+                  isRequired={false}
+                  Key="errorTitle"
+                  width="50%"
+                  setForm={setForm}
+                  isValidate={isValidate}
+                />
+                <ConditionRow
+                  label={"오류제목"}
+                  type="input"
+                  value={form?.errordesc?.errorTitle}
+                  disabled={false}
+                  isRequired={false}
+                  Key="errorTitle"
+                  width="50%"
+                  setForm={setForm}
+                  isValidate={isValidate}
+                />
+                {/* <div className="flex w-[50%] items-center">
                   <label className="flex h-full w-[150px] min-w-[150px] items-center bg-[#d1daec] p-1 text-[12px] text-black">
                     오류제목
                   </label>
@@ -185,7 +272,7 @@ export const ErrorCodeManagementDetailModal: FC<{
                     오류제목
                   </label>
                   <input className="ml-[2px] w-[62%] rounded-[2px] border-[1px] border-[1px] border-[#999999] py-[2px]" />
-                </div>
+                </div> */}
               </div>
               <div className="flex h-[30px] w-full  border-[1px]">
                 <div className="flex w-[50%] items-center">

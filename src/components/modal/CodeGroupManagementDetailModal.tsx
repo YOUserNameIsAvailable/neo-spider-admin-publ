@@ -1,13 +1,4 @@
-import React, {
-  ChangeEvent,
-  Dispatch,
-  FC,
-  ReactElement,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import React, { Dispatch, FC, ReactElement, SetStateAction, useCallback, useEffect, useState } from "react";
 import { Window, WindowMoveEvent } from "@progress/kendo-react-dialogs";
 import { Button } from "@progress/kendo-react-buttons";
 import {
@@ -20,18 +11,11 @@ import {
 } from "@progress/kendo-react-grid";
 import { getter } from "@progress/kendo-react-common";
 import { setExpandedState } from "@progress/kendo-react-data-tools";
-import {
-  Input,
-  InputChangeEvent,
-  NumericTextBox,
-  NumericTextBoxChangeEvent,
-  TextArea,
-} from "@progress/kendo-react-inputs";
+import { Input, TextArea } from "@progress/kendo-react-inputs";
 import moment from "moment";
 import { CellRender, RowRender } from "../cellRender";
 import { DropDownCell } from "../DropDownCell";
 import { useDialogModalContext } from "@/hooks/ModalDialogContext";
-import { Tooltip } from "@progress/kendo-react-tooltip";
 import { useRecoilState } from "recoil";
 import { validateFieldState } from "@/store";
 
@@ -52,10 +36,8 @@ export const CodeGroupManagementDetailModal: FC<{
   ref: any;
 }> = ({ getHandler, setShowDetailModal, codeGroupId }, ref) => {
   const idGetter = getter(DATA_ITEM_KEY);
-  const [validateField, setValidateField] = useRecoilState(validateFieldState);
+  const [validateField] = useRecoilState(validateFieldState);
   const modalContext = useDialogModalContext();
-  const [filterValue, setFilterValue] = useState();
-  const [filteredData, setFilteredData] = useState<any[]>([]);
   const [currentSelectedState, setCurrentSelectedState] = useState<any>({});
   const [group, setGroup] = useState<any>();
 
@@ -253,18 +235,8 @@ export const CodeGroupManagementDetailModal: FC<{
     });
 
     console.log("itemChange: ", newData);
-    // setData(newData);
-    // setChanges(true);
-    setDataResult(newData);
-  };
 
-  const validateLogic = (value: any, type: string) => {
-    if (type === "numeric") {
-      return value > 0;
-    } else if (type === "text") {
-      return value === "";
-    }
-    return true;
+    setDataResult(newData);
   };
 
   const enterEdit = async (dataItem: any, field?: string) => {
@@ -446,7 +418,8 @@ export const CodeGroupManagementDetailModal: FC<{
                   최종수정일시
                 </label>
                 <div className="flex items-center break-all px-[2px] py-[4px] text-[11px] font-bold text-[#656565]">
-                  {moment(group?.lastUpdateDtime).format("YYYY/MM/DD HH:mm:ss")}
+                  {group?.lastUpdateDtime &&
+                    moment(group?.lastUpdateDtime, "YYYYMMDDhhmmss").format("YYYY/MM/DD HH:mm:ss")}
                 </div>
               </div>
             </div>
@@ -573,7 +546,6 @@ export const CodeGroupManagementDetailModal: FC<{
                 </div>
               </GridNoRecords>
               <Column
-                filterable={false}
                 field={SELECTED_FIELD}
                 width={30}
                 editable={false}
