@@ -51,8 +51,7 @@ export const TabProvider: FC<TabProviderProps> = ({ children }) => {
     }
 
     if (pathname !== selectedTab?.url && pathname.indexOf("login") == -1) {
-      // console.log("selectedTab.url; ", selectedTab.url);
-      selectedTab && router.push(("/main" + selectedTab.url) as string);
+      selectedTab && router.push(selectedTab.url as string);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -78,7 +77,7 @@ export const TabProvider: FC<TabProviderProps> = ({ children }) => {
       setSelectedTab(sessionSelectedTab);
 
       if (!isLoginPage && pathname !== sessionSelectedTab.url) {
-        router.push(("/main" + sessionSelectedTab.url) as string);
+        router.push(sessionSelectedTab.url as string);
       }
     } else if (selectedTab) {
       setTabs([{ text: "User Management", url: "/user-management" }]);

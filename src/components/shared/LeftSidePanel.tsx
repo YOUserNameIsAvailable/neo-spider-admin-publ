@@ -30,18 +30,17 @@ const TreeItem = (props: ItemRenderProps) => {
 
 export function LeftSideBar({ clickCollapseBtn }: { clickCollapseBtn: () => void }) {
   const { tabs, setTabs, setSelectedTab } = useTab();
-  // const LayoutSegmentData = useSelectedLayoutSegment();
-  // const LayoutSegmentsData = useSelectedLayoutSegments();
-  // const foundIndex = MENUS.findIndex((menu) => menu.checkLayoutSegment === LayoutSegmentData);
+  const LayoutSegmentData = useSelectedLayoutSegment();
+  const LayoutSegmentsData = useSelectedLayoutSegments();
+  const foundIndex = MENUS.findIndex((menu) => menu.checkLayoutSegment === LayoutSegmentData);
 
-  // const indexString = findMenuIndex(MENUS, LayoutSegmentsData[LayoutSegmentsData.length - 1]);
+  const indexString = findMenuIndex(MENUS, LayoutSegmentsData[LayoutSegmentsData.length - 1]);
 
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const [expand, setExpand] = useState<TreeViewOperationDescriptor>({ ids: [], idField: "text" });
-  const [select, setSelect] = useState<string[]>([]);
-  // const [select, setSelect] = useState<string[]>(indexString ? [indexString] : []);
+  const [select, setSelect] = useState<string[]>(indexString ? [indexString] : []);
 
   const onItemClick = ({ item: _item, itemHierarchicalIndex }: TreeViewItemClickEvent) => {
     const item: IMenu = _item;
@@ -75,15 +74,15 @@ export function LeftSideBar({ clickCollapseBtn }: { clickCollapseBtn: () => void
     index === -1 ? ids.push(item.text) : ids.splice(index, 1);
 
     setExpand({ ids, idField: "text" });
-    // sessionStorage.setItem("expand", JSON.stringify({ ids, idField: "text" }));
+    sessionStorage.setItem("expand", JSON.stringify({ ids, idField: "text" }));
   };
 
-  // useEffect(() => {
-  //   if (sessionStorage.getItem("expand")) {
-  //     const expand = JSON.parse(sessionStorage.getItem("expand") || "");
-  //     setExpand(expand);
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (sessionStorage.getItem("expand")) {
+      const expand = JSON.parse(sessionStorage.getItem("expand") || "");
+      setExpand(expand);
+    }
+  }, []);
 
   function findMenuIndex(menus: any[], url: string, parentIndex = 0): string | null {
     for (let i = 0; i < menus.length; i++) {
@@ -110,7 +109,7 @@ export function LeftSideBar({ clickCollapseBtn }: { clickCollapseBtn: () => void
             <PanelBarItem
               key={item.data}
               title={item.text}
-              // expanded={foundIndex !== -1 ? index === foundIndex : index === 0}
+              expanded={foundIndex !== -1 ? index === foundIndex : index === 0}
               expanded={index === 0}
               headerClassName="panel-bar-header overflow-hidden whitespace-nowrap"
               className="panel-bar">
