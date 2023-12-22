@@ -40,7 +40,7 @@ export const UserManagementDetailModal: FC<{
   };
 
   const getDetail = async () => {
-    const detailJson = await fetch("/api/spider/userMng/detail", {
+    const detailJson = await fetch("/api/spider/user-management/detail", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -77,7 +77,7 @@ export const UserManagementDetailModal: FC<{
     }
     console.log("form: ", form);
 
-    const updatedJson = await fetch("/api/spider/userMng/update", {
+    const updatedJson = await fetch("/api/spider/user-management/update", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -99,7 +99,7 @@ export const UserManagementDetailModal: FC<{
   };
 
   const resetPassword = async () => {
-    const userJson = await fetch("/api/spider/userMng/resetPass", {
+    const userJson = await fetch("/api/spider/user-management/resetPass", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

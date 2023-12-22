@@ -26,7 +26,7 @@ export default function Page() {
 
   const getHandler = async (page?: number, displayCount?: number) => {
     try {
-      const dataJson = await fetch("/api/spider/roleMng/list", {
+      const dataJson = await fetch("/api/spider/role-management/list", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -70,7 +70,7 @@ export default function Page() {
           return rest;
         });
 
-      const dataJson = await fetch("/api/spider/roleMng/save", {
+      const dataJson = await fetch("/api/spider/role-management/save", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

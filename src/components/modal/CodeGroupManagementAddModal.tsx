@@ -65,7 +65,7 @@ export const CodeGroupManagementAddModal: FC<{
         return rest;
       });
 
-    const updateJson = await fetch("/api/spider/codeGroup/update", {
+    const updateJson = await fetch("/api/spider/code-group-management/update", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -89,7 +89,7 @@ export const CodeGroupManagementAddModal: FC<{
         await modalContext.showDialog(" ", "코드그룹ID를 입력해주세요.", "alert");
         return;
       }
-      const checkJson = await fetch("/api/spider/codeGroup/dupCheck", {
+      const checkJson = await fetch("/api/spider/code-group-management/dupCheck", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

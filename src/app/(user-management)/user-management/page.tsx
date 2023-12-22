@@ -9,6 +9,7 @@ import { UserManagementTable } from "@/components/UserManagementTable";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { UserManagementAddModal } from "@/components/modal/UserManagementAddModal";
+import { validateResult } from "@/utils/util";
 
 export default function Page() {
   const router = useRouter();
@@ -30,7 +31,7 @@ export default function Page() {
 
   const getHandler = async (page?: number, displayCount?: number) => {
     try {
-      const dataJson = await fetch("/api/spider/userMng/list", {
+      const dataJson = await fetch("/api/spider/user-management/list", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -48,17 +49,11 @@ export default function Page() {
       const data = await dataJson.json();
       console.log("data: ", data);
 
-      if (data?.result?.error?.code === "FRU00001") {
-        console.error(data?.result?.error);
-        alert("로그인이 만료되었습니다.");
-        sessionStorage.removeItem("isLogin");
-        router.push("/login");
-        return;
+      if (validateResult(data, router)) {
+        setResult(data?.body?.list);
+        setCount(data?.body?.count);
+        setCurrentPage(page || 1);
       }
-
-      setResult(data?.body?.list);
-      setCount(data?.body?.count);
-      setCurrentPage(page || 1);
     } catch (err) {
       console.error(err);
     }

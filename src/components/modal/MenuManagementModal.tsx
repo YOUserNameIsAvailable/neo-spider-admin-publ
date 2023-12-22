@@ -39,7 +39,7 @@ export const MenuManagementModal: FC<{
   };
 
   const getDetail = async () => {
-    const detailJson = await fetch("/api/spider/menuMng/detail", {
+    const detailJson = await fetch("/api/spider/menu-management/detail", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -74,7 +74,7 @@ export const MenuManagementModal: FC<{
     }
     console.log("form: ", form);
 
-    const updatedJson = await fetch("/api/spider/menuMng/update", {
+    const updatedJson = await fetch("/api/spider/menu-management/update", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -93,7 +93,7 @@ export const MenuManagementModal: FC<{
   };
 
   const deleteDetail = async () => {
-    const deletedJson = await fetch("/api/spider/menuMng/delete", {
+    const deletedJson = await fetch("/api/spider/menu-management/delete", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

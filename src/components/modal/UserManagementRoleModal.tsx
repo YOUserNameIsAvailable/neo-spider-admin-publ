@@ -47,7 +47,7 @@ export const UserManagementRoleModal: FC<{ setShowRoleModal: Dispatch<SetStateAc
   };
 
   const getDetail = async () => {
-    const resultJson = await fetch("/api/spider/userMng/menuList", {
+    const resultJson = await fetch("/api/spider/user-management/menuList", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -71,7 +71,7 @@ export const UserManagementRoleModal: FC<{ setShowRoleModal: Dispatch<SetStateAc
     }
     console.log("form: ", form);
 
-    const userJson = await fetch("/api/spider/userMng/update", {
+    const userJson = await fetch("/api/spider/user-management/update", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

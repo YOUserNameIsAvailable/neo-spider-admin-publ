@@ -53,7 +53,7 @@ export const RoleManagementModal: FC<{
   });
 
   const getDetail = async () => {
-    const detailJson = await fetch("/api/spider/roleMng/roleMenuList", {
+    const detailJson = await fetch("/api/spider/role-management/roleMenuList", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -73,7 +73,7 @@ export const RoleManagementModal: FC<{
   };
 
   const updateDetail = async () => {
-    const updateJson = await fetch("/api/spider/roleMng/saveRoleMenu", {
+    const updateJson = await fetch("/api/spider/role-management/saveRoleMenu", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

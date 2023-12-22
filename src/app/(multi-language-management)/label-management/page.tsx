@@ -29,7 +29,7 @@ export default function Page() {
 
   const getHandler = async (page?: number, displayCount?: number) => {
     try {
-      const dataJson = await fetch("/api/spider/label/list", {
+      const dataJson = await fetch("/api/spider/label-management/list", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

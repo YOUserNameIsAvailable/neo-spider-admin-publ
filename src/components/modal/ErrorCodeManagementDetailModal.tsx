@@ -42,7 +42,7 @@ export const ErrorCodeManagementDetailModal: FC<{
     try {
       const loginJson = sessionStorage.getItem("isLogin") || "";
       const login = JSON.parse(loginJson);
-      const resultJson = await fetch("/api/spider/errCodeMng/detail", {
+      const resultJson = await fetch("/api/spider/error-code-management/detail", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

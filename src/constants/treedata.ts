@@ -1046,7 +1046,7 @@ export const TreeData = [
                 menuCheck: "W",
                 gubn: "iframe",
                 text: "페이지관리",
-                url: "/api/spider/pageMng/",
+                url: "/api/spider/page-management/",
               },
             ],
             url: "NAN",

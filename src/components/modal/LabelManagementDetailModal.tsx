@@ -38,7 +38,7 @@ export const LabelManagementDetailModal: FC<{
   };
 
   const getDetail = async () => {
-    const detailJson = await fetch("/api/spider/label/detail", {
+    const detailJson = await fetch("/api/spider/label-management/detail", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -56,7 +56,7 @@ export const LabelManagementDetailModal: FC<{
   };
 
   const updateDetail = async () => {
-    const updateJson = await fetch("/api/spider/codeGroup/update", {
+    const updateJson = await fetch("/api/spider/code-group-management/update", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

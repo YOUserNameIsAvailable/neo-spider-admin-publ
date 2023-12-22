@@ -53,7 +53,7 @@ export const CodeGroupManagementDetailModal: FC<{
   });
 
   const getDetail = async () => {
-    const detailJson = await fetch("/api/spider/codeGroup/detail", {
+    const detailJson = await fetch("/api/spider/code-group-management/detail", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -84,7 +84,7 @@ export const CodeGroupManagementDetailModal: FC<{
         return rest;
       });
 
-    const updateJson = await fetch("/api/spider/codeGroup/update", {
+    const updateJson = await fetch("/api/spider/code-group-management/update", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -109,7 +109,7 @@ export const CodeGroupManagementDetailModal: FC<{
     if (!isConfirm) {
       return;
     }
-    const deleteJson = await fetch("/api/spider/codeGroup/delete", {
+    const deleteJson = await fetch("/api/spider/code-group-management/delete", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

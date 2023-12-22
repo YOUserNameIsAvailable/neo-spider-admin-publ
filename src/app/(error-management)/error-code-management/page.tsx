@@ -32,7 +32,7 @@ export default function Page() {
 
   const getHandler = async (page?: number, displayCount?: number) => {
     try {
-      const dataJson = await fetch("/api/spider/errCodeMng/list", {
+      const dataJson = await fetch("/api/spider/error-code-management/list", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -28,7 +28,7 @@ export default function Page() {
     try {
       const loginJson = sessionStorage.getItem("isLogin") || "";
       const login = JSON.parse(loginJson);
-      const dataJson = await fetch("/api/spider/menuMng/list", {
+      const dataJson = await fetch("/api/spider/menu-management/list", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -32,7 +32,7 @@ export default function Page() {
 
   const getHandler = async (page?: number, displayCount?: number) => {
     try {
-      const dataJson = await fetch("/api/spider/codeGroup/list", {
+      const dataJson = await fetch("/api/spider/code-group-management/list", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
