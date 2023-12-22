@@ -18,6 +18,7 @@ import { RoleManagementModal } from "./modal/RoleManagementModal";
 import { CellRender, RowRender } from "./cellRender";
 import { DropDownCell } from "./DropDownCell";
 import { Input } from "@progress/kendo-react-inputs";
+import { useDialogModalContext } from "@/hooks/ModalDialogContext";
 
 const DATA_ITEM_KEY = "rowSeq";
 const SELECTED_FIELD = "selected";
@@ -44,6 +45,7 @@ export const RoleManagementTable: FC<{
   ref: any;
 }> = forwardRef(({ getHandler, result, count, displayCount }, ref) => {
   const idGetter = getter(DATA_ITEM_KEY);
+  const modalContext = useDialogModalContext();
   const [filterValue, setFilterValue] = useState();
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [currentSelectedState, setCurrentSelectedState] = useState<any>({});
@@ -200,9 +202,9 @@ export const RoleManagementTable: FC<{
     setDataResult(processWithGroups(newData, dataState));
   };
 
-  const enterEdit = (dataItem: any, field?: string) => {
+  const enterEdit = async (dataItem: any, field?: string) => {
     if (field === "roleId" && dataItem?.CRUD !== "추가") {
-      alert("Primary key 필드는 추가시에만 입력이 가능합니다.");
+      await modalContext.showDialog("알림", "Primary key 필드는 추가시에만 입력이 가능합니다.", "alert");
       return;
     }
     const newData = dataResult?.data.map((item: any) => ({
@@ -303,6 +305,7 @@ export const RoleManagementTable: FC<{
           <Grid
             style={{
               height: "500px",
+              cursor: "pointer",
             }}
             pageable={{
               pageSizes: false,

@@ -5,12 +5,10 @@ import { GridPDFExport } from "@progress/kendo-react-pdf";
 import { ExcelExport } from "@progress/kendo-react-excel-export";
 import { Grid, GridColumn as Column, GridNoRecords } from "@progress/kendo-react-grid";
 import { setGroupIds, setExpandedState } from "@progress/kendo-react-data-tools";
-import { EMPLOYEES } from "@/constants";
 import { ColumnMenu } from "./ColumnMenu";
-import { ClientWebProps } from "@/types";
-import { Button } from "@progress/kendo-react-buttons";
+import { useDialogModalContext } from "@/hooks/ModalDialogContext";
 
-const DATA_ITEM_KEY = "id";
+const DATA_ITEM_KEY = "rowSeq";
 const SELECTED_FIELD = "selected";
 const initialDataState = {
   take: 10,
@@ -30,12 +28,14 @@ const processWithGroups = (data: any, dataState: any) => {
 };
 
 export const ClientWebTable: FC<{
+  getHandler: (page?: number, displayCount?: number) => void;
   onRowClick?: (e: any) => void;
   result: any[];
   count: number;
   displayCount: number;
-}> = ({ onRowClick, result, count, displayCount }) => {
-  const idGetter = getter("id");
+}> = ({ getHandler, onRowClick, result, count, displayCount }) => {
+  const idGetter = getter(DATA_ITEM_KEY);
+  const modalContext = useDialogModalContext();
   const [filterValue, setFilterValue] = useState();
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [currentSelectedState, setCurrentSelectedState] = useState<any>({});
@@ -44,8 +44,10 @@ export const ClientWebTable: FC<{
   const [data, setData] = useState<any[]>([]);
 
   const dataStateChange = (event: any) => {
-    setDataResult(process(filteredData, event.dataState));
+    console.log("dataStateChange: ", event);
     setDataState(event.dataState);
+    const page = Math.floor(event.dataState.skip / event.dataState.take) + 1;
+    getHandler(page, displayCount);
   };
 
   const onExpandChange = React.useCallback(
@@ -110,10 +112,10 @@ export const ClientWebTable: FC<{
   );
 
   const onSelectionChange = (event: any) => {
-    const selectedProductId = event.dataItem.rowSeq;
+    const selectedId = event.dataItem.rowSeq;
 
     const newData = data.map((item: any) => {
-      if (item.rowSeq === selectedProductId) {
+      if (item.rowSeq === selectedId) {
         item.selected = !item.selected;
       }
       return item;
@@ -121,7 +123,7 @@ export const ClientWebTable: FC<{
 
     setCurrentSelectedState((prevState: any) => ({
       ...prevState,
-      [selectedProductId]: !prevState[selectedProductId],
+      [selectedId]: !prevState[selectedId],
     }));
 
     const newDataResult = processWithGroups(newData, dataState);
@@ -154,14 +156,6 @@ export const ClientWebTable: FC<{
     return count;
   };
 
-  const renderButtonCell = (dataItem: any, props: any, text: string, event?: () => void) => (
-    <td {...props.tdProps} style={{ textAlign: "center" }}>
-      <Button size={"small"} className="cell-inside-btn px-4 font-normal" themeColor={"primary"} onClick={event}>
-        {text}
-      </Button>
-    </td>
-  );
-
   const checkHeaderSelectionValue = () => {
     const newData = setExpandedState({
       data: setSelectedValue(dataResult.data),
@@ -173,12 +167,29 @@ export const ClientWebTable: FC<{
   };
 
   useEffect(() => {
-    if (result?.length > 0) {
-      setFilteredData(result);
-      setDataResult(process(result, dataState));
-      setData(result);
-    }
+    setFilteredData(result);
+    setDataResult({ data: result, total: count });
+    setData(result);
+
+    console.log("result: ", result);
+    console.log("dataResult: ", dataResult);
+    console.log("data: ", data);
+    console.log("dataState: ", dataState);
+    console.log("filteredData: ", filteredData);
+    console.log("currentSelectedState: ", currentSelectedState);
+    console.log("filterValue: ", filterValue);
+    console.log("initialDataState: ", initialDataState);
   }, [result]);
+
+  useEffect(() => {
+    if (displayCount) {
+      console.log("useEffect displayCount: ", displayCount);
+      const page = Math.floor(dataState.skip / dataState.take) + 1;
+      const skip = (page - 1) * displayCount;
+
+      setDataState((prev) => ({ ...prev, skip: skip, take: displayCount }));
+    }
+  }, [displayCount]);
 
   return (
     <div>
