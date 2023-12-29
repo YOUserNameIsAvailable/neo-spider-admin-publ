@@ -3,13 +3,7 @@ import { Window, WindowMoveEvent } from "@progress/kendo-react-dialogs";
 import { Button } from "@progress/kendo-react-buttons";
 import { DropDownList } from "@progress/kendo-react-dropdowns";
 import { Splitter } from "@progress/kendo-react-layout";
-import {
-  Grid,
-  GridColumn as Column,
-  GridRowProps,
-  GridNoRecords,
-  GridHeaderCellProps,
-} from "@progress/kendo-react-grid";
+import { Grid, GridColumn as Column, GridRowProps, GridNoRecords } from "@progress/kendo-react-grid";
 import { Checkbox, Input } from "@progress/kendo-react-inputs";
 
 interface PositionInterface {
@@ -65,7 +59,7 @@ export const RoleManagementModal: FC<{
 
     const detailResult = await detailJson.json();
     const detail = detailResult?.body?.menulist;
-    const mdofiy = detailResult?.body?.rolemenulist;
+    const mdofiy = detailResult?.body?.rolemenulist || [];
     console.log("detail: ", detail, mdofiy);
     setDataResult(detail);
     setData(detail);
@@ -190,12 +184,9 @@ export const RoleManagementModal: FC<{
 
     const newDataResult = newData;
     setModifyData(newDataResult);
-
-    console.log(123123, newDataResult);
   };
 
   const renderCheckBox = (dataItem: any, props: any, event: (dataItem: any, field: string) => void) => {
-    console.log(123123, dataItem[props.field], dataItem[props.field] === "true");
     const value = dataItem[props.field] === "true" ? true : false;
     return (
       <td {...props.tdProps} style={{ textAlign: "center" }}>

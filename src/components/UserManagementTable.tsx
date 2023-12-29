@@ -1,4 +1,4 @@
-import React, { useState, FC, useCallback, useEffect } from "react";
+import React, { useState, FC, useCallback, useEffect, useRef } from "react";
 import { getter } from "@progress/kendo-react-common";
 import { process } from "@progress/kendo-data-query";
 import { GridPDFExport } from "@progress/kendo-react-pdf";
@@ -8,8 +8,10 @@ import { setGroupIds } from "@progress/kendo-react-data-tools";
 import { Button } from "@progress/kendo-react-buttons";
 import { UserManagementDetailModal } from "./modal/UserManagementDetailModal";
 import { UserManagementRoleModal } from "./modal/UserManagementRoleModal";
+import { isExportExcelState } from "@/store";
+import { useRecoilState } from "recoil";
 
-const DATA_ITEM_KEY = "id";
+const DATA_ITEM_KEY = "rowSeq";
 const SELECTED_FIELD = "selected";
 const initialDataState = {
   take: 20,
@@ -32,7 +34,9 @@ export const UserManagementTable: FC<{
   count: number;
   displayCount: number;
 }> = ({ getHandler, result, count, displayCount }) => {
-  const idGetter = getter("id");
+  const idGetter = getter(DATA_ITEM_KEY);
+  const _export = useRef<ExcelExport | null>(null);
+  const [isExportExcel, setIsExportExcel] = useRecoilState<any>(isExportExcelState);
   const [filterValue, setFilterValue] = useState();
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [currentSelectedState, setCurrentSelectedState] = useState<any>({});
@@ -173,20 +177,25 @@ export const UserManagementTable: FC<{
     }
   }, [displayCount]);
 
-  const _export = React.useRef<ExcelExport | null>(null);
+  useEffect(() => {
+    if (isExportExcel && _export.current) {
+      const exportExcel = async (_export: any) => {
+        const result = await getHandler(1, 9999999);
+        console.log("_exporter.current:", dataResult, result);
 
-  const excelExport = () => {
-    if (_export.current) {
-      console.log("_exporter.current:", _export.current, dataResult);
-      _export.current?.save(dataResult);
+        if (result !== undefined) {
+          _export.current.save({ data: result as any[], total: (result as any[]).length });
+        }
+        setIsExportExcel(false);
+      };
+      exportExcel(_export);
     }
-  };
+  }, [isExportExcel]);
 
   return (
     <>
       <div>
-        <div onClick={excelExport}>export test</div>
-        <ExcelExport ref={_export}>
+        <ExcelExport fileName="UserManagement" ref={_export}>
           <Grid
             style={{
               height: "500px",

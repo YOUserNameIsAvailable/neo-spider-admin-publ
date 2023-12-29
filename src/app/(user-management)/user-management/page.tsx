@@ -10,9 +10,12 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { UserManagementAddModal } from "@/components/modal/UserManagementAddModal";
 import { validateResult } from "@/utils/util";
+import { isExportExcelState } from "@/store";
+import { useRecoilState } from "recoil";
 
 export default function Page() {
   const router = useRouter();
+  const [isExportExcel, setIsExportExcel] = useRecoilState<any>(isExportExcelState);
   const [searchText, setSearchText] = useState<string>("");
   const [form, setForm] = useState<any>({
     _search_type: "_search_userName",
@@ -49,10 +52,12 @@ export default function Page() {
       const data = await dataJson.json();
       console.log("data: ", data);
 
-      if (validateResult(data, router)) {
+      if (validateResult(data, router) && !isExportExcel) {
         setResult(data?.body?.list);
         setCount(data?.body?.count);
         setCurrentPage(page || 1);
+      } else if (isExportExcel) {
+        return data?.body?.list;
       }
     } catch (err) {
       console.error(err);

@@ -16,6 +16,8 @@ import { Button } from "@progress/kendo-react-buttons";
 import { TabTitle } from "./TapTitle";
 import { Loader } from "@progress/kendo-react-indicators";
 import Loading from "@/components/loading";
+import { useRecoilState } from "recoil";
+import { isExportExcelState } from "@/store";
 
 interface LayoutProps {
   children?: ReactNode;
@@ -23,6 +25,9 @@ interface LayoutProps {
 
 export const Layout: FC<LayoutProps> = ({ children }) => {
   const pathname = usePathname();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [_, setIsExportExcel] = useRecoilState<any>(isExportExcelState);
   const [panes, setPanes] = useState<SplitterPaneProps[]>([
     {
       size: "249px",
@@ -37,11 +42,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
     },
   ]);
   const [isClose, setIsClose] = useState(false);
-
   const { tabs, selectedTab, selectedTabIndex, setSelectedTab, setTabs } = useTab();
-
-  const router = useRouter();
-  const searchParams = useSearchParams();
 
   const onSelectTab = (tab: ITab, index: number) => {
     setSelectedTab(tab);
@@ -116,6 +117,10 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
     }
   }, []);
 
+  const excelExport = () => {
+    setIsExportExcel(true);
+  };
+
   return (
     <>
       {/* top bar */}
@@ -155,7 +160,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                 <div className="title-bar">
                   <div className="title text-[15px] font-bold text-[#656565]">{selectedTab?.text}</div>
                   <div className="actions">
-                    <Button imageUrl="/images/btn_excel_off.gif" className="excel-btn" />
+                    <Button imageUrl="/images/btn_excel_off.gif" className="excel-btn" onClick={excelExport} />
                     <Button imageUrl="/images/btn_print_off.gif" className="ml-px-10 print-btn" />
                     <Button imageUrl="/images/refresh.png" className="search-btn ml-[5px]" />
                   </div>
