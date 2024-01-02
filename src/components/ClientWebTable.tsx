@@ -128,8 +128,6 @@ export const ClientWebTable: FC<{
 
     const newDataResult = processWithGroups(newData, dataState);
     setDataResult(newDataResult);
-
-    console.log(123123, newDataResult);
   };
 
   const getNumberOfItems = (data: any) => {

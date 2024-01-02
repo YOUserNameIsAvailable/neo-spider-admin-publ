@@ -1,8 +1,17 @@
-import React, { FC, ReactElement, forwardRef, useCallback, useEffect, useImperativeHandle, useState } from "react";
+import React, {
+  FC,
+  ReactElement,
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 import { getter } from "@progress/kendo-react-common";
 import { process } from "@progress/kendo-data-query";
 import { GridPDFExport } from "@progress/kendo-react-pdf";
-import { ExcelExport } from "@progress/kendo-react-excel-export";
+import { ExcelExport, ExcelExportColumn } from "@progress/kendo-react-excel-export";
 import {
   Grid,
   GridColumn as Column,
@@ -19,6 +28,8 @@ import { CellRender, RowRender } from "./cellRender";
 import { DropDownCell } from "./DropDownCell";
 import { Input } from "@progress/kendo-react-inputs";
 import { useDialogModalContext } from "@/hooks/ModalDialogContext";
+import { useRecoilState } from "recoil";
+import { isExportExcelState } from "@/store";
 
 const DATA_ITEM_KEY = "rowSeq";
 const SELECTED_FIELD = "selected";
@@ -45,6 +56,9 @@ export const RoleManagementTable: FC<{
   ref: any;
 }> = forwardRef(({ getHandler, result, count, displayCount }, ref) => {
   const idGetter = getter(DATA_ITEM_KEY);
+  const _export = useRef<ExcelExport | null>(null);
+  const _grid = useRef<any>();
+  const [isExportExcel, setIsExportExcel] = useRecoilState<any>(isExportExcelState);
   const modalContext = useDialogModalContext();
   const [filterValue, setFilterValue] = useState();
   const [filteredData, setFilteredData] = useState<any[]>([]);
@@ -141,8 +155,6 @@ export const RoleManagementTable: FC<{
 
     const newDataResult = processWithGroups(newData, dataState);
     setDataResult(newDataResult);
-
-    console.log(123123, newDataResult);
   };
 
   const getNumberOfItems = (data: any) => {
@@ -298,108 +310,123 @@ export const RoleManagementTable: FC<{
     }
   }, [displayCount]);
 
+  useEffect(() => {
+    if (isExportExcel && _export.current) {
+      const exportExcel = async (_export: any) => {
+        const result = await getHandler(1, 9999999);
+        console.log("_exporter.current:", dataResult, result);
+
+        if (result !== undefined) {
+          _export.current.save({ data: result as any[], total: (result as any[]).length });
+        }
+        setIsExportExcel(false);
+      };
+      exportExcel(_export);
+    }
+  }, [isExportExcel]);
+
   return (
     <>
       <div>
-        <ExcelExport>
-          <Grid
-            style={{
-              height: "500px",
-              cursor: "pointer",
+        <Grid
+          ref={_grid}
+          style={{
+            height: "500px",
+            cursor: "pointer",
+          }}
+          pageable={{
+            pageSizes: false,
+            buttonCount: 10,
+          }}
+          {...dataState}
+          data={dataResult}
+          total={count || 0}
+          expandField="expanded"
+          dataItemKey={DATA_ITEM_KEY}
+          selectedField={SELECTED_FIELD}
+          resizable={true}
+          editField="inEdit"
+          cellRender={customCellRender}
+          rowRender={customRowRender}
+          onItemChange={itemChange}
+          onDataStateChange={dataStateChange}
+          onHeaderSelectionChange={onHeaderSelectionChange}
+          onSelectionChange={onSelectionChange}>
+          <GridNoRecords>
+            <div id="noRecord" className="popup_pop_norecord">
+              No Record Found.
+            </div>
+          </GridNoRecords>
+          <Column
+            filterable={false}
+            field={SELECTED_FIELD}
+            width={30}
+            editable={false}
+            headerSelectionValue={checkHeaderSelectionValue()}
+            headerClassName="bg-[#adc6f4] overflow-none"
+            className="overflow-none"
+          />
+          <Column field="CRUD" title="CRUD" headerClassName="justify-center bg-[#adc6f4]" width={53} editable={false} />
+          <Column
+            field="roleId"
+            title="Role ID"
+            headerClassName="justify-center bg-[#adc6f4] col-width20per"
+            className="col-width20per"
+            editor="text"
+          />
+          <Column
+            field="roleName"
+            title="Role Name"
+            headerClassName="justify-center bg-[#adc6f4] col-width20per"
+            className="col-width20per"
+            editor="text"
+          />
+          <Column
+            field="useYnNm"
+            title="use"
+            headerClassName="justify-center bg-[#adc6f4] col-width15per"
+            className="col-width15per"
+            editable={true}
+            cell={(props) => <DropDownCell props={props} enterEdit={enterEdit} exitEdit={exitEdit} />}
+          />
+          <Column
+            field="roleDesc"
+            title="Role desc"
+            headerClassName="justify-center bg-[#adc6f4] col-width45per"
+            className="col-width45per"
+            editor="text"
+          />
+          <Column
+            field="ranking"
+            title="Ranking"
+            headerClassName="justify-center bg-[#adc6f4] col-width10per"
+            className="col-width10per"
+            editor="numeric"
+          />
+          <Column
+            title="Menu role"
+            cells={{
+              data: ({ dataItem, ...props }) => {
+                return renderButtonCell(dataItem, props, "Menu", () => {
+                  if (dataItem?.CRUD === "추가") {
+                    return;
+                  }
+                  setRoleId(dataItem.roleId);
+                  setShowModal(true);
+                });
+              },
             }}
-            pageable={{
-              pageSizes: false,
-              buttonCount: 10,
-            }}
-            {...dataState}
-            data={dataResult}
-            total={count || 0}
-            expandField="expanded"
-            dataItemKey={DATA_ITEM_KEY}
-            selectedField={SELECTED_FIELD}
-            resizable={true}
-            editField="inEdit"
-            cellRender={customCellRender}
-            rowRender={customRowRender}
-            onItemChange={itemChange}
-            onDataStateChange={dataStateChange}
-            onHeaderSelectionChange={onHeaderSelectionChange}
-            onSelectionChange={onSelectionChange}>
-            <GridNoRecords>
-              <div id="noRecord" className="popup_pop_norecord">
-                No Record Found.
-              </div>
-            </GridNoRecords>
-            <Column
-              filterable={false}
-              field={SELECTED_FIELD}
-              width={30}
-              editable={false}
-              headerSelectionValue={checkHeaderSelectionValue()}
-              headerClassName="bg-[#adc6f4] overflow-none"
-              className="overflow-none"
-            />
-            <Column
-              field="CRUD"
-              title="CRUD"
-              headerClassName="justify-center bg-[#adc6f4]"
-              width={53}
-              editable={false}
-            />
-            <Column
-              field="roleId"
-              title="Role ID"
-              headerClassName="justify-center bg-[#adc6f4] col-width20per"
-              className="col-width20per"
-              editor="text"
-            />
-            <Column
-              field="roleName"
-              title="Role Name"
-              headerClassName="justify-center bg-[#adc6f4] col-width20per"
-              className="col-width20per"
-              editor="text"
-            />
-            <Column
-              field="useYnNm"
-              title="use"
-              headerClassName="justify-center bg-[#adc6f4] col-width15per"
-              className="col-width15per"
-              editable={true}
-              cell={(props) => <DropDownCell props={props} enterEdit={enterEdit} exitEdit={exitEdit} />}
-            />
-            <Column
-              field="roleDesc"
-              title="Role desc"
-              headerClassName="justify-center bg-[#adc6f4] col-width45per"
-              className="col-width45per"
-              editor="text"
-            />
-            <Column
-              field="ranking"
-              title="Ranking"
-              headerClassName="justify-center bg-[#adc6f4] col-width10per"
-              className="col-width10per"
-              editor="numeric"
-            />
-            <Column
-              title="Menu role"
-              cells={{
-                data: ({ dataItem, ...props }) => {
-                  return renderButtonCell(dataItem, props, "Menu", () => {
-                    if (dataItem?.CRUD === "추가") {
-                      return;
-                    }
-                    setRoleId(dataItem.roleId);
-                    setShowModal(true);
-                  });
-                },
-              }}
-              headerClassName="justify-center bg-[#adc6f4]"
-              width={83}
-              editable={false}
-            />
-          </Grid>
+            headerClassName="justify-center bg-[#adc6f4]"
+            width={83}
+            editable={false}
+          />
+        </Grid>
+        <ExcelExport fileName="RoleManagement" ref={_export}>
+          <ExcelExportColumn field="roleId" title="Role ID" />
+          <ExcelExportColumn field="roleName" title="Role Name" />
+          <ExcelExportColumn field="useYnNm" title="use" />
+          <ExcelExportColumn field="roleDesc" title="Role desc" />
+          <ExcelExportColumn field="ranking" title="Ranking" />
         </ExcelExport>
         <GridPDFExport margin="1cm">
           <Grid

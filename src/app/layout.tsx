@@ -24,8 +24,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   const isHomePage = pathname.indexOf("front") > -1;
   const isLoginPage = pathname.indexOf("login") > -1;
 
-  console.log(123123, pathname, isHomePage, isLoginPage);
-
   useEffect(() => {
     const sessionIsLogin = sessionStorage.getItem("isLogin") || {};
     const _isLogin = Object.keys(sessionIsLogin).length > 0 ? true : false;

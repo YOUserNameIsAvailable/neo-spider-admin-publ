@@ -10,7 +10,7 @@ import { ColumnMenu } from "./ColumnMenu";
 import { Button } from "@progress/kendo-react-buttons";
 import { MenuManagementModal } from "./modal/MenuManagementModal";
 
-const DATA_ITEM_KEY = "id";
+const DATA_ITEM_KEY = "rowSeq";
 const SELECTED_FIELD = "selected";
 const initialDataState = {
   take: 10,
@@ -33,7 +33,7 @@ export const MenuManagementTable: FC<{
   count: number;
   displayCount: number;
 }> = ({ getHandler, result, count, displayCount }) => {
-  const idGetter = getter("id");
+  const idGetter = getter(DATA_ITEM_KEY);
   const [filterValue, setFilterValue] = useState();
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [currentSelectedState, setCurrentSelectedState] = useState<any>({});

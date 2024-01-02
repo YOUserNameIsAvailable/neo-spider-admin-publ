@@ -84,7 +84,6 @@ export const CodeGroupManagementAddModal: FC<{
 
   const checkCodeGroupId = async () => {
     try {
-      console.log(123123, group);
       if (group?.codeGroupId === "" || !group?.codeGroupId) {
         await modalContext.showDialog(" ", "코드그룹ID를 입력해주세요.", "alert");
         return;
@@ -357,7 +356,6 @@ export const CodeGroupManagementAddModal: FC<{
                   value={group?.codeGroupId}
                   onInput={(e) => {
                     setGroup({ ...group, codeGroupId: e?.currentTarget?.value });
-                    console.log(123123, e?.currentTarget?.value, group);
                   }}
                 />
                 <Button className="basic-small-btn" onClick={checkCodeGroupId}>

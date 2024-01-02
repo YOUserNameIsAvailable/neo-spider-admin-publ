@@ -127,8 +127,6 @@ export const LabelManagementTable: FC<{
 
     const newDataResult = processWithGroups(newData, dataState);
     setDataResult(newDataResult);
-
-    console.log(123123, newDataResult);
   };
 
   const getNumberOfItems = (data: any) => {

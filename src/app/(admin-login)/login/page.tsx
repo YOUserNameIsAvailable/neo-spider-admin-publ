@@ -15,8 +15,6 @@ export default function Page() {
     try {
       e.preventDefault();
 
-      console.log(123123, form);
-
       const loginJson = await fetch("/api/admin/login", {
         method: "POST",
         headers: {
