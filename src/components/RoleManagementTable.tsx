@@ -57,7 +57,6 @@ export const RoleManagementTable: FC<{
 }> = forwardRef(({ getHandler, result, count, displayCount }, ref) => {
   const idGetter = getter(DATA_ITEM_KEY);
   const _export = useRef<ExcelExport | null>(null);
-  const _grid = useRef<any>();
   const [isExportExcel, setIsExportExcel] = useRecoilState<any>(isExportExcelState);
   const modalContext = useDialogModalContext();
   const [filterValue, setFilterValue] = useState();
@@ -329,7 +328,6 @@ export const RoleManagementTable: FC<{
     <>
       <div>
         <Grid
-          ref={_grid}
           style={{
             height: "500px",
             cursor: "pointer",

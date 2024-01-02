@@ -214,6 +214,7 @@ textarea.k-textarea {
   padding: 2px;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap !important;
 }
 
 .k-checkbox:checked {

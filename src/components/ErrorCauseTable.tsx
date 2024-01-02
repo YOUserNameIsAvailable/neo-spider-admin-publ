@@ -1,14 +1,17 @@
-import React from "react";
+import React, { FC, useCallback, useEffect, useRef, useState } from "react";
 import { getter } from "@progress/kendo-react-common";
 import { process } from "@progress/kendo-data-query";
 import { GridPDFExport } from "@progress/kendo-react-pdf";
 import { ExcelExport } from "@progress/kendo-react-excel-export";
-import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
+import { Grid, GridColumn as Column, GridNoRecords } from "@progress/kendo-react-grid";
 import { setGroupIds, setExpandedState } from "@progress/kendo-react-data-tools";
 import { EMPLOYEES } from "@/constants";
 import { ColumnMenu } from "./ColumnMenu";
+import { useRecoilState } from "recoil";
+import { isExportExcelState } from "@/store";
+import { Button } from "@progress/kendo-react-buttons";
 
-const DATA_ITEM_KEY = "id";
+const DATA_ITEM_KEY = "rowSeq";
 const SELECTED_FIELD = "selected";
 const initialDataState = {
   take: 10,
@@ -25,67 +28,32 @@ const processWithGroups = (data: any, dataState: any) => {
   return newDataState;
 };
 
-export function ErrotCauseTable() {
-  const idGetter = getter("id");
-  const [filterValue, setFilterValue] = React.useState();
-  const [filteredData, setFilteredData] = React.useState(EMPLOYEES);
-  const [currentSelectedState, setCurrentSelectedState] = React.useState<any>({});
-  const [dataState, setDataState] = React.useState(initialDataState);
-  const [dataResult, setDataResult] = React.useState(process(filteredData, dataState));
-  const [data, setData] = React.useState(filteredData);
-
-  const onFilterChange = (ev: any) => {
-    let value = ev.value;
-
-    setFilterValue(ev.value);
-
-    let newData = EMPLOYEES.filter((item: any) => {
-      let match = false;
-
-      for (const property in item) {
-        if (item[property].toString().toLocaleLowerCase().indexOf(value.toLocaleLowerCase()) >= 0) {
-          match = true;
-        }
-        if (item[property].toLocaleDateString && item[property].toLocaleDateString().indexOf(value) >= 0) {
-          match = true;
-        }
-      }
-
-      return match;
-    });
-
-    setFilteredData(newData);
-
-    let clearedPagerDataState = {
-      ...dataState,
-      take: 8,
-      skip: 0,
-    };
-
-    let processedData = process(newData, clearedPagerDataState);
-    setDataResult(processedData);
-    setDataState(clearedPagerDataState);
-    setData(newData);
-  };
-
-  const [resultState, setResultState] = React.useState(
-    processWithGroups(
-      EMPLOYEES.map((item: any) => ({
-        ...item,
-        ["selected"]: currentSelectedState[idGetter(item)],
-      })),
-
-      initialDataState,
-    ),
-  );
+export const ErrotCauseTable: FC<{
+  getHandler: (page?: number, displayCount?: number) => void;
+  result: any[];
+  count: number;
+  displayCount: number;
+}> = ({ getHandler, result, count, displayCount }) => {
+  const idGetter = getter(DATA_ITEM_KEY);
+  const _export = useRef<ExcelExport | null>(null);
+  const [isExportExcel, setIsExportExcel] = useRecoilState<any>(isExportExcelState);
+  const [filterValue, setFilterValue] = useState();
+  const [filteredData, setFilteredData] = useState<any[]>([]);
+  const [currentSelectedState, setCurrentSelectedState] = useState<any>({});
+  const [dataState, setDataState] = useState(initialDataState);
+  const [dataResult, setDataResult] = useState<any>({ data: [] });
+  const [data, setData] = useState<any[]>([]);
 
   const dataStateChange = (event: any) => {
-    setDataResult(process(filteredData, event.dataState));
+    console.log("dataStateChange: ", event);
     setDataState(event.dataState);
+    const page = Math.floor(event.dataState.skip / event.dataState.take) + 1;
+    getHandler(page, displayCount);
   };
 
-  const onExpandChange = React.useCallback(
+  const onExpandChange = useCallback(
     (event: any) => {
+      console.log("onExpandChange: ", event);
       const newData = [...dataResult.data];
       const item = event.dataItem;
       if (item.groupId) {
@@ -108,30 +76,9 @@ export function ErrotCauseTable() {
     [dataResult],
   );
 
-  const setSelectedValue = (data: any) => {
-    let newData = data.map((item: any) => {
-      if (item.items) {
-        return {
-          ...item,
-          items: setSelectedValue(item.items),
-        };
-      } else {
-        return {
-          ...item,
-          ["selected"]: currentSelectedState[idGetter(item)],
-        };
-      }
-    });
-    return newData;
-  };
-
-  const newData = setExpandedState({
-    data: setSelectedValue(resultState.data),
-    collapsedIds: [],
-  });
-
-  const onHeaderSelectionChange = React.useCallback(
+  const onHeaderSelectionChange = useCallback(
     (event: any) => {
+      console.log("onHeaderSelectionChange: ", event);
       const checkboxElement = event.syntheticEvent.target;
       const checked = checkboxElement.checked;
       const newSelectedState: any = {};
@@ -139,7 +86,7 @@ export function ErrotCauseTable() {
         newSelectedState[idGetter(item)] = checked;
       });
       setCurrentSelectedState(newSelectedState);
-      const newData = data.map((item) => ({
+      const newData = data.map((item: any) => ({
         ...item,
         [SELECTED_FIELD]: checked,
       }));
@@ -150,6 +97,7 @@ export function ErrotCauseTable() {
   );
 
   const onSelectionChange = (event: any) => {
+    console.log("onSelectionChange: ", event);
     const selectedProductId = event.dataItem.id;
 
     const newData = data.map((item: any) => {
@@ -192,16 +140,53 @@ export function ErrotCauseTable() {
     return count;
   };
 
-  const handleButtonClick = (row: any) => {
-    // Handle button click for the specific row
-    console.log(`Button clicked for user: ${row.full_name}`);
-  };
-
-  const renderButtonCell = (props: any) => (
-    <td>
-      <button onClick={() => handleButtonClick(props.dataItem)}>Click me</button>
+  const renderButtonCell = (dataItem: any, props: any, text: string, event?: () => void) => (
+    <td {...props.tdProps} style={{ textAlign: "center" }}>
+      <Button size={"small"} className="cell-inside-btn px-4 font-normal" themeColor={"primary"} onClick={event}>
+        {text}
+      </Button>
     </td>
   );
+
+  useEffect(() => {
+    setFilteredData(result);
+    setDataResult({ data: result, total: count });
+    setData(result);
+
+    console.log("result: ", result);
+    console.log("dataResult: ", dataResult);
+    console.log("data: ", data);
+    console.log("dataState: ", dataState);
+    console.log("filteredData: ", filteredData);
+    console.log("currentSelectedState: ", currentSelectedState);
+    console.log("filterValue: ", filterValue);
+    console.log("initialDataState: ", initialDataState);
+  }, [result]);
+
+  useEffect(() => {
+    if (displayCount) {
+      console.log("useEffect displayCount: ", displayCount);
+      const page = Math.floor(dataState.skip / dataState.take) + 1;
+      const skip = (page - 1) * displayCount;
+
+      setDataState((prev) => ({ ...prev, skip: skip, take: displayCount }));
+    }
+  }, [displayCount]);
+
+  useEffect(() => {
+    if (isExportExcel && _export.current) {
+      const exportExcel = async (_export: any) => {
+        const result = await getHandler(1, 9999999);
+        console.log("_exporter.current:", dataResult, result);
+
+        if (result !== undefined) {
+          _export.current.save({ data: result as any[], total: (result as any[]).length });
+        }
+        setIsExportExcel(false);
+      };
+      exportExcel(_export);
+    }
+  }, [isExportExcel]);
 
   return (
     <div>
@@ -211,64 +196,61 @@ export function ErrotCauseTable() {
             height: "500px",
           }}
           pageable={{
-            pageSizes: true,
+            pageSizes: false,
+            buttonCount: 10,
           }}
-          data={dataResult}
-          sortable={true}
-          total={resultState.total}
-          onDataStateChange={dataStateChange}
           {...dataState}
-          onExpandChange={onExpandChange}
+          data={dataResult}
+          total={count || 0}
           expandField="expanded"
-          dataItemKey={DATA_ITEM_KEY}
-          selectedField={SELECTED_FIELD}
-          onHeaderSelectionChange={onHeaderSelectionChange}
-          onSelectionChange={onSelectionChange}
-          groupable={false}>
+          resizable={true}
+          onDataStateChange={dataStateChange}>
+          <GridNoRecords>
+            <div id="noRecord" className="popup_pop_norecord">
+              No Record Found.
+            </div>
+          </GridNoRecords>
           <Column
-            field="budget"
-            width="110px"
+            field="errorCode"
             title="Error code"
-            headerClassName="justify-center bg-[#adc6f4]"
-            columnMenu={ColumnMenu}
+            headerClassName="justify-center bg-[#adc6f4] col-width10per"
+            className="col-width10per"
           />
           <Column
-            field="full_name"
+            field="errorSerNo"
             title="Error occur serial no"
-            headerClassName="justify-center bg-[#adc6f4]"
-            columnMenu={ColumnMenu}
+            headerClassName="justify-center bg-[#adc6f4] col-width20per"
+            className="col-width20per"
           />
           <Column
-            field="target"
+            field="custUserId"
             title="Customer ID"
-            headerClassName="justify-center bg-[#adc6f4]"
-            columnMenu={ColumnMenu}
+            headerClassName="justify-center bg-[#adc6f4] col-width10per"
+            className="col-width10per"
           />
           <Column
             field="budget"
             title="Customer tel"
-            headerClassName="justify-center bg-[#adc6f4]"
-            columnMenu={ColumnMenu}
+            headerClassName="justify-center bg-[#adc6f4] col-width10per"
+            className="col-width10per"
           />
           <Column
-            field="budget"
+            field="errorMessage"
             title="Customer print message"
-            headerClassName="justify-center bg-[#adc6f4]"
-            columnMenu={ColumnMenu}
+            headerClassName="justify-center bg-[#adc6f4] col-width40per"
+            className="col-width40per"
           />
           <Column
-            field="budget"
-            width="120px"
+            field="menuName"
             title="Menu name"
-            headerClassName="justify-center bg-[#adc6f4]"
-            columnMenu={ColumnMenu}
+            headerClassName="justify-center bg-[#adc6f4] col-width10per"
+            className="col-width10per"
           />
           <Column
-            field="budget"
-            width="180"
+            field="errorInstanceId"
             title="Error instance ID"
-            headerClassName="justify-center bg-[#adc6f4]"
-            columnMenu={ColumnMenu}
+            headerClassName="justify-center bg-[#adc6f4] col-width10per"
+            className="col-width10per"
           />
         </Grid>
       </ExcelExport>
@@ -282,7 +264,7 @@ export function ErrotCauseTable() {
           }}
           data={dataResult}
           sortable={false}
-          total={resultState.total}
+          total={count || 0}
           onDataStateChange={dataStateChange}
           {...dataState}
           onExpandChange={onExpandChange}
@@ -296,4 +278,4 @@ export function ErrotCauseTable() {
       </GridPDFExport>
     </div>
   );
-}
+};

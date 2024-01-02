@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import { getter } from "@progress/kendo-react-common";
 import { process } from "@progress/kendo-data-query";
 import { GridPDFExport } from "@progress/kendo-react-pdf";
@@ -9,6 +9,8 @@ import { EMPLOYEES } from "@/constants";
 import { ColumnMenu } from "./ColumnMenu";
 import { Button } from "@progress/kendo-react-buttons";
 import { MenuManagementModal } from "./modal/MenuManagementModal";
+import { isExportExcelState } from "@/store";
+import { useRecoilState } from "recoil";
 
 const DATA_ITEM_KEY = "rowSeq";
 const SELECTED_FIELD = "selected";
@@ -34,6 +36,8 @@ export const MenuManagementTable: FC<{
   displayCount: number;
 }> = ({ getHandler, result, count, displayCount }) => {
   const idGetter = getter(DATA_ITEM_KEY);
+  const _export = useRef<ExcelExport | null>(null);
+  const [isExportExcel, setIsExportExcel] = useRecoilState<any>(isExportExcelState);
   const [filterValue, setFilterValue] = useState();
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [currentSelectedState, setCurrentSelectedState] = useState<any>({});
@@ -194,10 +198,25 @@ export const MenuManagementTable: FC<{
     }
   }, [displayCount]);
 
+  useEffect(() => {
+    if (isExportExcel && _export.current) {
+      const exportExcel = async (_export: any) => {
+        const result = await getHandler(1, 9999999);
+        console.log("_exporter.current:", dataResult, result);
+
+        if (result !== undefined) {
+          _export.current.save({ data: result as any[], total: (result as any[]).length });
+        }
+        setIsExportExcel(false);
+      };
+      exportExcel(_export);
+    }
+  }, [isExportExcel]);
+
   return (
     <>
       <div>
-        <ExcelExport>
+        <ExcelExport fileName="MenuManagement" ref={_export}>
           <Grid
             style={{
               height: "500px",

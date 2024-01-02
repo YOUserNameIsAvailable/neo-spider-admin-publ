@@ -11,7 +11,7 @@ import { Button } from "@progress/kendo-react-buttons";
 import { ErrorCodeManagementDetailModal } from "./modal/ErrorCodeManagementDetailModal";
 import { ErrorCodeManagementHandlerModal } from "./modal/ErrorCodeManagementHandlerModal";
 
-const DATA_ITEM_KEY = "id";
+const DATA_ITEM_KEY = "rowSeq";
 const SELECTED_FIELD = "selected";
 const initialDataState = {
   take: 10,
@@ -33,7 +33,7 @@ export const ErrorCodeTable: FC<{
   count: number;
   displayCount: number;
 }> = ({ getHandler, result, count, displayCount }) => {
-  const idGetter = getter("id");
+  const idGetter = getter(DATA_ITEM_KEY);
   const [filterValue, setFilterValue] = useState();
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [currentSelectedState, setCurrentSelectedState] = useState<any>({});
