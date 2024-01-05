@@ -7,6 +7,9 @@ import { Grid, GridColumn as Column, GridRowClickEvent, GridNoRecords } from "@p
 import { setGroupIds, setExpandedState } from "@progress/kendo-react-data-tools";
 import { CodeGroupManagementDetailModal } from "@/components/modal/CodeGroupManagementDetailModal";
 import { Button } from "@progress/kendo-react-buttons";
+import { isExportExcelState } from "@/store";
+import { useRecoilState } from "recoil";
+import { exportExcel } from "@/utils/util";
 
 const DATA_ITEM_KEY = "rowSeq";
 const SELECTED_FIELD = "selected";
@@ -32,6 +35,8 @@ export const CodeGroupManagementTable: FC<{
   displayCount: number;
 }> = ({ getHandler, result, count, displayCount }) => {
   const idGetter = getter(DATA_ITEM_KEY);
+  const _export = useRef<ExcelExport | null>(null);
+  const [isExportExcel, setIsExportExcel] = useRecoilState<any>(isExportExcelState);
   const childRef = useRef<any>();
   const [filterValue, setFilterValue] = useState();
   const [filteredData, setFilteredData] = useState<any[]>([]);
@@ -184,9 +189,15 @@ export const CodeGroupManagementTable: FC<{
     }
   }, [displayCount]);
 
+  useEffect(() => {
+    if (isExportExcel && _export.current) {
+      exportExcel(_export, getHandler, setIsExportExcel);
+    }
+  }, [isExportExcel]);
+
   return (
     <div>
-      <ExcelExport>
+      <ExcelExport fileName="CodeGroupManagement" ref={_export}>
         <Grid
           style={{
             height: "500px",

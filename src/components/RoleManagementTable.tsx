@@ -30,6 +30,7 @@ import { Input } from "@progress/kendo-react-inputs";
 import { useDialogModalContext } from "@/hooks/ModalDialogContext";
 import { useRecoilState } from "recoil";
 import { isExportExcelState } from "@/store";
+import { exportExcel } from "@/utils/util";
 
 const DATA_ITEM_KEY = "rowSeq";
 const SELECTED_FIELD = "selected";
@@ -311,16 +312,7 @@ export const RoleManagementTable: FC<{
 
   useEffect(() => {
     if (isExportExcel && _export.current) {
-      const exportExcel = async (_export: any) => {
-        const result = await getHandler(1, 9999999);
-        console.log("_exporter.current:", dataResult, result);
-
-        if (result !== undefined) {
-          _export.current.save({ data: result as any[], total: (result as any[]).length });
-        }
-        setIsExportExcel(false);
-      };
-      exportExcel(_export);
+      exportExcel(_export, getHandler, setIsExportExcel);
     }
   }, [isExportExcel]);
 

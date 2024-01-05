@@ -5,11 +5,14 @@ import { ExcelExport } from "@progress/kendo-react-excel-export";
 import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
 import { setGroupIds, setExpandedState } from "@progress/kendo-react-data-tools";
 import { EMPLOYEES } from "@/constants";
-import { FC, useCallback, useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useRef, useState } from "react";
 import { ColumnMenu } from "./ColumnMenu";
 import { Button } from "@progress/kendo-react-buttons";
 import { ErrorCodeManagementDetailModal } from "./modal/ErrorCodeManagementDetailModal";
 import { ErrorCodeManagementHandlerModal } from "./modal/ErrorCodeManagementHandlerModal";
+import { useRecoilState } from "recoil";
+import { isExportExcelState } from "@/store";
+import { exportExcel } from "@/utils/util";
 
 const DATA_ITEM_KEY = "rowSeq";
 const SELECTED_FIELD = "selected";
@@ -34,6 +37,8 @@ export const ErrorCodeTable: FC<{
   displayCount: number;
 }> = ({ getHandler, result, count, displayCount }) => {
   const idGetter = getter(DATA_ITEM_KEY);
+  const _export = useRef<ExcelExport | null>(null);
+  const [isExportExcel, setIsExportExcel] = useRecoilState<any>(isExportExcelState);
   const [filterValue, setFilterValue] = useState();
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [currentSelectedState, setCurrentSelectedState] = useState<any>({});
@@ -202,10 +207,16 @@ export const ErrorCodeTable: FC<{
     }
   }, [displayCount]);
 
+  useEffect(() => {
+    if (isExportExcel && _export.current) {
+      exportExcel(_export, getHandler, setIsExportExcel);
+    }
+  }, [isExportExcel]);
+
   return (
     <>
       <div>
-        <ExcelExport>
+        <ExcelExport fileName="ErrorCode" ref={_export}>
           <Grid
             style={{
               height: "500px",
